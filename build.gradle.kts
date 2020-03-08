@@ -40,13 +40,13 @@ library {
         "ultimate" -> {
             source {
                 from("src/main/cpp")
-                from("src/main/LPE-CS/cpp")
+                from("src/main/LPE-U/cpp")
             }
             publicHeaders {
                 from("src/main/headers")
             }
             privateHeaders {
-                from("src/main/LPE-CS/headers")
+                from("src/main/LPE-U/headers")
             }
         }
     }

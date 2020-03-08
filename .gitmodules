@@ -1,3 +1,6 @@
 [submodule "WDL-library/src/main/cpp"]
 	path = WDL-library/src/main/cpp
 	url = https://github.com/justinfrankel/WDL
+[submodule "src/main/LPE-U"]
+	path = src/main/LPE-U
+	url = git@gitlab.dr-bertling.de:livepresets/lpe-cs.git
