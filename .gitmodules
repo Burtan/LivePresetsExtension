@@ -1,3 +1,3 @@
-[submodule "WDL"]
+[submodule "WDL-library/src/main/cpp"]
 	path = WDL-library/src/main/cpp
 	url = https://github.com/justinfrankel/WDL
