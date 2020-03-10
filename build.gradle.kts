@@ -59,8 +59,12 @@ library {
             }
             else -> "ce"
         }
+        val arch = when (targetMachine.architecture.name) {
+            "x86-64" -> "x64"
+            else -> targetMachine.architecture.name
+        }
         val userPath = System.getProperty("user.home")
-        val fileName = "reaper_livepresets_${facet}_${targetMachine.architecture}"
+        val fileName = "reaper_livepresets_${facet}_${arch}"
 
         //add build details to macros
         compileTask.get().macros["BUILD_VERSION"] = "\"${getVersionNameFromGit()}\""
@@ -73,11 +77,12 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isWindows) {
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/user32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/gdi32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/advapi32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/shell32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/comdlg32.lib")
+
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/user32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/gdi32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/advapi32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/shell32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/comdlg32.lib")
 
             linkTask.get().linkedFile.set(file("$userPath/AppData/Roaming/REAPER/UserPlugins/$fileName.dll"))
 
@@ -148,7 +153,6 @@ library {
     }
 
     targetMachines.add(machines.linux.x86_64)
-    targetMachines.add(machines.linux.x86)
     targetMachines.add(machines.windows.x86_64)
     targetMachines.add(machines.windows.x86)
     targetMachines.add(machines.macOS.x86_64)
