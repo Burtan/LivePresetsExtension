@@ -144,7 +144,9 @@ library {
     }
 
     targetMachines.add(machines.linux.x86_64)
+    targetMachines.add(machines.linux.x86)
     targetMachines.add(machines.windows.x86_64)
+    targetMachines.add(machines.windows.x86)
     targetMachines.add(machines.macOS.x86_64)
 
     dependencies {
