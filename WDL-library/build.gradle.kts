@@ -5,7 +5,14 @@ group = "cockos"
 version = "1.0"
 
 tasks.withType(CreateStaticLibrary::class).configureEach {
-    val cObjs = project.fileTree("build/objs") {
+
+    val arch = targetPlatform.get().architecture.name
+    val os = targetPlatform.get().operatingSystem.name
+    //val type = if (isDebuggable) "debug" else "release"
+    val type = ""
+    val dir = "build/objs/mainC/$type/$os/$arch"
+
+    val cObjs = project.fileTree(dir) {
         include("**/*.obj")
     }
     source(cObjs)
@@ -62,7 +69,11 @@ library {
             source.from("src/main/cpp/WDL/zlib/zutil.c")
 
             // Must use another directory for proper up-to-date check
-            objectFileDir.set(project.layout.buildDirectory.dir("objs/mainC"))
+            val arch = targetMachine.architecture.name
+            val os = targetMachine.operatingSystemFamily.name
+            val type = if (isDebuggable) "debug" else "release"
+            val dir = "objs/mainC/$type/$os/$arch"
+            objectFileDir.set(project.layout.buildDirectory.dir(dir))
 
             // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
             macros = compileTask.get().macros
@@ -97,7 +108,7 @@ library {
             isPositionIndependentCode = compileTask.get().isPositionIndependentCode
         }
 
-        tasks.filter { it.name.contains("createDebug") }.forEach {
+        tasks.filter { it.name.contains("create") }.forEach {
             it.dependsOn(cCompileTask)
             if (targetMachine.operatingSystemFamily.isMacOs) {
                 it.dependsOn(objcCompileTask)
