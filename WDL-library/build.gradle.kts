@@ -97,12 +97,14 @@ library {
             isPositionIndependentCode = compileTask.get().isPositionIndependentCode
         }
 
-        tasks["createDebug"].dependsOn(cCompileTask)
-        if (targetMachine.operatingSystemFamily.isMacOs) {
-            tasks["createDebug"].dependsOn(objcCompileTask)
+        tasks.filter { it.name.contains("createDebug") }.forEach {
+            it.dependsOn(cCompileTask)
+            if (targetMachine.operatingSystemFamily.isMacOs) {
+                it.dependsOn(objcCompileTask)
+            }
         }
-    }
 
+    }
 
     linkage.set(listOf(Linkage.STATIC))
     source {
@@ -135,4 +137,9 @@ library {
     publicHeaders {
         from("src/main/cpp")
     }
+
+    targetMachines.add(machines.linux.x86_64)
+    targetMachines.add(machines.windows.x86_64)
+    targetMachines.add(machines.windows.x86)
+    targetMachines.add(machines.macOS.x86_64)
 }

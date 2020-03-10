@@ -1,7 +1,6 @@
-import java.io.FileOutputStream
 import java.io.ByteArrayOutputStream
-import java.util.Date
 import java.text.SimpleDateFormat
+import java.util.*
 
 plugins {
     `cpp-library`
@@ -16,7 +15,7 @@ repositories {
 
 unitTest {
     dependencies {
-        implementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
+        testImplementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
     }
     binaries.configureEach(CppTestExecutable::class.java) {
         if (toolChain is Gcc && targetMachine.operatingSystemFamily.isLinux) {
@@ -53,9 +52,15 @@ library {
 
     binaries.configureEach(CppSharedLibrary::class.java) {
         //macros for ultimate or ce version
-        when (properties["facet"]) {
-            "ultimate" -> compileTask.get().macros["LPE_ULTIMATE"] = null
+        val facet = when (properties["facet"]) {
+            "ultimate" -> {
+                compileTask.get().macros["LPE_ULTIMATE"] = null
+                "ultimate"
+            }
+            else -> "ce"
         }
+        val userPath = System.getProperty("user.home")
+        val fileName = "reaper_livepresets_${facet}_${targetMachine.architecture}"
 
         //add build details to macros
         compileTask.get().macros["BUILD_VERSION"] = "\"${getVersionNameFromGit()}\""
@@ -74,8 +79,7 @@ library {
             linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/shell32.lib")
             linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/comdlg32.lib")
 
-            val dll = file(System.getProperty("user.home") + "/AppData/Roaming/REAPER/UserPlugins/reaper_livepresets.dll")
-            linkTask.get().linkedFile.set(dll)
+            linkTask.get().linkedFile.set(file("$userPath/AppData/Roaming/REAPER/UserPlugins/$fileName.dll"))
 
             val cResTask = tasks.register("cRes ${name.capitalize()}", WindowsResourceCompile::class.java) {
                 targetPlatform.set(compileTask.get().targetPlatform)
@@ -104,14 +108,14 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isLinux) {
-            linkTask.get().linkedFile.set(file("/home/frederik/.config/REAPER/UserPlugins/reaper_livepresets.so"))
+            linkTask.get().linkedFile.set(file("$userPath/.config/REAPER/UserPlugins/$fileName.so"))
             compileTask.get().macros["SWELL_TARGET_GDK"] = "3"
             compileTask.get().macros["NOMINMAX"] = null
             compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
         }
 
         if (targetMachine.operatingSystemFamily.isMacOs) {
-            linkTask.get().linkedFile.set(file("/Users/frederik/Library/Application Support/REAPER/UserPlugins/reaper_livepresets.dylibs"))
+            linkTask.get().linkedFile.set(file("$userPath/.config/REAPER/UserPlugins/$fileName.dylibs"))
             compileTask.get().macros["NOMINMAX"] = null
             compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
         }
