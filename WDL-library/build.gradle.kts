@@ -4,20 +4,6 @@ plugins {
 group = "cockos"
 version = "1.0"
 
-tasks.withType(CreateStaticLibrary::class).configureEach {
-
-    val arch = targetPlatform.get().architecture.name
-    val os = targetPlatform.get().operatingSystem.name
-    //val type = if (isDebuggable) "debug" else "release"
-    val type = ""
-    val dir = "build/objs/mainC/$type/$os/$arch"
-
-    val cObjs = project.fileTree(dir) {
-        include("**/*.obj")
-    }
-    source(cObjs)
-}
-
 library {
     binaries.configureEach(CppStaticLibrary::class.java) {
         compileTask.get().isPositionIndependentCode = true
@@ -48,6 +34,20 @@ library {
     }
 
     binaries.configureEach {
+        // Must use another directory for proper up-to-date check
+        val arch = targetMachine.architecture.name
+        val os = targetMachine.operatingSystemFamily.name
+        val type = if (isDebuggable) "debug" else "release"
+
+        tasks.withType(CreateStaticLibrary::class).configureEach {
+            val dir = "build/objs/mainC/$type/$os/$arch"
+
+            val cObjs = project.fileTree(dir) {
+                include("**/*.obj")
+            }
+            source(cObjs)
+        }
+
         val cCompileTask = tasks.register("compile" + name.capitalize() + "C", CCompile::class) {
             toolChain.set(compileTask.map { it.toolChain.get() })
             // Take configuration from C++ compile tasks
@@ -67,11 +67,7 @@ library {
             source.from("src/main/cpp/WDL/zlib/inflate.c")
             source.from("src/main/cpp/WDL/zlib/inftrees.c")
             source.from("src/main/cpp/WDL/zlib/zutil.c")
-
-            // Must use another directory for proper up-to-date check
-            val arch = targetMachine.architecture.name
-            val os = targetMachine.operatingSystemFamily.name
-            val type = if (isDebuggable) "debug" else "release"
+            
             val dir = "objs/mainC/$type/$os/$arch"
             objectFileDir.set(project.layout.buildDirectory.dir(dir))
 
