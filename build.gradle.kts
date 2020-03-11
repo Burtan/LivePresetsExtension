@@ -147,9 +147,6 @@ library {
             compileTask.get().includes("$buildDir/res/")
             compileTask.get().dependsOn(genResTask)
         }
-
-        compileTask.get().isDebuggable = true
-        compileTask.get().isPositionIndependentCode = true
     }
 
     targetMachines.add(machines.linux.x86_64)

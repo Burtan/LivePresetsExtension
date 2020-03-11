@@ -6,7 +6,81 @@ version = "1.0"
 
 library {
     binaries.configureEach(CppStaticLibrary::class.java) {
-        compileTask.get().isPositionIndependentCode = true
+        val type = if (isDebuggable) "debug" else "release"
+        val arch = targetMachine.architecture.name
+        val os = targetMachine.operatingSystemFamily.name
+
+        val cCompileTask = tasks.register("compile" + name.capitalize() + "C", CCompile::class) {
+            // Take configuration from C++ compile tasks
+            toolChain.set(compileTask.map { it.toolChain.get() })
+            targetPlatform.set(compileTask.map { it.targetPlatform.get() })
+            includes.from(compileTask.map { it.includes })
+            systemIncludes.from(compileTask.map { it.systemIncludes })
+
+            // Configure the C source file location
+            when (toolChain.get()) {
+                is VisualCpp -> {
+                    source.from("src/main/cpp/WDL/win32_utf8.c")
+                }
+            }
+            source.from("src/main/cpp/WDL/zlib/adler32.c")
+            source.from("src/main/cpp/WDL/zlib/crc32.c")
+            source.from("src/main/cpp/WDL/zlib/inffast.c")
+            source.from("src/main/cpp/WDL/zlib/inflate.c")
+            source.from("src/main/cpp/WDL/zlib/inftrees.c")
+            source.from("src/main/cpp/WDL/zlib/zutil.c")
+
+            val dir = "objs/mainC/$type/$os/$arch"
+            objectFileDir.set(project.layout.buildDirectory.dir(dir))
+
+            // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
+            macros = compileTask.get().macros
+            isOptimized = compileTask.get().isOptimized
+            isDebuggable = compileTask.get().isDebuggable
+            isPositionIndependentCode = compileTask.get().isPositionIndependentCode
+        }
+
+        val objcCompileTask = tasks.register("compile" + name.capitalize() + "objC", ObjectiveCppCompile::class) {
+            // Take configuration from C++ compile tasks
+            toolChain.set(compileTask.map { it.toolChain.get() })
+            targetPlatform.set(compileTask.map { it.targetPlatform.get() })
+            includes.from(compileTask.map { it.includes })
+            systemIncludes.from(compileTask.map { it.systemIncludes })
+
+            // Configure the objC source file location
+            source.from("src/main/cpp/WDL/swell/swell-miscdlg.mm")
+            source.from("src/main/cpp/WDL/swell/swell-gdi.mm")
+            source.from("src/main/cpp/WDL/swell/swell-kb.mm")
+            source.from("src/main/cpp/WDL/swell/swell-menu.mm")
+            source.from("src/main/cpp/WDL/swell/swell-misc.mm")
+            source.from("src/main/cpp/WDL/swell/swell-dlg.mm")
+            source.from("src/main/cpp/WDL/swell/swell-wnd.mm")
+
+            // Must use another directory for proper up-to-date check
+            val dir = "objs/mainObjc/$type/$os/$arch"
+            objectFileDir.set(project.layout.buildDirectory.dir(dir))
+
+            // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
+            macros = compileTask.get().macros
+            isOptimized = compileTask.get().isOptimized
+            isDebuggable = compileTask.get().isDebuggable
+            isPositionIndependentCode = compileTask.get().isPositionIndependentCode
+        }
+
+        //add c and objC compile results to createTask sources
+        val cObjs = project.fileTree("build/objs/mainC/$type/$os/$arch") {
+            include("**/*.obj")
+        }
+        createTask.get().source(cObjs)
+        createTask.get().dependsOn(cCompileTask)
+
+        if (targetMachine.operatingSystemFamily.isMacOs) {
+            val objc = project.fileTree("build/objs/mainObjc/$type/$os/$arch") {
+                include("**/*.obj")
+            }
+            createTask.get().source(objc)
+            createTask.get().dependsOn(objcCompileTask)
+        }
 
         // Define toolchain-specific compiler options
         when (toolChain) {
@@ -31,86 +105,6 @@ library {
 
             compileTask.get().macros["NOMINMAX"] = null
         }
-    }
-
-    binaries.configureEach {
-        // Must use another directory for proper up-to-date check
-        val arch = targetMachine.architecture.name
-        val os = targetMachine.operatingSystemFamily.name
-        val type = if (isDebuggable) "debug" else "release"
-
-        tasks.withType(CreateStaticLibrary::class).configureEach {
-            val dir = "build/objs/mainC/$type/$os/$arch"
-
-            val cObjs = project.fileTree(dir) {
-                include("**/*.obj")
-            }
-            source(cObjs)
-        }
-
-        val cCompileTask = tasks.register("compile" + name.capitalize() + "C", CCompile::class) {
-            toolChain.set(compileTask.map { it.toolChain.get() })
-            // Take configuration from C++ compile tasks
-            targetPlatform.set(compileTask.map { it.targetPlatform.get() })
-            includes.from(compileTask.map { it.includes })
-            systemIncludes.from(compileTask.map { it.systemIncludes })
-
-            // Configure the C source file location
-            when (toolChain.get()) {
-                is VisualCpp -> {
-                    source.from("src/main/cpp/WDL/win32_utf8.c")
-                }
-            }
-            source.from("src/main/cpp/WDL/zlib/adler32.c")
-            source.from("src/main/cpp/WDL/zlib/crc32.c")
-            source.from("src/main/cpp/WDL/zlib/inffast.c")
-            source.from("src/main/cpp/WDL/zlib/inflate.c")
-            source.from("src/main/cpp/WDL/zlib/inftrees.c")
-            source.from("src/main/cpp/WDL/zlib/zutil.c")
-            
-            val dir = "objs/mainC/$type/$os/$arch"
-            objectFileDir.set(project.layout.buildDirectory.dir(dir))
-
-            // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
-            macros = compileTask.get().macros
-            isOptimized = compileTask.get().isOptimized
-            isDebuggable = compileTask.get().isDebuggable
-            isPositionIndependentCode = compileTask.get().isPositionIndependentCode
-        }
-
-        val objcCompileTask = tasks.register("compile" + name.capitalize() + "objC", ObjectiveCppCompile::class) {
-            toolChain.set(compileTask.map { it.toolChain.get() })
-            // Take configuration from C++ compile tasks
-            targetPlatform.set(compileTask.map { it.targetPlatform.get() })
-            includes.from(compileTask.map { it.includes })
-            systemIncludes.from(compileTask.map { it.systemIncludes })
-
-            // Configure the objC source file location
-            source.from("src/main/cpp/WDL/swell/swell-miscdlg.mm")
-            source.from("src/main/cpp/WDL/swell/swell-gdi.mm")
-            source.from("src/main/cpp/WDL/swell/swell-kb.mm")
-            source.from("src/main/cpp/WDL/swell/swell-menu.mm")
-            source.from("src/main/cpp/WDL/swell/swell-misc.mm")
-            source.from("src/main/cpp/WDL/swell/swell-dlg.mm")
-            source.from("src/main/cpp/WDL/swell/swell-wnd.mm")
-
-            // Must use another directory for proper up-to-date check
-            objectFileDir.set(project.layout.buildDirectory.dir("objs/mainObjC"))
-
-            // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
-            macros = compileTask.get().macros
-            isOptimized = compileTask.get().isOptimized
-            isDebuggable = compileTask.get().isDebuggable
-            isPositionIndependentCode = compileTask.get().isPositionIndependentCode
-        }
-
-        tasks.filter { it.name.contains("create") }.forEach {
-            it.dependsOn(cCompileTask)
-            if (targetMachine.operatingSystemFamily.isMacOs) {
-                it.dependsOn(objcCompileTask)
-            }
-        }
-
     }
 
     linkage.set(listOf(Linkage.STATIC))
@@ -141,6 +135,7 @@ library {
         from("src/main/cpp/WDL/wingui/wndsize.cpp")
         from("src/main/cpp/WDL/wingui/scrollbar/coolscroll.cpp")
     }
+
     publicHeaders {
         from("src/main/cpp")
     }
