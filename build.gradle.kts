@@ -7,15 +7,9 @@ plugins {
     `cpp-unit-test`
 }
 
-repositories {
-    maven {
-        url = uri("https://repo.gradle.org/gradle/libs-snapshots-local/")
-    }
-}
-
 unitTest {
     dependencies {
-        testImplementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
+        //testImplementation(":googletest")
     }
     binaries.configureEach(CppTestExecutable::class.java) {
         if (toolChain is Gcc && targetMachine.operatingSystemFamily.isLinux) {
