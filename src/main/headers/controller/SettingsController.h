@@ -46,7 +46,7 @@ protected:
 private:
     std::unique_ptr<ComboBox> mCombo = nullptr;
 
-    static void updateAllPresets(HWND Arg1, UINT Arg2, UINT_PTR Arg3, DWORD Arg4);
+    static void CALLBACK updateAllPresets(HWND Arg1, UINT Arg2, UINT_PTR Arg3, DWORD Arg4);
 };
 
 
