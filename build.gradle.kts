@@ -90,7 +90,6 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isWindows) {
-
             linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/user32.lib")
             linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/gdi32.lib")
             linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/advapi32.lib")
@@ -133,6 +132,8 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isMacOs) {
+            linkTask.get().linkerArgs.addAll(listOf("-framework", "AppKit"))
+
             linkTask.get().linkedFile.set(file("$userPath/.config/REAPER/UserPlugins/$fileName.dylibs"))
             compileTask.get().macros["NOMINMAX"] = null
             compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
