@@ -17,11 +17,10 @@ unitTest {
     binaries.configureEach(CppTestExecutable::class.java) {
         //ignore test on none-x64 as googletest dependency is x64 only
         if (targetMachine.architecture.name != MachineArchitecture.X86_64) {
-            compileTask.get().source.from(null)
+            compileTask.get().source.setFrom(null)
         } else {
-            println(targetMachine.architecture.name)
             dependencies {
-                //testImplementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
+                testImplementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
             }
             if (toolChain is Gcc && targetMachine.operatingSystemFamily.isLinux) {
                 linkTask.get().linkerArgs.add("-lpthread")
