@@ -29,8 +29,13 @@ unitTest {
             dependencies {
                 testImplementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
             }
+
             if (toolChain is Gcc && targetMachine.operatingSystemFamily.isLinux) {
                 linkTask.get().linkerArgs.add("-lpthread")
+            }
+
+            if (targetMachine.operatingSystemFamily.isMacOs) {
+                linkTask.get().linkerArgs.addAll(listOf("-framework", "AppKit"))
             }
 
             if (targetMachine.operatingSystemFamily.isWindows) {
