@@ -139,7 +139,7 @@ library {
         if (targetMachine.operatingSystemFamily.isMacOs) {
             linkTask.get().linkerArgs.addAll(listOf("-framework", "AppKit"))
 
-            linkTask.get().linkedFile.set(file("$userPath/.config/REAPER/UserPlugins/$fileName.dylibs"))
+            linkTask.get().linkedFile.set(file("$userPath/Library/Application Support/REAPER/UserPlugins/$fileName.dylibs"))
             compileTask.get().macros["NOMINMAX"] = null
             compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
         }
