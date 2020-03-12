@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run MacOs" type="GradleAppRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="LivePresetsExtension" TARGET_NAME="LivePresetsExtension" CONFIG_NAME="LivePresetsExtension [debugMacosX86-64]" RUN_PATH="/Applications/REAPER64.app">
+  <configuration default="false" name="Run MacOs" type="GradleAppRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="LivePresetsExtension" TARGET_NAME="LivePresetsExtension" CONFIG_NAME="LivePresetsExtension [releaseMacosX86-64]" RUN_PATH="/Applications/REAPER64.app/Contents/MacOS/REAPER">
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="false" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
     </method>
