@@ -15,6 +15,13 @@ repositories {
 
 unitTest {
     binaries.configureEach(CppTestExecutable::class.java) {
+        // Define toolchain-specific compiler options
+        when (toolChain) {
+            is Gcc -> compileTask.get().compilerArgs.addAll(listOf("-std=c++17", "-fpermissive"))
+            is Clang -> compileTask.get().compilerArgs.addAll(listOf("-std=c++17", "-fpermissive"))
+            is VisualCpp -> compileTask.get().compilerArgs.addAll(listOf("/std:c++17", "/permissive-"))
+        }
+
         //ignore test on none-x64 as googletest dependency is x64 only
         if (targetMachine.architecture.name != MachineArchitecture.X86_64) {
             compileTask.get().source.setFrom(null)
@@ -77,7 +84,8 @@ library {
 
         // Define toolchain-specific compiler options
         when (toolChain) {
-            is Gcc, is Clang -> compileTask.get().compilerArgs.addAll(listOf("-std=c++17", "-fpermissive"))
+            is Gcc -> compileTask.get().compilerArgs.addAll(listOf("-std=c++17", "-fpermissive"))
+            is Clang -> compileTask.get().compilerArgs.addAll(listOf("-std=c++17", "-fpermissive"))
             is VisualCpp -> compileTask.get().compilerArgs.addAll(listOf("/std:c++17", "/permissive-"))
         }
 

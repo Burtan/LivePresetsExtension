@@ -106,7 +106,7 @@ void TrackInfo::recallSettings(FilterMode parentFilter) const {
     }*/
 
     //prepare lists for matching sends (that can be reused) and nonMatching sends (that have to be removed)
-    auto nonMatchingSends = std::set(mSwSends.begin(), mSwSends.end());
+    auto nonMatchingSends = std::set<SwSendInfo*>(mSwSends.begin(), mSwSends.end());
     auto matchingSends = std::vector<SwSendInfo*>(GetTrackNumSends(getMediaTrack(), 0));
 
     //go through all sends and check for matching destination because you can't change them
