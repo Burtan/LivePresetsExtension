@@ -103,8 +103,6 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isMacOs) {
-            //add appkit TODO
-
             //use position independent code to prevent errors
             compileTask.get().isPositionIndependentCode = true
 
