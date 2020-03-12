@@ -48,13 +48,7 @@ library {
             systemIncludes.from(compileTask.map { it.systemIncludes })
 
             // Configure the objC source file location
-            source.from("src/main/cpp/WDL/swell/swell-miscdlg.mm")
-            source.from("src/main/cpp/WDL/swell/swell-gdi.mm")
-            source.from("src/main/cpp/WDL/swell/swell-kb.mm")
-            source.from("src/main/cpp/WDL/swell/swell-menu.mm")
-            source.from("src/main/cpp/WDL/swell/swell-misc.mm")
-            source.from("src/main/cpp/WDL/swell/swell-dlg.mm")
-            source.from("src/main/cpp/WDL/swell/swell-wnd.mm")
+            source.from("src/main/cpp/WDL/swell/swell-modstub.mm")
 
             // Must use another directory for proper up-to-date check
             val dir = "objs/mainObjc/$type/$os/$arch"
@@ -68,18 +62,25 @@ library {
         }
 
         //add c and objC compile results to createTask sources
-        val cObjs = project.fileTree("build/objs/mainC/$type/$os/$arch") {
-            include("**/*.obj")
-        }
-        createTask.get().source(cObjs)
-        createTask.get().dependsOn(cCompileTask)
-
         if (targetMachine.operatingSystemFamily.isMacOs) {
-            val objc = project.fileTree("build/objs/mainObjc/$type/$os/$arch") {
-                include("**/*.obj")
+            val cObjs = project.fileTree("build/objs/mainC/$type/$os/$arch") {
+                include("**/*.o")
             }
+            val objc = project.fileTree("build/objs/mainObjc/$type/$os/$arch") {
+                include("**/*.o")
+            }
+            createTask.get().source(cObjs)
+            createTask.get().dependsOn(cCompileTask)
             createTask.get().source(objc)
             createTask.get().dependsOn(objcCompileTask)
+        }
+
+        if (targetMachine.operatingSystemFamily.isLinux) {
+            val cObjs = project.fileTree("build/objs/mainC/$type/$os/$arch") {
+                include("**/*.obj")
+            }
+            createTask.get().source(cObjs)
+            createTask.get().dependsOn(cCompileTask)
         }
 
         // Define toolchain-specific compiler options
@@ -102,11 +103,14 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isMacOs) {
-            //swell
-            compileTask.get().source.from("src/main/cpp/WDL/swell/swell.cpp")
-            compileTask.get().source.from("src/main/cpp/WDL/swell/swell-ini.cpp")
+            //add appkit TODO
 
+            //use position independent code to prevent errors
+            compileTask.get().isPositionIndependentCode = true
+
+            //Add macros to use swell from reaper (reduces size)
             compileTask.get().macros["NOMINMAX"] = null
+            compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
         }
     }
 
