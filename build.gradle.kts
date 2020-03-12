@@ -7,21 +7,33 @@ plugins {
     `cpp-unit-test`
 }
 
-unitTest {
-    dependencies {
-        //testImplementation(":googletest")
+repositories {
+    maven {
+        url = uri("https://repo.gradle.org/gradle/libs-snapshots-local/")
     }
-    binaries.configureEach(CppTestExecutable::class.java) {
-        if (toolChain is Gcc && targetMachine.operatingSystemFamily.isLinux) {
-            linkTask.get().linkerArgs.add("-lpthread")
-        }
+}
 
-        if (targetMachine.operatingSystemFamily.isWindows) {
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/user32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/gdi32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/advapi32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/shell32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/comdlg32.lib")
+unitTest {
+    binaries.configureEach(CppTestExecutable::class.java) {
+        //ignore test on none-x64 as googletest dependency is x64 only
+        if (targetMachine.architecture.name != MachineArchitecture.X86_64) {
+            compileTask.get().source.from(null)
+        } else {
+            println(targetMachine.architecture.name)
+            dependencies {
+                //testImplementation("org.gradle.cpp-samples:googletest:1.9.0-gr4-SNAPSHOT")
+            }
+            if (toolChain is Gcc && targetMachine.operatingSystemFamily.isLinux) {
+                linkTask.get().linkerArgs.add("-lpthread")
+            }
+
+            if (targetMachine.operatingSystemFamily.isWindows) {
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/user32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/gdi32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/advapi32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/shell32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/comdlg32.lib")
+            }
         }
     }
 }
