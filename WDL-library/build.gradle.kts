@@ -89,6 +89,9 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isLinux) {
+            //use position independent code to prevent errors
+            compileTask.get().isPositionIndependentCode = true
+
             //swell
             compileTask.get().source.from("src/main/cpp/WDL/swell/swell-modstub-generic.cpp")
 
