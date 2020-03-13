@@ -260,11 +260,10 @@ INT_PTR WINAPI ModalWindow::dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
                 wnd->onClose();
                 break;
             case WM_KEYDOWN: {
-                //certain keys are used to navigate between controls on windows and are not passed to the dlgProc
-                //also controls that catch key events do not pass them to dlgProc, windows with controls always
-                //give the focus to controls so key events normally never arrive here unless controls are told
-                //to ignore keys
+                //certain keys are used to navigate between controls on windows os and are not passed to the dlgProc
                 //VK_UP, VK_LEFT, VK_RIGHT, VK_DOWN, VK_TAB
+                //which keys are passed to dlgProc depends on the control having the focus, the os and a custom wndProc
+                //of that control. On windows controls eat all keys. On linux only used keys are eaten.
                 MSG msg{};
                 msg.hwnd = hwndDlg;
                 msg.message = uMsg;
