@@ -35,6 +35,7 @@
 #include <data/models/HotkeyCommand.h>
 #include <data/models/ActionCommand.h>
 #include <ui/LivePresetsListAdapter.h>
+#include <controller/ModalTest.h>
 
 /*
 Main entry point, is called when the extension is loaded.
@@ -51,6 +52,12 @@ LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd)
             "LPE_OPENTOGGLE_ABOUT",
             "Opens/Closes the LivePresetsExtension about window",
             std::bind(&LPE::toggleAboutWindow, this)
+    ));
+
+    mActions.add(std::make_unique<HotkeyCommand>(
+            "LPE_MODALTEST",
+            "Modal test",
+            std::bind(&LPE::modalTest, this)
     ));
 
     //create control view action only on ultimate
@@ -186,6 +193,19 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
 
         mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_ABOUT");
         InsertMenuItem(subMenu, GetMenuItemCount(subMenu), true, &mii);
+
+        //show about
+        mii = MENUITEMINFO();
+        mii.cbSize = sizeof(MENUITEMINFO);
+        mii.fMask = MIIM_TYPE | MIIM_ID;
+        mii.fType = MFT_STRING;
+
+        text = "Modal Test";
+        mii.dwTypeData = text.data();
+        mii.cch = text.size();
+
+        mii.wID = NamedCommandLookup("_LPE_MODALTEST");
+        InsertMenuItem(subMenu, GetMenuItemCount(subMenu), true, &mii);
     }
     if (strcmp(menustr, "Track control panel context") == 0 && flag == 0) {
         HMENU subMenu = CreatePopupMenu();
@@ -270,6 +290,11 @@ void LPE::toggleMutedTracksVisibility() {
     }
 
     TrackList_AdjustWindows(true);
+}
+
+void LPE::modalTest() {
+    auto test = ModalTest();
+    test.show();
 }
 
 /**
