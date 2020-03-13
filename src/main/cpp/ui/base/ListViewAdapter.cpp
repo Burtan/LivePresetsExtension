@@ -1,7 +1,7 @@
 /******************************************************************************
 / LivePresetsExtension
 /
-/ 
+/ Adapter for ListView
 /
 / Copyright (c) 2020 and later Dr. med. Frederik Bertling
 /

@@ -30,9 +30,9 @@
 #ifndef LPE_LISTVIEWADAPTER_H
 #define LPE_LISTVIEWADAPTER_H
 
-#include <memory>
 #include <vector>
 #ifdef _WIN32
+    #include <Windows.h>
     #include <CommCtrl.h>
 #else
     #include <WDL/swell/swell-types.h>
