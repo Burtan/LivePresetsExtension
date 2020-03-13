@@ -46,6 +46,9 @@ template<typename T>
 class ListViewAdapter {
 public:
     explicit ListViewAdapter(std::vector<T*>* items) : mItems(items) {};
+    ~ListViewAdapter() {
+        int a = 1;
+    }
 
     virtual void saveColumnWidths(HWND hwnd) = 0;
     virtual void saveSortedColumnIndex(HWND hwnd, int index) = 0;

@@ -104,4 +104,3 @@ void TreeView::setAdapter(std::unique_ptr<LivePresetsTreeAdapter> adapter) {
 LivePresetsTreeAdapter* TreeView::getAdapter() {
     return mAdapter.get();
 }
-
