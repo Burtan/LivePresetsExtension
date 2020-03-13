@@ -27,6 +27,7 @@
 /
 ******************************************************************************/
 
+#include <algorithm>
 #include <ui/base/ListViewAdapter.h>
 #include <data/models/LivePreset.h>
 
@@ -36,14 +37,13 @@
  * of a compared to b, or false for lower order of a compared to b.
  */
 template<typename T>
-void ListViewAdapter<T>::setComparator(bool (*compare)(T* a, T* b)) {
+void ListViewAdapter<T>::setComparator(bool (*compare)(T*, T*)) {
     mCompare = compare;
-};
-template void ListViewAdapter<LivePreset>::setComparator(bool (*compare)(LivePreset* a, LivePreset* b));
+}
+template void ListViewAdapter<LivePreset>::setComparator(bool (*compare)(LivePreset*, LivePreset*));
 
 template<typename T>
-ListViewAdapter<T>::~ListViewAdapter() {
-}
+ListViewAdapter<T>::~ListViewAdapter() = default;
 template ListViewAdapter<LivePreset>::~ListViewAdapter();
 
 /**
@@ -51,10 +51,10 @@ template ListViewAdapter<LivePreset>::~ListViewAdapter();
  * @param filter a function pointer that defines the filtering algorythm. Should return true to show the item.
  */
 template<typename T>
-void ListViewAdapter<T>::setFilter(bool (*filter)(T* a)) {
+void ListViewAdapter<T>::setFilter(bool (*filter)(T*)) {
     mFilter = filter;
-};
-template void ListViewAdapter<LivePreset>::setFilter(bool (*filter)(LivePreset* a));
+}
+template void ListViewAdapter<LivePreset>::setFilter(bool (*filter)(LivePreset*));
 
 /*
  * Do not call this manually, is automatically called by the ListView when necessary.
@@ -65,12 +65,12 @@ void ListViewAdapter<T>::filterAndSort() {
 
     //filter items
     if (mFilter) {
-        mShowingItems.erase(remove_if(mShowingItems.begin(), mShowingItems.end(), mFilter), mShowingItems.end());
+        mShowingItems.erase(std::remove_if(mShowingItems.begin(), mShowingItems.end(), mFilter), mShowingItems.end());
     }
 
     //sort items
     if (mCompare) {
-        sort(mShowingItems.begin(), mShowingItems.end(), mCompare);
+        std::sort(mShowingItems.begin(), mShowingItems.end(), mCompare);
     }
-};
+}
 template void ListViewAdapter<LivePreset>::filterAndSort();
