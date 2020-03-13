@@ -35,7 +35,6 @@
 #include <data/models/HotkeyCommand.h>
 #include <data/models/ActionCommand.h>
 #include <ui/LivePresetsListAdapter.h>
-#include <controller/ModalTest.h>
 
 /*
 Main entry point, is called when the extension is loaded.
