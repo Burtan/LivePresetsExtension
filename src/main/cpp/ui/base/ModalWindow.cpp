@@ -263,7 +263,9 @@ INT_PTR WINAPI ModalWindow::dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
                 //certain keys are used to navigate between controls on windows os and are not passed to the dlgProc
                 //VK_UP, VK_LEFT, VK_RIGHT, VK_DOWN, VK_TAB
                 //which keys are passed to dlgProc depends on the control having the focus, the os and a custom wndProc
-                //of that control. On windows controls eat all keys. On linux only used keys are eaten.
+                //of that control. On windows controls eat all keys. On linux and mac only used keys are eaten. On linux
+                //and windows, modal dialogs with controls always give the focus to any control, on mac no control can
+                //have the focus
                 MSG msg{};
                 msg.hwnd = hwndDlg;
                 msg.message = uMsg;

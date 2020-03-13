@@ -54,12 +54,6 @@ LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd)
             std::bind(&LPE::toggleAboutWindow, this)
     ));
 
-    mActions.add(std::make_unique<HotkeyCommand>(
-            "LPE_MODALTEST",
-            "Modal test",
-            std::bind(&LPE::modalTest, this)
-    ));
-
     //create control view action only on ultimate
     if (Licensing_IsUltimate()) {
         mActions.add(std::make_unique<HotkeyCommand>(
@@ -290,11 +284,6 @@ void LPE::toggleMutedTracksVisibility() {
     }
 
     TrackList_AdjustWindows(true);
-}
-
-void LPE::modalTest() {
-    auto test = ModalTest();
-    test.show();
 }
 
 /**
