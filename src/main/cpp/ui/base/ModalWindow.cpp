@@ -35,10 +35,7 @@
 
 #endif
 #include "plugins/reaper_plugin_functions.h"
-#include <WDL/wdlstring.h>
 #include <LivePresetsExtension.h>
-
-WNDPROC ModalWindow::defWndProc;
 
 ModalWindow::ModalWindow(int iResource, const char* cWndTitle, const char* cId, int iCmdID)
         : mHwnd(nullptr), mLayout(iResource), mTitle(cWndTitle), mId(cId), mCmdId(iCmdID) {
@@ -210,29 +207,6 @@ void ModalWindow::loadScreensetState(const char* cStateBuf, int iLen) {
     loadStateFromPersistance(state);
 }
 
-LRESULT WINAPI ModalWindow::wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    auto* wnd = reinterpret_cast<ModalWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-
-    //on windows there are no WM_KEYDOWN events, so catch WM_COMMAND with wParam 1 instead and make it behave like VK_RETURN
-    //on SWELL WM_KEYDOWN events are triggered
-    if (uMsg == WM_KEYDOWN || (uMsg == WM_COMMAND && wParam == 1)) {
-        MSG msg{};
-        msg.hwnd = hwnd;
-        if (wParam == 1) {
-            msg.wParam = VK_RETURN;
-        } else {
-            msg.wParam = wParam;
-        }
-        msg.lParam = lParam;
-        msg.message = WM_KEYDOWN;
-        if (wnd->onKey(&msg, 0)) {
-            return 1;
-        }
-    }
-
-    return defWndProc(hwnd, uMsg, wParam, lParam);
-}
-
 /**
  * A function called by the UI system to notify the user on certain actions
  * @param hwndDlg The handle to the dialog which notifies
@@ -246,7 +220,6 @@ INT_PTR WINAPI ModalWindow::dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
     if (!wnd && uMsg == WM_INITDIALOG) {
         wnd = reinterpret_cast<ModalWindow*>(lParam);
         SetWindowLongPtr(hwndDlg, GWLP_USERDATA, lParam);
-        defWndProc = (WNDPROC) SetWindowLongPtr(hwndDlg, GWLP_WNDPROC, (LONG_PTR) wndProc);
         wnd->initDialog(hwndDlg);
     }
 
@@ -287,7 +260,17 @@ INT_PTR WINAPI ModalWindow::dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
                 wnd->onClose();
                 break;
             case WM_KEYDOWN: {
-
+                //certain keys are used to navigate between controls on windows and are not passed to the dlgProc
+                //also controls that catch key events do not pass them to dlgProc, windows with controls always
+                //give the focus to controls so key events normally never arrive here unless controls are told
+                //to ignore keys
+                //VK_UP, VK_LEFT, VK_RIGHT, VK_DOWN, VK_TAB
+                MSG msg{};
+                msg.hwnd = hwndDlg;
+                msg.message = uMsg;
+                msg.wParam = wParam;
+                msg.lParam = lParam;
+                return wnd->onKey(&msg, lParam & 24);
             }
             default:
                 wnd->onUnhandledMsg(uMsg, wParam, lParam);

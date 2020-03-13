@@ -68,6 +68,7 @@ private:
     void toggleMainWindow();
     void toggleAboutWindow();
     void toggleControlView();
+    void modalTest();
     void onRecallPreset(int val, int valhw, int relmode, HWND hwnd);
     void onApplySelectedTrackConfigsToAllPresets();
 };
