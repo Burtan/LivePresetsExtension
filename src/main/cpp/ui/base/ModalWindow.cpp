@@ -286,6 +286,9 @@ INT_PTR WINAPI ModalWindow::dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
                 wnd->onDestroy();
                 wnd->onClose();
                 break;
+            case WM_KEYDOWN: {
+
+            }
             default:
                 wnd->onUnhandledMsg(uMsg, wParam, lParam);
         }
