@@ -44,7 +44,8 @@ template ListView<LivePreset>::ListView(HWND hwnd);
 
 template<typename T>
 ListView<T>::~ListView() {
-    int i = 0;
+    //needed for mac to not crash
+    mAdapter.release();
 }
 template ListView<LivePreset>::~ListView();
 
