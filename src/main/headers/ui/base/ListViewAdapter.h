@@ -46,9 +46,7 @@ template<typename T>
 class ListViewAdapter {
 public:
     explicit ListViewAdapter(std::vector<T*>* items) : mItems(items) {};
-    ~ListViewAdapter() {
-        int a = 1;
-    }
+    ~ListViewAdapter();
 
     virtual void saveColumnWidths(HWND hwnd) = 0;
     virtual void saveSortedColumnIndex(HWND hwnd, int index) = 0;
@@ -59,37 +57,9 @@ public:
     virtual int getIndex(T *item) = 0;
     virtual LVITEM getLvItem(int index) = 0;
     virtual const char* getLvItemText(int index, int column) = 0;
-    /**
-     * Add a comparator to enable sorting
-     * @param compare a function pointer that defines the comparing algorythm. Should return true for higher order
-     * of a compared to b, or false for lower order of a compared to b.
-     */
-    void setComparator(bool (*compare)(T* a, T* b)) {
-        mCompare = compare;
-    };
-    /**
-     * Add a filter to only show a subset of the items, e.g. for searching.
-     * @param filter a function pointer that defines the filtering algorythm. Should return true to show the item.
-     */
-    void setFilter(bool (*filter)(T* a)) {
-        mFilter = filter;
-    };
-    /*
-     * Do not call this manually, is automatically called by the ListView when necessary.
-     */
-    void filterAndSort() {
-        mShowingItems = std::vector(*mItems);
-
-        //filter items
-        if (mFilter) {
-            mShowingItems.erase(remove_if(mShowingItems.begin(), mShowingItems.end(), mFilter), mShowingItems.end());
-        }
-
-        //sort items
-        if (mCompare) {
-            sort(mShowingItems.begin(), mShowingItems.end(), mCompare);
-        }
-    };
+    void setComparator(bool (*compare)(T* a, T* b));
+    void setFilter(bool (*filter)(T* a));
+    void filterAndSort();
 protected:
     std::vector<T*>* mItems;
     std::vector<T*> mShowingItems;

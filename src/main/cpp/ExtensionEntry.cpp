@@ -214,7 +214,7 @@ int extensionInit(REAPER_PLUGIN_HINSTANCE hInstance, reaper_plugin_info_t* pInfo
 
 int extensionExit() {
     if (plugin_register && g_lpe) {
-        g_lpe.reset();
+        g_lpe.release();
         plugin_register("-hookcommand2", (void*) hookCommand2Proc);
         plugin_register("-hookcommand", (void*) hookCommandProc);
         plugin_register("-hookcustommenu", (void*) hookMenuProc);
