@@ -99,7 +99,7 @@ LRESULT WINAPI LivePresetEditController::wndProc(HWND hwnd, UINT uMsg, WPARAM wP
             return handled;
         }
     }
-    return defWndProc(hwnd, uMsg, wParam, lParam);
+    return CallWindowProc(defWndProc, hwnd, uMsg, wParam, lParam);
 }
 
 void LivePresetEditController::cancel() {
