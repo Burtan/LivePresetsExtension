@@ -35,7 +35,8 @@
 
 class CommandList {
 public:
-    void add(std::unique_ptr<BaseCommand> command);
+    BaseCommand::CommandID add(std::unique_ptr<BaseCommand> command);
+    void remove(BaseCommand::CommandID cmdId);
     bool run(BaseCommand::CommandID id, int val = 0, int valhw = 0, int relmode = 0, HWND hwnd = nullptr) const;
 private:
     [[nodiscard]] BaseCommand* find(BaseCommand::CommandID id) const;
