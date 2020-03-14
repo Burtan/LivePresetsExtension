@@ -78,6 +78,7 @@ void LivePresetsTreeAdapter::onAction(HWND hwnd, HTREEITEM hItem) {
             break;
         }
         case TYPE::LIVEPRESET:
+        case TYPE::CTRL:
         case TYPE::NOTHING:
             break;
     }
@@ -143,6 +144,7 @@ std::vector<TVITEM> LivePresetsTreeAdapter::getChilds(TVITEM* parent) {
                 break;
             }
             case TYPE::NOTHING:
+            case TYPE::CTRL:
             case TYPE::PARAM:
             case TYPE::LIVEPRESET:
                 break;

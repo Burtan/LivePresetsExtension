@@ -75,8 +75,6 @@ protected:
 private:
     static LRESULT screensetCallback(int action, const char* id, void* param, void* actionParm, int actionParmSize);
     static INT_PTR WINAPI dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
-    static WNDPROC defWndProc;
-    static LRESULT WINAPI wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     static void getMinMaxInfo(LPMINMAXINFO info);
     void initDialog(HWND hwndDlg);
