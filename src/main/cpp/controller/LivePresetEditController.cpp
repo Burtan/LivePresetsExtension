@@ -32,6 +32,8 @@
 #include <LivePresetsExtension.h>
 #include <resources/resource.h>
 
+WNDPROC LivePresetEditController::defTreeProc;
+
 LivePresetEditController::LivePresetEditController(LivePreset* preset)
         : ModalWindow(IDD_LIVEPRESET, preset->mName.data(), "LivePresetsEditController", 0),
         mPreset(preset)
@@ -50,12 +52,14 @@ void LivePresetEditController::onInitDlg() {
     SetDlgItemText(mHwnd, IDC_DESC, mPreset->mDescription.data());
     SetDlgItemText(mHwnd, IDC_ID, mPreset->mRecallId.data());
 
-    SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC, (LONG_PTR) treeProc);
-
     //create TreeView and add event listeners
     mTree = std::make_unique<TreeView>(GetDlgItem(mHwnd, IDC_TREE));
     auto treeAdapter = std::make_unique<LivePresetsTreeAdapter>(mPreset);
     mTree->setAdapter(std::move(treeAdapter));
+
+    //add custom TreeView wndProc to hook key events
+    SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_USERDATA, (LONG_PTR) mTree.get());
+    defTreeProc = (WNDPROC) SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC, (LONG_PTR) treeProc);
 
     //hide combo in ce version
     if (!Licensing_IsUltimate()) {
@@ -71,8 +75,19 @@ void LivePresetEditController::onInitDlg() {
 }
 
 LRESULT WINAPI LivePresetEditController::treeProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    int a = 0;
-    return 1;
+    auto* tree = reinterpret_cast<TreeView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+
+    if (uMsg == WM_KEYDOWN) {
+        MSG msg{};
+        msg.hwnd = hwnd;
+        msg.message = uMsg;
+        msg.wParam = wParam;
+        msg.lParam = lParam;
+        if (auto res = tree->onKey(&msg, lParam & 24)) {
+            return res;
+        }
+    }
+    return defTreeProc(hwnd, uMsg, wParam, lParam);
 }
 
 void LivePresetEditController::cancel() {
@@ -128,7 +143,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
             auto filter = mPreset->extractFilterPreset();
             std::string name = "New preset";
             auto dlg = ConfirmationController("Save filter...", &name);
-            if (bool result = dlg.show()) {
+            if (dlg.show()) {
                 //When name is entered that exists ask for overwrite
                 if (FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &name)) {
                     char title[256];
@@ -152,14 +167,6 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
 }
 
 int LivePresetEditController::onKey(MSG* msg, int keyState) {
-    HWND focus = GetFocus();
-    if (focus == GetDlgItem(mHwnd, IDC_TREE)) {
-        int handled = mTree->onKey(msg, keyState);
-
-        if (handled)
-            return handled;
-    }
-
     if (msg->message == WM_KEYDOWN) {
         if (!keyState) {
             switch(msg->wParam) {
