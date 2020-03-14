@@ -27,20 +27,23 @@
 /
 ******************************************************************************/
 
-#include <algorithm>
 #include <data/models/LivePreset.h>
 #include <plugins/lpe_ultimate.h>
 #include <util/util.h>
-
+#include <LivePresetsExtension.h>
+#include <functional>
 
 LivePreset::LivePreset(std::string name, std::string description)
         : mName(std::move(name)), mDescription(std::move(description)) {
     genGuid(&mGuid);
     LivePreset::saveCurrentState(false);
+    mRecallId = g_lpe->mModel.mPresets.size() + 1;
+    createRecallAction();
 }
 
 LivePreset::LivePreset(ProjectStateContext *ctx) {
     initFromChunk(ctx);
+    createRecallAction();
 }
 
 LivePreset::~LivePreset() {
@@ -51,6 +54,11 @@ LivePreset::~LivePreset() {
     mControlInfos.clear();
 
     delete mMasterTrack;
+
+    //remove recallAction when there is one
+    if (mRecallCmdId) {
+        g_lpe->mActions.remove(mRecallCmdId);
+    }
 }
 
 /**
@@ -68,12 +76,14 @@ LivePreset& LivePreset::operator=(LivePreset&& other) {
     mMasterTrack = other.mMasterTrack;
     mTracks = other.mTracks;
     mControlInfos = other.mControlInfos;
+    mRecallCmdId = other.mRecallCmdId;
 
     //make all pointers null and create empty containers for now empty instance other that its destruction does not
     //affect this instance
     mTracks = std::vector<TrackInfo*>();
     mControlInfos = std::vector<std::shared_ptr<ControlInfo>>();
     mMasterTrack = nullptr;
+    mRecallCmdId = 0;
 
     return *this;
 }
@@ -141,6 +151,26 @@ void LivePreset::saveCurrentState(bool update) {
 
 }
 
+/**
+ * Creates a reaper action which can bind to Hotkeys/midi/osc to recall this LivePreset
+ */
+void LivePreset::createRecallAction() {
+    auto name = WDL_FastString();
+
+    name.AppendFormatted(4096, "LPE_RECALLPRESET_%i", mRecallId);
+
+    auto desc = WDL_FastString();
+    desc.AppendFormatted(4096, "LPE - Recall preset: %s", mName.data());
+
+    //use try
+    using namespace std::placeholders;
+    mRecallCmdId = g_lpe->mActions.add(std::make_unique<ActionCommand>(
+            name.Get(),
+            desc.Get(),
+            std::bind(&LPE::onRecallPreset, g_lpe.get(), mRecallId, _2, _3, _4)
+    ));
+}
+
 void LivePreset::persistHandler(WDL_FastString& str) const {
     BaseInfo::persistHandler(str);
 
@@ -151,7 +181,7 @@ void LivePreset::persistHandler(WDL_FastString& str) const {
     str.AppendFormatted(4096, "NAME \"%s\"\n", mName.data());
     str.AppendFormatted(4096, "DESC \"%s\"\n", mDescription.data());
     str.AppendFormatted(4096, "DATE %li\n", mDate);
-    str.AppendFormatted(4096, "RECALLID %s\n", mRecallId.data());
+    str.AppendFormatted(4096, "RECALLID %i\n", mRecallId);
 
     mMasterTrack->persist(str);
 
@@ -185,7 +215,7 @@ bool LivePreset::initFromChunkHandler(std::string &key, std::vector<const char *
         return true;
     }
     if (key == "RECALLID") {
-        mRecallId = params[0];
+        mRecallId = std::stoi(params[0]);
         return true;
     }
     return false;

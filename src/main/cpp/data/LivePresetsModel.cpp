@@ -199,7 +199,7 @@ void LivePresetsModel::persistHandler(WDL_FastString &str) const {
 
 void LivePresetsModel::recallByValue(int val) {
     for (auto preset : mPresets) {
-        if (preset->mRecallId == std::to_string(val)) {
+        if (preset->mRecallId == val) {
             if (mIsReselectLivePresetByValueRecall || !mActivePreset || preset != mActivePreset)
                 recallPreset(preset);
             break;
@@ -212,14 +212,15 @@ void LivePresetsModel::recallByValue(int val) {
  * @param preset the preset to assign the unique id to
  * @param id the unique id
  */
-void LivePresetsModel::setRecallIdForPreset(LivePreset* preset, int id) {
+bool LivePresetsModel::setRecallIdForPreset(LivePreset* preset, int id) {
     for (auto mPreset : mPresets) {
-        if (mPreset->mRecallId == std::to_string(id)) {
-            mPreset->mRecallId = "";
-            break;
+        if (mPreset->mRecallId == id && !GuidsEqual(preset->mGuid, mPreset->mGuid)) {
+            preset->mRecallId = -1;
+            return false;
         }
     }
-    preset->mRecallId = std::to_string(id);
+    preset->mRecallId = id;
+    return true;
 }
 
 /**

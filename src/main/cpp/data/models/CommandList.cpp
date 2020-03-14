@@ -43,6 +43,10 @@ bool CommandList::run(BaseCommand::CommandID id, int val, int valhw, int relmode
     return false;
 }
 
-void CommandList::add(std::unique_ptr<BaseCommand> command) {
+BaseCommand::CommandID CommandList::add(std::unique_ptr<BaseCommand> command) {
     mCommands.emplace(command->id(), std::move(command));
+}
+
+void CommandList::remove(BaseCommand::CommandID cmdId) {
+    mCommands.erase(cmdId);
 }

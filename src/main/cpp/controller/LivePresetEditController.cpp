@@ -50,7 +50,7 @@ void LivePresetEditController::onInitDlg() {
     //fills TextEdits
     SetDlgItemText(mHwnd, IDC_NAME, mPreset->mName.data());
     SetDlgItemText(mHwnd, IDC_DESC, mPreset->mDescription.data());
-    SetDlgItemText(mHwnd, IDC_ID, mPreset->mRecallId.data());
+    SetDlgItemText(mHwnd, IDC_ID, std::to_string(mPreset->mRecallId).data());
 
     //create TreeView and add event listeners
     mTree = std::make_unique<TreeView>(GetDlgItem(mHwnd, IDC_TREE));
@@ -148,6 +148,10 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
         case IDC_SAVE:
             save();
             break;
+        case IDC_RECALL: {
+            auto section = SectionFromUniqueID(0);
+            DoActionShortcutDialog(mHwnd, section, mPreset->mRecallCmdId, 0);
+        }
         case IDC_SETTINGS:
             showFilterSettings();
             break;

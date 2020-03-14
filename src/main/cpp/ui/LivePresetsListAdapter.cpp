@@ -79,7 +79,7 @@ const char* LivePresetsListAdapter::getLvItemText(int index, int column) {
             return (char*) "";
         }
         case COLUMN::RECALLID:
-            return preset->mRecallId.data();
+            return std::to_string(preset->mRecallId).data();
         case COLUMN::NAME:
             return preset->mName.data();
         case COLUMN::DESCRIPTION:
@@ -134,31 +134,11 @@ void LivePresetsListAdapter::onChangedSortingColumn(LVCOLUMN col, bool reverse) 
         case COLUMN::RECALLID:
             if (reverse) {
                 setComparator([](LivePreset* a, LivePreset* b) -> bool {
-                    int aId = 0;
-                    int bId = 0;
-                    try {
-                        aId = stoi(a->mRecallId);
-                    } catch (std::exception&) {}
-                    
-                    try {
-                        bId = stoi(b->mRecallId);
-                    } catch (std::exception&) {}
-
-                    return aId < bId;
+                    return a->mRecallId < b->mRecallId;
                 });
             } else {
                 setComparator([](LivePreset* a, LivePreset* b) -> bool {
-                    int aId = 0;
-                    int bId = 0;
-                    try {
-                        aId = stoi(a->mRecallId);
-                    } catch (std::exception&) {}
-
-                    try {
-                        bId = stoi(b->mRecallId);
-                    } catch (std::exception&) {}
-
-                    return aId > bId;
+                    return a->mRecallId > b->mRecallId;
                 });
             }
             break;
