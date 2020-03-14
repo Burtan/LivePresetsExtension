@@ -32,7 +32,7 @@
 #include <LivePresetsExtension.h>
 #include <resources/resource.h>
 
-WNDPROC LivePresetEditController::defTreeProc;
+WNDPROC LivePresetEditController::defWndProc;
 
 LivePresetEditController::LivePresetEditController(LivePreset* preset)
         : ModalWindow(IDD_LIVEPRESET, preset->mName.data(), "LivePresetsEditController", 0),
@@ -57,9 +57,14 @@ void LivePresetEditController::onInitDlg() {
     auto treeAdapter = std::make_unique<LivePresetsTreeAdapter>(mPreset);
     mTree->setAdapter(std::move(treeAdapter));
 
-    //add custom TreeView wndProc to hook key events
-    SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_USERDATA, (LONG_PTR) mTree.get());
-    defTreeProc = (WNDPROC) SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC, (LONG_PTR) treeProc);
+    //add custom wndProc to hook key events for tree, custom tree wndProc doesn't work on SWELL mac, so getting dlg here
+    if (GetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC)) {
+        SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_USERDATA, (LONG_PTR) mTree.get());
+        defWndProc = (WNDPROC) SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC, (LONG_PTR) wndProc);
+    } else {
+        SetWindowLongPtr(mHwnd, GWLP_USERDATA, (LONG_PTR) this);
+        defWndProc = (WNDPROC) SetWindowLongPtr(mHwnd, GWLP_WNDPROC, (LONG_PTR) wndProc);
+    }
 
     //hide combo in ce version
     if (!Licensing_IsUltimate()) {
@@ -74,8 +79,14 @@ void LivePresetEditController::onInitDlg() {
     mCombo->setAdapter(std::move(comboAdapter));
 }
 
-LRESULT WINAPI LivePresetEditController::treeProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT WINAPI LivePresetEditController::wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    //treat every unhandled key as used for tree as a workaround on mac
+#ifdef __APPLE__
+    auto* ctrl = reinterpret_cast<LivePresetEditController*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    auto* tree = ctrl->mTree.get();
+#else
     auto* tree = reinterpret_cast<TreeView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+#endif
 
     if (uMsg == WM_KEYDOWN) {
         MSG msg{};
@@ -83,11 +94,12 @@ LRESULT WINAPI LivePresetEditController::treeProc(HWND hwnd, UINT uMsg, WPARAM w
         msg.message = uMsg;
         msg.wParam = wParam;
         msg.lParam = lParam;
-        if (auto res = tree->onKey(&msg, lParam & 24)) {
-            return res;
+
+        if (auto handled = tree->onKey(&msg, lParam & 24)) {
+            return handled;
         }
     }
-    return defTreeProc(hwnd, uMsg, wParam, lParam);
+    return defWndProc(hwnd, uMsg, wParam, lParam);
 }
 
 void LivePresetEditController::cancel() {
