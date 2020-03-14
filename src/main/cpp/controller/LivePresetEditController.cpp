@@ -50,6 +50,8 @@ void LivePresetEditController::onInitDlg() {
     SetDlgItemText(mHwnd, IDC_DESC, mPreset->mDescription.data());
     SetDlgItemText(mHwnd, IDC_ID, mPreset->mRecallId.data());
 
+    SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC, (LONG_PTR) treeProc);
+
     //create TreeView and add event listeners
     mTree = std::make_unique<TreeView>(GetDlgItem(mHwnd, IDC_TREE));
     auto treeAdapter = std::make_unique<LivePresetsTreeAdapter>(mPreset);
@@ -66,6 +68,11 @@ void LivePresetEditController::onInitDlg() {
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
     auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(FilterPreset_GetNames(g_lpe->mModel.mFilterPresets));
     mCombo->setAdapter(std::move(comboAdapter));
+}
+
+LRESULT WINAPI LivePresetEditController::treeProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    int a = 0;
+    return 1;
 }
 
 void LivePresetEditController::cancel() {
