@@ -65,6 +65,7 @@ public:
     [[nodiscard]] LivePreset* getCurrentSettingsAsPreset() const;
     void removePresets(std::vector<LivePreset*> &preset);
     void recallPreset(LivePreset* preset);
+    bool recallPresetByGuid(GUID guid);
     void onApplySelectedTrackConfigsToAllPresets(const std::vector<MediaTrack*>& tracks);
     void reset();
 protected:
