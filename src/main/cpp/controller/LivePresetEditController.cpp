@@ -118,7 +118,7 @@ void LivePresetEditController::save() {
     //surround with try/catch because stoi can fail when there is no valid id
     try {
         int id = std::stoi(buf);
-        g_lpe->mModel.setRecallIdForPreset(mPreset, id);
+        mPreset->mRecallId = g_lpe->mModel.getRecallIdForPreset(mPreset, id);
     } catch (std::exception&) {}
 
     keepPreset = true;

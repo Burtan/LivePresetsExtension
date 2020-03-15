@@ -56,7 +56,7 @@ public:
 
     const LivePreset* getActivePreset();
     void recallByValue(int cc);
-    bool setRecallIdForPreset(LivePreset* preset, int id);
+    int getRecallIdForPreset(LivePreset* preset, int id = 0);
 
     //undo redo relevant
     void removePreset(LivePreset* preset, bool saveUndo = true);

@@ -33,17 +33,18 @@
 #include <LivePresetsExtension.h>
 #include <functional>
 
-LivePreset::LivePreset(std::string name, std::string description)
-        : mName(std::move(name)), mDescription(std::move(description)) {
+LivePreset::LivePreset(std::string name, std::string description) : mName(std::move(name)),
+        mDescription(std::move(description))
+{
     genGuid(&mGuid);
     LivePreset::saveCurrentState(false);
-    mRecallId = g_lpe->mModel.mPresets.size() + 1;
-    createRecallAction();
+
+    //make sure that new presets get a recall id assigned
+    mRecallId = g_lpe->mModel.getRecallIdForPreset(this);
 }
 
 LivePreset::LivePreset(ProjectStateContext *ctx) {
     initFromChunk(ctx);
-    createRecallAction();
 }
 
 LivePreset::~LivePreset() {
@@ -54,17 +55,12 @@ LivePreset::~LivePreset() {
     mControlInfos.clear();
 
     delete mMasterTrack;
-
-    //remove recallAction when there is one
-    if (mRecallCmdId) {
-        g_lpe->mActions.remove(mRecallCmdId);
-    }
 }
 
 /**
  * Move assignment for LivePreset
  */
-LivePreset& LivePreset::operator=(LivePreset&& other) {
+LivePreset& LivePreset::operator=(LivePreset&& other) noexcept {
     //reassign all rvalues of rvalue reference other
     mName = other.mName;
     mGuid = other.mGuid;
@@ -136,14 +132,14 @@ void LivePreset::saveCurrentState(bool update) {
         }
 
         for (const GUID* trackNew : tracksNew) {
-            TrackInfo* info = new TrackInfo(GetTrackByGUID(*trackNew));
+            auto* info = new TrackInfo(GetTrackByGUID(*trackNew));
             mTracks.push_back(info);
         }
 
     } else {
         mMasterTrack = new MasterTrackInfo();
         for (int i = 0; i < GetNumTracks(); i++) {
-            TrackInfo* info = new TrackInfo(GetTrack(nullptr, i));
+            auto* info = new TrackInfo(GetTrack(nullptr, i));
             mTracks.push_back(info);
         }
         //TODO save assignments
@@ -189,7 +185,7 @@ void LivePreset::persistHandler(WDL_FastString& str) const {
         track->persist(str);
     }
 
-    for (const auto info : mControlInfos) {
+    for (const auto& info : mControlInfos) {
         ControlInfo_Persist(info.get(), str);
     }
 }
@@ -249,7 +245,7 @@ void LivePreset::recallSettings(FilterMode parentFilter) const {
     for (const auto track : mTracks) {
         track->recallSettings(filter);
     }
-    for (const auto info : mControlInfos) {
+    for (const auto& info : mControlInfos) {
         ControlInfo_RecallSettings(info.get(), filter);
     }
 }

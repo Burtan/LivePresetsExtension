@@ -42,11 +42,11 @@ class LivePreset : public BaseInfo {
 public:
 	explicit LivePreset(std::string name = "New preset", std::string description = "");
     explicit LivePreset(ProjectStateContext* ctx);
-    LivePreset& operator=(LivePreset&& other);
+    LivePreset& operator=(LivePreset&& other) noexcept;
     ~LivePreset();
 
     //transient data
-    BaseCommand::CommandID mRecallCmdId;
+    BaseCommand::CommandID mRecallCmdId = -1;
 
     //data to persist
     GUID mGuid = GUID();
