@@ -36,17 +36,15 @@
 #else
     #include <WDL/swell/swell-types.h>
 #endif
-#include <functional>
-#include <memory>
-#include <map>
+#include <string>
 
 class BaseCommand {
 public:
     typedef unsigned short CommandID;
     typedef std::function<void(int val, int valhw, int relmode, HWND hwnd)> Callback;
 
-    BaseCommand(const std::string& name, const std::string& desc, Callback callback) : mName(name), mDesc(desc),
-            mCallback(std::move(callback)) {}
+    BaseCommand(std::string  name, std::string  desc, Callback callback) : mName(std::move(name)),
+            mDesc(std::move(desc)), mCallback(std::move(callback)) {}
     virtual ~BaseCommand() = default;
 
     [[nodiscard]] CommandID id() const { return mCmdId; }

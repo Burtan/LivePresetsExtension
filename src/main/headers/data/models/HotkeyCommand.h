@@ -36,7 +36,7 @@
 class HotkeyCommand : public BaseCommand {
 public:
     HotkeyCommand(const std::string& name, const std::string& desc, Callback callback);
-    ~HotkeyCommand();
+    ~HotkeyCommand() override;
 
     void run(int val, int valhw, int relmode, HWND hwnd) override;
 };
