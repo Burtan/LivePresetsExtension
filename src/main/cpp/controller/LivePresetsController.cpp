@@ -80,6 +80,9 @@ void LivePresetsController::createPreset() {
     if (auto filter = FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &g_lpe->mModel.mDefaultFilterPreset)) {
         preset->applyFilterPreset(filter);
     }
+
+    //keep track of the recallCmdId to remove it if the created preset is removed
+    auto tempCmdId = preset->mRecallCmdId;
     auto editedPreset = editPreset(preset);
 
     if (editedPreset != nullptr) {
@@ -87,6 +90,8 @@ void LivePresetsController::createPreset() {
         mList->invalidate();
         int index = mList->getAdapter()->getIndex(editedPreset);
         mList->selectIndex(index);
+    } else {
+        g_lpe->mActions.remove(tempCmdId);
     }
 }
 
@@ -132,10 +137,7 @@ void LivePresetsController::editSelectedPreset() {
     WDL_FastString str;
     preset->persist(str);
     auto ctx = StringProjectStateContext(str);
-    auto presetToEdit = new LivePreset((ProjectStateContext*) &ctx);
-
-    //don't forget to copy transient data
-    presetToEdit->mRecallCmdId = preset->mRecallCmdId;
+    auto presetToEdit = new LivePreset((ProjectStateContext*) &ctx, preset->mRecallCmdId);
 
     auto editedPreset = editPreset(presetToEdit);
 

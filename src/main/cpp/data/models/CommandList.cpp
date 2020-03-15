@@ -44,7 +44,9 @@ bool CommandList::run(BaseCommand::CommandID id, int val, int valhw, int relmode
 }
 
 BaseCommand::CommandID CommandList::add(std::unique_ptr<BaseCommand> command) {
+    auto id = command->id();
     mCommands.emplace(command->id(), std::move(command));
+    return id;
 }
 
 void CommandList::remove(BaseCommand::CommandID cmdId) {

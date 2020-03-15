@@ -41,10 +41,18 @@ LivePreset::LivePreset(std::string name, std::string description) : mName(std::m
 
     //make sure that new presets get a recall id assigned
     mRecallId = g_lpe->mModel.getRecallIdForPreset(this);
+
+    if (mRecallCmdId == 0) {
+        createRecallAction();
+    }
 }
 
-LivePreset::LivePreset(ProjectStateContext *ctx) {
+LivePreset::LivePreset(ProjectStateContext *ctx, BaseCommand::CommandID recallCmdId) : mRecallCmdId(recallCmdId) {
     initFromChunk(ctx);
+
+    if (mRecallCmdId == 0) {
+        createRecallAction();
+    }
 }
 
 LivePreset::~LivePreset() {
