@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <ui/base/ListViewAdapter.h>
 #include <data/models/LivePreset.h>
+#include <data/models/Control.h>
 
 /**
  * Add a comparator to enable sorting
@@ -41,10 +42,12 @@ void ListViewAdapter<T>::setComparator(bool (*compare)(T*, T*)) {
     mCompare = compare;
 }
 template void ListViewAdapter<LivePreset>::setComparator(bool (*compare)(LivePreset*, LivePreset*));
+template void ListViewAdapter<Control>::setComparator(bool (*compare)(Control*, Control*));
 
 template<typename T>
 ListViewAdapter<T>::~ListViewAdapter() = default;
 template ListViewAdapter<LivePreset>::~ListViewAdapter();
+template ListViewAdapter<Control>::~ListViewAdapter();
 
 /**
  * Add a filter to only show a subset of the items, e.g. for searching.
@@ -55,6 +58,7 @@ void ListViewAdapter<T>::setFilter(bool (*filter)(T*)) {
     mFilter = filter;
 }
 template void ListViewAdapter<LivePreset>::setFilter(bool (*filter)(LivePreset*));
+template void ListViewAdapter<Control>::setFilter(bool (*filter)(Control*));
 
 /*
  * Do not call this manually, is automatically called by the ListView when necessary.
@@ -74,3 +78,4 @@ void ListViewAdapter<T>::filterAndSort() {
     }
 }
 template void ListViewAdapter<LivePreset>::filterAndSort();
+template void ListViewAdapter<Control>::filterAndSort();
