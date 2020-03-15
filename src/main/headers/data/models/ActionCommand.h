@@ -36,6 +36,7 @@
 class ActionCommand : public BaseCommand {
 public:
     ActionCommand(const char* name, const char* desc, Callback callback);
+    ~ActionCommand();
 
     void run(int val, int valhw, int relmode, HWND hwnd) override;
 private:

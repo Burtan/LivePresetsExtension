@@ -159,8 +159,19 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
     }
 }
 
+void LivePresetsModel::replacePreset(LivePreset *oldPreset, LivePreset *newPreset) {
+    mPresets.erase(remove(mPresets.begin(), mPresets.end(), oldPreset), mPresets.end());
+    mPresets.push_back(newPreset);
+}
+
+/**
+ * Removes a preset from model, also removes the assigned preset recall binding
+ * @param preset
+ * @param saveUndo
+ */
 void LivePresetsModel::removePreset(LivePreset* preset, bool saveUndo) {
     mPresets.erase(remove(mPresets.begin(), mPresets.end(), preset), mPresets.end());
+    g_lpe->mActions.remove(preset->mRecallCmdId);
     if (saveUndo) {
         Undo_OnStateChangeEx2(nullptr, "Remove LivePreset", UNDO_STATE_MISCCFG, -1);
     }
@@ -168,7 +179,7 @@ void LivePresetsModel::removePreset(LivePreset* preset, bool saveUndo) {
 
 void LivePresetsModel::removePresets(std::vector<LivePreset*>& presets) {
     for (auto preset : presets) {
-        mPresets.erase(remove(mPresets.begin(), mPresets.end(), preset), mPresets.end());
+        removePreset(preset, false);
     }
     Undo_OnStateChangeEx2(nullptr, "Remove src", UNDO_STATE_MISCCFG, -1);
 }

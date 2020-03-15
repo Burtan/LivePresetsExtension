@@ -118,6 +118,10 @@ void LivePresetsController::removeSelectedPresets() {
     mList->invalidate();
 }
 
+/**
+ * Creates a copy of the currently selected preset and opens the edit dialog for it. When the dialog is confirmed
+ * The copy is saved in place of the original one
+ */
 void LivePresetsController::editSelectedPreset() {
     auto indices = mList->getSelectedIndices();
     if (indices.size() != 1)
@@ -130,11 +134,13 @@ void LivePresetsController::editSelectedPreset() {
     auto ctx = StringProjectStateContext(str);
     auto presetToEdit = new LivePreset((ProjectStateContext*) &ctx);
 
+    //don't forget to copy transient data
+    presetToEdit->mRecallCmdId = preset->mRecallCmdId;
+
     auto editedPreset = editPreset(presetToEdit);
 
     if (editedPreset != nullptr) {
-        g_lpe->mModel.removePreset(preset, false);
-        g_lpe->mModel.addPreset(editedPreset, false);
+        g_lpe->mModel.replacePreset(preset, editedPreset);
         //Undo_OnStateChangeEx2(nullptr, "Updated LivePreset", UNDO_STATE_MISCCFG, -1);
         mList->invalidate();
         int index = mList->getAdapter()->getIndex(editedPreset);

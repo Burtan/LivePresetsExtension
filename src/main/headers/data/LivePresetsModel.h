@@ -59,6 +59,7 @@ public:
     int getRecallIdForPreset(LivePreset* preset, int id = 0);
 
     //undo redo relevant
+    void replacePreset(LivePreset* oldPreset, LivePreset* newPreset);
     void removePreset(LivePreset* preset, bool saveUndo = true);
     void addPreset(LivePreset* preset, bool saveUndo = true);
     [[nodiscard]] LivePreset* getCurrentSettingsAsPreset() const;

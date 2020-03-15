@@ -36,6 +36,7 @@
 class HotkeyCommand : public BaseCommand {
 public:
     HotkeyCommand(const char* name, const char* desc, Callback callback);
+    ~HotkeyCommand();
 
     void run(int val, int valhw, int relmode, HWND hwnd) override;
 private:
