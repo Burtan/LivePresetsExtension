@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <ui/base/ListViewAdapter.h>
 #include <data/models/LivePreset.h>
-#include <data/models/Control.h>
+#include <plugins/lpe_ultimate.h>
 
 /**
  * Add a comparator to enable sorting
