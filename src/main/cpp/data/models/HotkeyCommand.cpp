@@ -39,6 +39,13 @@ HotkeyCommand::HotkeyCommand(const char* name, const char* desc, Callback callba
     plugin_register("gaccel", &g);
 }
 
+/*
+ * Make sure that the associated action is unregistered from reaper
+ */
+HotkeyCommand::~HotkeyCommand() {
+    plugin_register("-gaccel", &g);
+}
+
 void HotkeyCommand::run(int val, int valhw, int relmode, HWND hwnd) {
     mCallback(val, valhw, relmode, hwnd);
 }

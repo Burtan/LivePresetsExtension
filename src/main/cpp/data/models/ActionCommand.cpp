@@ -39,6 +39,13 @@ ActionCommand::ActionCommand(const char* name, const char* desc, Callback callba
     mCmdId = plugin_register("custom_action", (void*) &s);
 }
 
+/*
+ * Make sure that the associated action is unregistered from reaper
+ */
+ActionCommand::~ActionCommand() {
+    plugin_register("-custom_action", (void*) &s);
+}
+
 void ActionCommand::run(int val, int valhw, int relmode, HWND hwnd) {
     mCallback(val, valhw, relmode, hwnd);
 }
