@@ -212,15 +212,13 @@ void LivePresetsModel::recallByValue(int val) {
  * @param preset the preset to assign the unique id to
  * @param id the unique id
  */
-bool LivePresetsModel::setRecallIdForPreset(LivePreset* preset, int id) {
+int LivePresetsModel::getRecallIdForPreset(LivePreset* preset, int id) {
     for (auto mPreset : mPresets) {
-        if (mPreset->mRecallId == id && !GuidsEqual(preset->mGuid, mPreset->mGuid)) {
-            preset->mRecallId = -1;
-            return false;
+        if ((mPreset->mRecallId == id && !GuidsEqual(preset->mGuid, mPreset->mGuid)) || id == -1) {
+            return getRecallIdForPreset(preset, id + 1);
         }
     }
-    preset->mRecallId = id;
-    return true;
+    return id;
 }
 
 /**
