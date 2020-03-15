@@ -42,13 +42,13 @@ Main entry point, is called when the extension is loaded.
 */
 LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd), mInstance(hInstance) {
     //register commands and project config with reaper
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_OPENTOGGLE_MAIN",
             "LPE - Opens/Closes the LivePresetsExtension main window",
             std::bind(&LPE::toggleMainWindow, this)
     ));
 
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_OPENTOGGLE_ABOUT",
             "LPE - Opens/Closes the LivePresetsExtension about window",
             std::bind(&LPE::toggleAboutWindow, this)
@@ -56,27 +56,27 @@ LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd)
 
     //create control view action only on ultimate
     if (Licensing_IsUltimate()) {
-        mActions.add(std::make_unique<HotkeyCommand>(
+        mActions.add(new HotkeyCommand(
                 "LPE_OPENTOGGLE_CONTROL",
                 "LPE - Opens/Closes the LivePresetsExtension ControlView window",
                 std::bind(&LPE::toggleControlView, this)
         ));
     }
 
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_TRACKSAVEALL",
             "LPE - Saves the track data into all presets",
             std::bind(&LPE::onApplySelectedTrackConfigsToAllPresets, this)
     ));
 
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_TOGGLEMUTEDVISIBILITY",
             "LPE - Shows/Hides muted tracks in TCP",
             std::bind(&LPE::toggleMutedTracksVisibility, this)
     ));
 
     using namespace std::placeholders;
-    mActions.add(std::make_unique<ActionCommand>(
+    mActions.add(new ActionCommand(
             "LPE_SELECTPRESET",
             "LPE - Selects a preset",
             std::bind(&LPE::onRecallPreset, this, _1, _2, _3, _4)

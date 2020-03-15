@@ -30,11 +30,12 @@
 #include <data/models/ActionCommand.h>
 #include "plugins/reaper_plugin_functions.h"
 
-ActionCommand::ActionCommand(const char* name, const char* desc, Callback callback)
+ActionCommand::ActionCommand(const std::string& name, const std::string& desc, Callback callback)
         : BaseCommand(name, desc, std::move(callback))
 {
-    s.idStr = name;
-    s.name = desc;
+    custom_action_register_t s{};
+    s.idStr = mName.data();
+    s.name = mDesc.data();
     s.uniqueSectionId = 0;
     mCmdId = plugin_register("custom_action", (void*) &s);
 }
@@ -43,6 +44,10 @@ ActionCommand::ActionCommand(const char* name, const char* desc, Callback callba
  * Make sure that the associated action is unregistered from reaper
  */
 ActionCommand::~ActionCommand() {
+    custom_action_register_t s{};
+    s.idStr = mName.data();
+    s.name = mDesc.data();
+    s.uniqueSectionId = 0;
     plugin_register("-custom_action", (void*) &s);
 }
 
