@@ -1,5 +1,6 @@
-#include "gtest/gtest.h"
-#include "util/util.h"
+#include <gtest/gtest.h>
+#include <util/util.h>
+#include <fcntl.h>
 
 bool (*cmp)(int&, long&) = [](int& a, long& b) -> bool {
     return a == b;
@@ -45,4 +46,20 @@ TEST(util_test_removed, utils_test) {
     ASSERT_EQ(updated.size(), 2);
     ASSERT_EQ(removed.size(), 2);
     ASSERT_EQ(added.size(), 0);
+}
+
+TEST(guid_int_transcoding, utils_test) {
+    GUID oGuid{};
+
+    //from swell to generate random data
+    int f = open("/dev/urandom",O_RDONLY);
+    read(f,&oGuid,sizeof(GUID));
+    close(f);
+
+    int inOut[4];
+
+    GuidToInts(oGuid, inOut);
+    GUID cGuid = IntsToGuid(inOut[0], inOut[1], inOut[2], inOut[3]);
+
+    ASSERT_TRUE(GuidsEqual(oGuid, cGuid));
 }
