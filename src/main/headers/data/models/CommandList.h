@@ -32,6 +32,7 @@
 
 #include "data/models/HotkeyCommand.h"
 #include "data/models/ActionCommand.h"
+#include <map>
 
 class CommandList {
 public:

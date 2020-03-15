@@ -36,7 +36,7 @@
 class ActionCommand : public BaseCommand {
 public:
     ActionCommand(const std::string& name, const std::string& desc, Callback callback);
-    ~ActionCommand();
+    ~ActionCommand() override;
 
     void run(int val, int valhw, int relmode, HWND hwnd) override;
 };
