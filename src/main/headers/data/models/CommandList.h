@@ -32,14 +32,18 @@
 
 #include "data/models/HotkeyCommand.h"
 #include "data/models/ActionCommand.h"
+#include <map>
 
 class CommandList {
 public:
-    void add(std::unique_ptr<BaseCommand> command);
+    ~CommandList();
+
+    BaseCommand::CommandID add(BaseCommand *command);
+    void remove(BaseCommand::CommandID cmdId);
     bool run(BaseCommand::CommandID id, int val = 0, int valhw = 0, int relmode = 0, HWND hwnd = nullptr) const;
 private:
     [[nodiscard]] BaseCommand* find(BaseCommand::CommandID id) const;
-    std::map<BaseCommand::CommandID, std::unique_ptr<BaseCommand>> mCommands;
+    std::map<BaseCommand::CommandID, BaseCommand*> mCommands;
 };
 
 

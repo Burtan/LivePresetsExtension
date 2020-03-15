@@ -36,6 +36,7 @@
 #include <data/models/Hardware.h>
 #include <data/models/ControlInfo.h>
 #include <data/models/FilterPreset.h>
+#include <ui/ControlsListAdapter.h>
 #include <util/Licensing.h>
 #else //LPE_ULTIMATE
 //Only include this one in .cpp files for models not in .h files as that creates circular dependencies

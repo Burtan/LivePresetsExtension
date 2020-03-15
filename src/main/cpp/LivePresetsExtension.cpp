@@ -35,49 +35,50 @@
 #include <data/models/HotkeyCommand.h>
 #include <data/models/ActionCommand.h>
 #include <ui/LivePresetsListAdapter.h>
+#include <util/util.h>
 
 /*
 Main entry point, is called when the extension is loaded.
 */
 LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd), mInstance(hInstance) {
     //register commands and project config with reaper
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_OPENTOGGLE_MAIN",
-            "Opens/Closes the LivePresetsExtension main window",
+            "LPE - Opens/Closes the LivePresetsExtension main window",
             std::bind(&LPE::toggleMainWindow, this)
     ));
 
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_OPENTOGGLE_ABOUT",
-            "Opens/Closes the LivePresetsExtension about window",
+            "LPE - Opens/Closes the LivePresetsExtension about window",
             std::bind(&LPE::toggleAboutWindow, this)
     ));
 
     //create control view action only on ultimate
     if (Licensing_IsUltimate()) {
-        mActions.add(std::make_unique<HotkeyCommand>(
+        mActions.add(new HotkeyCommand(
                 "LPE_OPENTOGGLE_CONTROL",
-                "Opens/Closes the LivePresetsExtension ControlView window",
+                "LPE - Opens/Closes the LivePresetsExtension ControlView window",
                 std::bind(&LPE::toggleControlView, this)
         ));
     }
 
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_TRACKSAVEALL",
-            "Saves the track data into all presets",
+            "LPE - Saves the track data into all presets",
             std::bind(&LPE::onApplySelectedTrackConfigsToAllPresets, this)
     ));
 
-    mActions.add(std::make_unique<HotkeyCommand>(
+    mActions.add(new HotkeyCommand(
             "LPE_TOGGLEMUTEDVISIBILITY",
-            "Shows/Hides muted tracks in TCP",
+            "LPE - Shows/Hides muted tracks in TCP",
             std::bind(&LPE::toggleMutedTracksVisibility, this)
     ));
 
     using namespace std::placeholders;
-    mActions.add(std::make_unique<ActionCommand>(
+    mActions.add(new ActionCommand(
             "LPE_SELECTPRESET",
-            "Selects a preset",
+            "LPE - Selects a preset",
             std::bind(&LPE::onRecallPreset, this, _1, _2, _3, _4)
     ));
 }
@@ -216,6 +217,13 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
 
         InsertMenuItem(subMenu, 0, true, &smii);
     }
+}
+
+/*
+ * Recall a preset by its GUID which is encoded in all 4 variables
+ */
+void LPE::recallPresetByGuid(int data1, int data2, int data3, HWND data4) {
+    mModel.recallPresetByGuid(IntsToGuid(data1, data2, data3, (long) data4));
 }
 
 /**

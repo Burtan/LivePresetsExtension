@@ -134,6 +134,21 @@ void LivePresetsModel::addPreset(LivePreset *preset, bool saveUndo) {
     }
 }
 
+/*
+ * Tries to find a preset with the given guid and recalls it
+ * returns true when a preset was found
+ */
+bool LivePresetsModel::recallPresetByGuid(GUID guid) {
+    for (auto preset : mPresets) {
+        if (GuidsEqual(preset->mGuid, guid)) {
+            recallPreset(preset);
+            return true;
+        }
+    }
+    return false;
+}
+
+
 void LivePresetsModel::recallPreset(LivePreset* preset) {
     if (!preset)
         return;
@@ -159,8 +174,19 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
     }
 }
 
+void LivePresetsModel::replacePreset(LivePreset *oldPreset, LivePreset *newPreset) {
+    mPresets.erase(remove(mPresets.begin(), mPresets.end(), oldPreset), mPresets.end());
+    mPresets.push_back(newPreset);
+}
+
+/**
+ * Removes a preset from model, also removes the assigned preset recall binding
+ * @param preset
+ * @param saveUndo
+ */
 void LivePresetsModel::removePreset(LivePreset* preset, bool saveUndo) {
     mPresets.erase(remove(mPresets.begin(), mPresets.end(), preset), mPresets.end());
+    g_lpe->mActions.remove(preset->mRecallCmdId);
     if (saveUndo) {
         Undo_OnStateChangeEx2(nullptr, "Remove LivePreset", UNDO_STATE_MISCCFG, -1);
     }
@@ -168,7 +194,7 @@ void LivePresetsModel::removePreset(LivePreset* preset, bool saveUndo) {
 
 void LivePresetsModel::removePresets(std::vector<LivePreset*>& presets) {
     for (auto preset : presets) {
-        mPresets.erase(remove(mPresets.begin(), mPresets.end(), preset), mPresets.end());
+        removePreset(preset, false);
     }
     Undo_OnStateChangeEx2(nullptr, "Remove src", UNDO_STATE_MISCCFG, -1);
 }
@@ -199,7 +225,7 @@ void LivePresetsModel::persistHandler(WDL_FastString &str) const {
 
 void LivePresetsModel::recallByValue(int val) {
     for (auto preset : mPresets) {
-        if (preset->mRecallId == std::to_string(val)) {
+        if (preset->mRecallId == val) {
             if (mIsReselectLivePresetByValueRecall || !mActivePreset || preset != mActivePreset)
                 recallPreset(preset);
             break;
@@ -212,14 +238,13 @@ void LivePresetsModel::recallByValue(int val) {
  * @param preset the preset to assign the unique id to
  * @param id the unique id
  */
-void LivePresetsModel::setRecallIdForPreset(LivePreset* preset, int id) {
+int LivePresetsModel::getRecallIdForPreset(LivePreset* preset, int id) {
     for (auto mPreset : mPresets) {
-        if (mPreset->mRecallId == std::to_string(id)) {
-            mPreset->mRecallId = "";
-            break;
+        if ((mPreset->mRecallId == id && !GuidsEqual(preset->mGuid, mPreset->mGuid)) || id == -1) {
+            return getRecallIdForPreset(preset, id + 1);
         }
     }
-    preset->mRecallId = std::to_string(id);
+    return id;
 }
 
 /**

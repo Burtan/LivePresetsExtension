@@ -51,6 +51,9 @@ protected:
     LPARAM result() override;
     int onNotify(WPARAM wParam, LPARAM lParam) override;
 private:
+    static WNDPROC defWndProc;
+    static LRESULT WINAPI wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
     bool keepPreset = false;
     LivePreset* mPreset;
     void cancel();

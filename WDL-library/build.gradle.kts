@@ -4,46 +4,15 @@ plugins {
 group = "cockos"
 version = "1.0"
 
-tasks.withType(CreateStaticLibrary::class).configureEach {
-    val cObjs = project.fileTree("build/objs") {
-        include("**/*.obj")
-    }
-    source(cObjs)
-}
-
 library {
     binaries.configureEach(CppStaticLibrary::class.java) {
-        compileTask.get().isPositionIndependentCode = true
+        val type = if (isDebuggable) "debug" else "release"
+        val arch = targetMachine.architecture.name
+        val os = targetMachine.operatingSystemFamily.name
 
-        // Define toolchain-specific compiler options
-        when (toolChain) {
-            is Gcc, is Clang -> compileTask.get().compilerArgs.addAll(listOf("-std=c++14"))
-            is VisualCpp -> compileTask.get().compilerArgs.add("/std:c++14")
-        }
-
-        if (targetMachine.operatingSystemFamily.isLinux) {
-            //swell
-            compileTask.get().source.from("src/main/cpp/WDL/swell/swell-modstub-generic.cpp")
-
-            //Add macros to use swell from reaper (reduces size)
-            compileTask.get().macros["SWELL_TARGET_GDK"] = "3"
-            compileTask.get().macros["NOMINMAX"] = null
-            compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
-        }
-
-        if (targetMachine.operatingSystemFamily.isMacOs) {
-            //swell
-            compileTask.get().source.from("src/main/cpp/WDL/swell/swell.cpp")
-            compileTask.get().source.from("src/main/cpp/WDL/swell/swell-ini.cpp")
-
-            compileTask.get().macros["NOMINMAX"] = null
-        }
-    }
-
-    binaries.configureEach {
         val cCompileTask = tasks.register("compile" + name.capitalize() + "C", CCompile::class) {
-            toolChain.set(compileTask.map { it.toolChain.get() })
             // Take configuration from C++ compile tasks
+            toolChain.set(compileTask.map { it.toolChain.get() })
             targetPlatform.set(compileTask.map { it.targetPlatform.get() })
             includes.from(compileTask.map { it.includes })
             systemIncludes.from(compileTask.map { it.systemIncludes })
@@ -61,8 +30,8 @@ library {
             source.from("src/main/cpp/WDL/zlib/inftrees.c")
             source.from("src/main/cpp/WDL/zlib/zutil.c")
 
-            // Must use another directory for proper up-to-date check
-            objectFileDir.set(project.layout.buildDirectory.dir("objs/mainC"))
+            val dir = "objs/mainC/$type/$os/$arch"
+            objectFileDir.set(project.layout.buildDirectory.dir(dir))
 
             // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
             macros = compileTask.get().macros
@@ -72,23 +41,18 @@ library {
         }
 
         val objcCompileTask = tasks.register("compile" + name.capitalize() + "objC", ObjectiveCppCompile::class) {
-            toolChain.set(compileTask.map { it.toolChain.get() })
             // Take configuration from C++ compile tasks
+            toolChain.set(compileTask.map { it.toolChain.get() })
             targetPlatform.set(compileTask.map { it.targetPlatform.get() })
             includes.from(compileTask.map { it.includes })
             systemIncludes.from(compileTask.map { it.systemIncludes })
 
             // Configure the objC source file location
-            source.from("src/main/cpp/WDL/swell/swell-miscdlg.mm")
-            source.from("src/main/cpp/WDL/swell/swell-gdi.mm")
-            source.from("src/main/cpp/WDL/swell/swell-kb.mm")
-            source.from("src/main/cpp/WDL/swell/swell-menu.mm")
-            source.from("src/main/cpp/WDL/swell/swell-misc.mm")
-            source.from("src/main/cpp/WDL/swell/swell-dlg.mm")
-            source.from("src/main/cpp/WDL/swell/swell-wnd.mm")
+            source.from("src/main/cpp/WDL/swell/swell-modstub.mm")
 
             // Must use another directory for proper up-to-date check
-            objectFileDir.set(project.layout.buildDirectory.dir("objs/mainObjC"))
+            val dir = "objs/mainObjc/$type/$os/$arch"
+            objectFileDir.set(project.layout.buildDirectory.dir(dir))
 
             // Unfortunately, this doesn't use the Provider API yet. The impact is minimized by using the lazy task API
             macros = compileTask.get().macros
@@ -97,12 +61,56 @@ library {
             isPositionIndependentCode = compileTask.get().isPositionIndependentCode
         }
 
-        tasks["createDebug"].dependsOn(cCompileTask)
+        //add c and objC compile results to createTask sources
         if (targetMachine.operatingSystemFamily.isMacOs) {
-            tasks["createDebug"].dependsOn(objcCompileTask)
+            val cObjs = project.fileTree("build/objs/mainC/$type/$os/$arch") {
+                include("**/*.o")
+            }
+            val objc = project.fileTree("build/objs/mainObjc/$type/$os/$arch") {
+                include("**/*.o")
+            }
+            createTask.get().source(cObjs)
+            createTask.get().dependsOn(cCompileTask)
+            createTask.get().source(objc)
+            createTask.get().dependsOn(objcCompileTask)
+        }
+
+        if (targetMachine.operatingSystemFamily.isLinux) {
+            val cObjs = project.fileTree("build/objs/mainC/$type/$os/$arch") {
+                include("**/*.obj")
+            }
+            createTask.get().source(cObjs)
+            createTask.get().dependsOn(cCompileTask)
+        }
+
+        // Define toolchain-specific compiler options
+        when (toolChain) {
+            is Gcc, is Clang -> compileTask.get().compilerArgs.addAll(listOf("-std=c++14"))
+            is VisualCpp -> compileTask.get().compilerArgs.add("/std:c++14")
+        }
+
+        if (targetMachine.operatingSystemFamily.isLinux) {
+            //use position independent code to prevent errors
+            compileTask.get().isPositionIndependentCode = true
+
+            //swell
+            compileTask.get().source.from("src/main/cpp/WDL/swell/swell-modstub-generic.cpp")
+
+            //Add macros to use swell from reaper (reduces size)
+            compileTask.get().macros["SWELL_TARGET_GDK"] = "3"
+            compileTask.get().macros["NOMINMAX"] = null
+            compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
+        }
+
+        if (targetMachine.operatingSystemFamily.isMacOs) {
+            //use position independent code to prevent errors
+            compileTask.get().isPositionIndependentCode = true
+
+            //Add macros to use swell from reaper (reduces size)
+            compileTask.get().macros["NOMINMAX"] = null
+            compileTask.get().macros["SWELL_PROVIDED_BY_APP"] = null
         }
     }
-
 
     linkage.set(listOf(Linkage.STATIC))
     source {
@@ -132,7 +140,13 @@ library {
         from("src/main/cpp/WDL/wingui/wndsize.cpp")
         from("src/main/cpp/WDL/wingui/scrollbar/coolscroll.cpp")
     }
+
     publicHeaders {
         from("src/main/cpp")
     }
+
+    targetMachines.add(machines.linux.x86_64)
+    targetMachines.add(machines.windows.x86_64)
+    targetMachines.add(machines.windows.x86)
+    targetMachines.add(machines.macOS.x86_64)
 }

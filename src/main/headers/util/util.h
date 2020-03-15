@@ -53,6 +53,8 @@ MediaTrack* GetTrackByGUID(GUID g1);
 void AddControl(HWND parentHwnd, const char* name, int id, const char* widget, int style, int exStyle,
                 int x, int y, int width, int height, bool adjustDpi = true);
 void RemoveControl(HWND hwnd);
+void GuidToInts(GUID g1, int inOut[4]);
+GUID IntsToGuid(int i1, int i2, int i3, int i4);
 
 template<typename T>
 void getPointerVector(std::vector<T>& base, std::vector<T*>& out) {

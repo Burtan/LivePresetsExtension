@@ -78,3 +78,34 @@ void RemoveControl(HWND hwnd) {
     SWELL_CloseWindow(hwnd);
 #endif
 }
+
+void GuidToInts(GUID g1, int inOut[4]) {
+    inOut[0] = (int) g1.Data1;
+    inOut[1] = g1.Data2;
+    inOut[1] |= g1.Data3 << 16;
+    inOut[2] = g1.Data4[0];
+    inOut[2] |= g1.Data4[1] << 8;
+    inOut[2] |= g1.Data4[2] << 16;
+    inOut[2] |= g1.Data4[3] << 24;
+    inOut[3] = g1.Data4[4];
+    inOut[3] |= g1.Data4[5] << 8;
+    inOut[3] |= g1.Data4[6] << 16;
+    inOut[3] |= g1.Data4[7] << 24;
+}
+
+GUID IntsToGuid(int i1, int i2, int i3, int i4) {
+    unsigned int data1 = i1;
+    unsigned short data2 = LOWORD(i2);
+    unsigned short data3 = HIWORD(i2);
+    unsigned char data4[8] = {0};
+    data4[0] = i3;
+    data4[1] = i3 >> 8;
+    data4[2] = i3 >> 16;
+    data4[3] = i3 >> 24;
+    data4[4] = i4;
+    data4[5] = i4 >> 8;
+    data4[6] = i4 >> 16;
+    data4[7] = i4 >> 24;
+
+    return {data1, data2, data3, data4[0], data4[1], data4[2], data4[3], data4[4], data4[5], data4[6], data4[7]};
+}

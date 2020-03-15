@@ -55,20 +55,20 @@ public:
     HWND mMainHwnd;
     CommandList mActions;
 
-    bool onActionExecuted(int iCmd, int flag);
-    bool onActionExecutedEx(KbdSectionInfo* sec, int cmdId, int val, int valhw, int relmode, HWND hwnd);
     static void onMenuClicked(const char* menustr, HMENU menu, int flag);
     static bool isMutedShown();
-
+    bool onActionExecuted(int iCmd, int flag);
+    bool onActionExecutedEx(KbdSectionInfo* sec, int cmdId, int val, int valhw, int relmode, HWND hwnd);
     bool recallState(ProjectStateContext* ctx, bool isUndo);
     void saveState(ProjectStateContext* ctx, bool isUndo);
     void resetState(bool isUndo);
+    void recallPresetByGuid(int data1, int data2, int data3, HWND data4);
+    void onRecallPreset(int val, int valhw, int relmode, HWND hwnd);
 private:
     void toggleMutedTracksVisibility();
     void toggleMainWindow();
     void toggleAboutWindow();
     void toggleControlView();
-    void onRecallPreset(int val, int valhw, int relmode, HWND hwnd);
     void onApplySelectedTrackConfigsToAllPresets();
 };
 

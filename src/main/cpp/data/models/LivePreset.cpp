@@ -27,20 +27,32 @@
 /
 ******************************************************************************/
 
-#include <algorithm>
 #include <data/models/LivePreset.h>
 #include <plugins/lpe_ultimate.h>
 #include <util/util.h>
+#include <LivePresetsExtension.h>
+#include <functional>
 
-
-LivePreset::LivePreset(std::string name, std::string description)
-        : mName(std::move(name)), mDescription(std::move(description)) {
+LivePreset::LivePreset(std::string name, std::string description) : mName(std::move(name)),
+        mDescription(std::move(description))
+{
     genGuid(&mGuid);
     LivePreset::saveCurrentState(false);
+
+    //make sure that new presets get a recall id assigned
+    mRecallId = g_lpe->mModel.getRecallIdForPreset(this);
+
+    if (mRecallCmdId == 0) {
+        createRecallAction();
+    }
 }
 
-LivePreset::LivePreset(ProjectStateContext *ctx) {
+LivePreset::LivePreset(ProjectStateContext *ctx, BaseCommand::CommandID recallCmdId) : mRecallCmdId(recallCmdId) {
     initFromChunk(ctx);
+
+    if (mRecallCmdId == 0) {
+        createRecallAction();
+    }
 }
 
 LivePreset::~LivePreset() {
@@ -56,7 +68,7 @@ LivePreset::~LivePreset() {
 /**
  * Move assignment for LivePreset
  */
-LivePreset& LivePreset::operator=(LivePreset&& other) {
+LivePreset& LivePreset::operator=(LivePreset&& other) noexcept {
     //reassign all rvalues of rvalue reference other
     mName = other.mName;
     mGuid = other.mGuid;
@@ -68,12 +80,14 @@ LivePreset& LivePreset::operator=(LivePreset&& other) {
     mMasterTrack = other.mMasterTrack;
     mTracks = other.mTracks;
     mControlInfos = other.mControlInfos;
+    mRecallCmdId = other.mRecallCmdId;
 
     //make all pointers null and create empty containers for now empty instance other that its destruction does not
     //affect this instance
     mTracks = std::vector<TrackInfo*>();
     mControlInfos = std::vector<std::shared_ptr<ControlInfo>>();
     mMasterTrack = nullptr;
+    mRecallCmdId = 0;
 
     return *this;
 }
@@ -126,19 +140,44 @@ void LivePreset::saveCurrentState(bool update) {
         }
 
         for (const GUID* trackNew : tracksNew) {
-            TrackInfo* info = new TrackInfo(GetTrackByGUID(*trackNew));
+            auto* info = new TrackInfo(GetTrackByGUID(*trackNew));
             mTracks.push_back(info);
         }
 
     } else {
         mMasterTrack = new MasterTrackInfo();
         for (int i = 0; i < GetNumTracks(); i++) {
-            TrackInfo* info = new TrackInfo(GetTrack(nullptr, i));
+            auto* info = new TrackInfo(GetTrack(nullptr, i));
             mTracks.push_back(info);
         }
         //TODO save assignments
     }
 
+}
+
+/**
+ * Creates a reaper action which can bind to Hotkeys/midi/osc to recall this LivePreset
+ */
+void LivePreset::createRecallAction() {
+    auto name = WDL_FastString();
+    char dest[64];
+    guidToString(&mGuid, dest);
+
+    name.AppendFormatted(4096, "LPE_RECALLPRESET_%s", dest);
+
+    auto desc = WDL_FastString();
+    desc.AppendFormatted(4096, "LPE - Recall preset: %s", mName.data());
+
+    using namespace std::placeholders;
+    //transcode guid as 4 int to make it fit to the ActionCommand function
+    int ints[4];
+    GuidToInts(mGuid, ints);
+
+    mRecallCmdId = g_lpe->mActions.add(new ActionCommand(
+            name.Get(),
+            desc.Get(),
+            std::bind(&LPE::recallPresetByGuid, g_lpe.get(), ints[0], ints[1], ints[2], (HWND) ((long) ints[3]))
+    ));
 }
 
 void LivePreset::persistHandler(WDL_FastString& str) const {
@@ -151,7 +190,7 @@ void LivePreset::persistHandler(WDL_FastString& str) const {
     str.AppendFormatted(4096, "NAME \"%s\"\n", mName.data());
     str.AppendFormatted(4096, "DESC \"%s\"\n", mDescription.data());
     str.AppendFormatted(4096, "DATE %li\n", mDate);
-    str.AppendFormatted(4096, "RECALLID %s\n", mRecallId.data());
+    str.AppendFormatted(4096, "RECALLID %i\n", mRecallId);
 
     mMasterTrack->persist(str);
 
@@ -159,7 +198,7 @@ void LivePreset::persistHandler(WDL_FastString& str) const {
         track->persist(str);
     }
 
-    for (const auto info : mControlInfos) {
+    for (const auto& info : mControlInfos) {
         ControlInfo_Persist(info.get(), str);
     }
 }
@@ -185,7 +224,7 @@ bool LivePreset::initFromChunkHandler(std::string &key, std::vector<const char *
         return true;
     }
     if (key == "RECALLID") {
-        mRecallId = params[0];
+        mRecallId = std::stoi(params[0]);
         return true;
     }
     return false;
@@ -219,7 +258,7 @@ void LivePreset::recallSettings(FilterMode parentFilter) const {
     for (const auto track : mTracks) {
         track->recallSettings(filter);
     }
-    for (const auto info : mControlInfos) {
+    for (const auto& info : mControlInfos) {
         ControlInfo_RecallSettings(info.get(), filter);
     }
 }

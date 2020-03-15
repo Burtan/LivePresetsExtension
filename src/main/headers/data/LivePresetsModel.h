@@ -56,14 +56,16 @@ public:
 
     const LivePreset* getActivePreset();
     void recallByValue(int cc);
-    void setRecallIdForPreset(LivePreset* preset, int id);
+    int getRecallIdForPreset(LivePreset* preset, int id = 0);
 
     //undo redo relevant
+    void replacePreset(LivePreset* oldPreset, LivePreset* newPreset);
     void removePreset(LivePreset* preset, bool saveUndo = true);
     void addPreset(LivePreset* preset, bool saveUndo = true);
     [[nodiscard]] LivePreset* getCurrentSettingsAsPreset() const;
     void removePresets(std::vector<LivePreset*> &preset);
     void recallPreset(LivePreset* preset);
+    bool recallPresetByGuid(GUID guid);
     void onApplySelectedTrackConfigsToAllPresets(const std::vector<MediaTrack*>& tracks);
     void reset();
 protected:

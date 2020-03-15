@@ -76,6 +76,7 @@ int TreeView::onKey(MSG* msg, int iKeyState) {
         if (!iKeyState) {
             auto selected = TreeView_GetSelection(mHwnd);
             switch(msg->wParam) {
+                case VK_SPACE:
                 case VK_RETURN: {
                     if (mAdapter) {
                         mAdapter->onAction(mHwnd, selected);
@@ -104,4 +105,3 @@ void TreeView::setAdapter(std::unique_ptr<LivePresetsTreeAdapter> adapter) {
 LivePresetsTreeAdapter* TreeView::getAdapter() {
     return mAdapter.get();
 }
-

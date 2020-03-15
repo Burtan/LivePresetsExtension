@@ -34,21 +34,27 @@
 #include <memory>
 #include <data/models/TrackInfo.h>
 #include <data/models/MasterTrackInfo.h>
+#include <data/models/base/BaseCommand.h>
+
 class ControlInfo;
 
 class LivePreset : public BaseInfo {
 public:
 	explicit LivePreset(std::string name = "New preset", std::string description = "");
-    explicit LivePreset(ProjectStateContext* ctx);
-    LivePreset& operator=(LivePreset&& other);
+    explicit LivePreset(ProjectStateContext* ctx, BaseCommand::CommandID recallCmdId = 0);
+    LivePreset& operator=(LivePreset&& other) noexcept;
     ~LivePreset();
+
+    //transient data
+    BaseCommand::CommandID mRecallCmdId = 0;
+    std::string mRecallIdDisplayingString = "";
 
     //data to persist
     GUID mGuid = GUID();
     std::string mName;
     std::string mDescription;
     time_t mDate = time(nullptr);
-    std::string mRecallId = "";
+    int mRecallId = -1;
 
     //data that can be recalled
     MasterTrackInfo* mMasterTrack;
@@ -60,6 +66,7 @@ public:
     void saveCurrentState(bool update) override;
     FilterPreset* extractFilterPreset() override;
     bool applyFilterPreset(FilterPreset *preset) override;
+    void createRecallAction();
 protected:
     [[nodiscard]] std::set<std::string> getKeys() const override;
     void persistHandler(WDL_FastString &str) const override;

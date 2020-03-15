@@ -35,11 +35,10 @@
 
 class HotkeyCommand : public BaseCommand {
 public:
-    HotkeyCommand(const char* name, const char* desc, Callback callback);
+    HotkeyCommand(const std::string& name, const std::string& desc, Callback callback);
+    ~HotkeyCommand() override;
 
     void run(int val, int valhw, int relmode, HWND hwnd) override;
-private:
-    gaccel_register_t g{};
 };
 
 

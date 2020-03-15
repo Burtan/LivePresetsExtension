@@ -32,6 +32,8 @@
 #include <LivePresetsExtension.h>
 #include <resources/resource.h>
 
+WNDPROC LivePresetEditController::defWndProc;
+
 LivePresetEditController::LivePresetEditController(LivePreset* preset)
         : ModalWindow(IDD_LIVEPRESET, preset->mName.data(), "LivePresetsEditController", 0),
         mPreset(preset)
@@ -48,12 +50,21 @@ void LivePresetEditController::onInitDlg() {
     //fills TextEdits
     SetDlgItemText(mHwnd, IDC_NAME, mPreset->mName.data());
     SetDlgItemText(mHwnd, IDC_DESC, mPreset->mDescription.data());
-    SetDlgItemText(mHwnd, IDC_ID, mPreset->mRecallId.data());
+    SetDlgItemText(mHwnd, IDC_ID, std::to_string(mPreset->mRecallId).data());
 
     //create TreeView and add event listeners
     mTree = std::make_unique<TreeView>(GetDlgItem(mHwnd, IDC_TREE));
     auto treeAdapter = std::make_unique<LivePresetsTreeAdapter>(mPreset);
     mTree->setAdapter(std::move(treeAdapter));
+
+    //add custom wndProc to hook key events for tree, custom tree wndProc doesn't work on SWELL mac, so getting dlg here
+    if (GetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC)) {
+        SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_USERDATA, (LONG_PTR) mTree.get());
+        defWndProc = (WNDPROC) SetWindowLongPtr(GetDlgItem(mHwnd, IDC_TREE), GWLP_WNDPROC, (LONG_PTR) wndProc);
+    } else {
+        SetWindowLongPtr(mHwnd, GWLP_USERDATA, (LONG_PTR) this);
+        defWndProc = (WNDPROC) SetWindowLongPtr(mHwnd, GWLP_WNDPROC, (LONG_PTR) wndProc);
+    }
 
     //hide combo in ce version
     if (!Licensing_IsUltimate()) {
@@ -66,6 +77,29 @@ void LivePresetEditController::onInitDlg() {
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
     auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(FilterPreset_GetNames(g_lpe->mModel.mFilterPresets));
     mCombo->setAdapter(std::move(comboAdapter));
+}
+
+LRESULT WINAPI LivePresetEditController::wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    //treat every unhandled key as used for tree as a workaround on mac
+#ifdef __APPLE__
+    auto* ctrl = reinterpret_cast<LivePresetEditController*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    auto* tree = ctrl->mTree.get();
+#else
+    auto* tree = reinterpret_cast<TreeView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+#endif
+
+    if (uMsg == WM_KEYDOWN) {
+        MSG msg{};
+        msg.hwnd = hwnd;
+        msg.message = uMsg;
+        msg.wParam = wParam;
+        msg.lParam = lParam;
+
+        if (auto handled = tree->onKey(&msg, lParam & 24)) {
+            return handled;
+        }
+    }
+    return CallWindowProc(defWndProc, hwnd, uMsg, wParam, lParam);
 }
 
 void LivePresetEditController::cancel() {
@@ -84,7 +118,7 @@ void LivePresetEditController::save() {
     //surround with try/catch because stoi can fail when there is no valid id
     try {
         int id = std::stoi(buf);
-        g_lpe->mModel.setRecallIdForPreset(mPreset, id);
+        mPreset->mRecallId = g_lpe->mModel.getRecallIdForPreset(mPreset, id);
     } catch (std::exception&) {}
 
     keepPreset = true;
@@ -114,6 +148,12 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
         case IDC_SAVE:
             save();
             break;
+        case IDC_RECALL: {
+            if (mPreset->mRecallCmdId != 0) {
+                auto section = SectionFromUniqueID(0);
+                DoActionShortcutDialog(mHwnd, section, mPreset->mRecallCmdId, 0);
+            }
+        }
         case IDC_SETTINGS:
             showFilterSettings();
             break;
@@ -121,7 +161,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
             auto filter = mPreset->extractFilterPreset();
             std::string name = "New preset";
             auto dlg = ConfirmationController("Save filter...", &name);
-            if (bool result = dlg.show()) {
+            if (dlg.show()) {
                 //When name is entered that exists ask for overwrite
                 if (FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &name)) {
                     char title[256];
@@ -145,14 +185,6 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
 }
 
 int LivePresetEditController::onKey(MSG* msg, int keyState) {
-    HWND focus = GetFocus();
-    if (focus == GetDlgItem(mHwnd, IDC_TREE)) {
-        int handled = mTree->onKey(msg, keyState);
-
-        if (handled)
-            return handled;
-    }
-
     if (msg->message == WM_KEYDOWN) {
         if (!keyState) {
             switch(msg->wParam) {

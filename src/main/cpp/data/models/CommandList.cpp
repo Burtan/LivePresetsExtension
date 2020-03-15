@@ -29,9 +29,16 @@
 
 #include <data/models/CommandList.h>
 
+CommandList::~CommandList() {
+    for (auto pair : mCommands) {
+        delete pair.second;
+    }
+    mCommands.clear();
+}
+
 BaseCommand* CommandList::find(const BaseCommand::CommandID id) const {
     const auto it = mCommands.find(id);
-    return it != mCommands.end() ? it->second.get() : nullptr;
+    return it != mCommands.end() ? it->second : nullptr;
 }
 
 bool CommandList::run(BaseCommand::CommandID id, int val, int valhw, int relmode, HWND hwnd) const {
@@ -43,6 +50,13 @@ bool CommandList::run(BaseCommand::CommandID id, int val, int valhw, int relmode
     return false;
 }
 
-void CommandList::add(std::unique_ptr<BaseCommand> command) {
-    mCommands.emplace(command->id(), std::move(command));
+BaseCommand::CommandID CommandList::add(BaseCommand *command) {
+    mCommands.emplace(command->id(), command);
+    return command->id();
+}
+
+void CommandList::remove(BaseCommand::CommandID cmdId) {
+    auto command = find(cmdId);
+    mCommands.erase(cmdId);
+    delete command;
 }
