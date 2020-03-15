@@ -79,7 +79,8 @@ const char* LivePresetsListAdapter::getLvItemText(int index, int column) {
             return (char*) "";
         }
         case COLUMN::RECALLID:
-            return std::to_string(preset->mRecallId).data();
+            preset->mRecallIdDisplayingString = std::to_string(preset->mRecallId);
+            return preset->mRecallIdDisplayingString.data();
         case COLUMN::NAME:
             return preset->mName.data();
         case COLUMN::DESCRIPTION:

@@ -47,6 +47,7 @@ public:
 
     //transient data
     BaseCommand::CommandID mRecallCmdId = 0;
+    std::string mRecallIdDisplayingString = "";
 
     //data to persist
     GUID mGuid = GUID();
