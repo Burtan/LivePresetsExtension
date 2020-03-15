@@ -134,6 +134,21 @@ void LivePresetsModel::addPreset(LivePreset *preset, bool saveUndo) {
     }
 }
 
+/*
+ * Tries to find a preset with the given guid and recalls it
+ * returns true when a preset was found
+ */
+bool LivePresetsModel::recallPresetByGuid(GUID guid) {
+    for (auto preset : mPresets) {
+        if (GuidsEqual(preset->mGuid, guid)) {
+            recallPreset(preset);
+            return true;
+        }
+    }
+    return false;
+}
+
+
 void LivePresetsModel::recallPreset(LivePreset* preset) {
     if (!preset)
         return;

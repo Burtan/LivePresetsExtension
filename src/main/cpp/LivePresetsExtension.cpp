@@ -35,6 +35,7 @@
 #include <data/models/HotkeyCommand.h>
 #include <data/models/ActionCommand.h>
 #include <ui/LivePresetsListAdapter.h>
+#include <util/util.h>
 
 /*
 Main entry point, is called when the extension is loaded.
@@ -216,6 +217,13 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
 
         InsertMenuItem(subMenu, 0, true, &smii);
     }
+}
+
+/*
+ * Recall a preset by its GUID which is encoded in all 4 variables
+ */
+void LPE::recallPresetByGuid(int data1, int data2, int data3, HWND data4) {
+    mModel.recallPresetByGuid(IntsToGuid(data1, data2, data3, (long) data4));
 }
 
 /**

@@ -158,12 +158,15 @@ void LivePreset::createRecallAction() {
     auto desc = WDL_FastString();
     desc.AppendFormatted(4096, "LPE - Recall preset: %s", mName.data());
 
-    //use try
     using namespace std::placeholders;
+    //transcode guid as 4 int to make it fit to the ActionCommand function
+    int ints[4];
+    GuidToInts(mGuid, ints);
+
     mRecallCmdId = g_lpe->mActions.add(std::make_unique<ActionCommand>(
             name.Get(),
             desc.Get(),
-            std::bind(&LPE::onRecallPreset, g_lpe.get(), mRecallId, _2, _3, _4)
+            std::bind(&LPE::recallPresetByGuid, g_lpe.get(), ints[0], ints[1], ints[2], (HWND) ints[3])
     ));
 }
 
