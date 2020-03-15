@@ -37,6 +37,8 @@
     #include <WDL/swell/swell-types.h>
 #endif
 #include <string>
+#include <functional>
+#include <utility>
 
 class BaseCommand {
 public:
