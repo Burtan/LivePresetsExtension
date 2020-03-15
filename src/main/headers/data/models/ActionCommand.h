@@ -35,12 +35,10 @@
 
 class ActionCommand : public BaseCommand {
 public:
-    ActionCommand(const char* name, const char* desc, Callback callback);
+    ActionCommand(const std::string& name, const std::string& desc, Callback callback);
     ~ActionCommand();
 
     void run(int val, int valhw, int relmode, HWND hwnd) override;
-private:
-    custom_action_register_t s{};
 };
 
 

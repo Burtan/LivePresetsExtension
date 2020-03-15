@@ -45,15 +45,15 @@ public:
     typedef unsigned short CommandID;
     typedef std::function<void(int val, int valhw, int relmode, HWND hwnd)> Callback;
 
-    BaseCommand(const char* name, const char* desc, Callback callback) : mName(name), mDesc(desc),
+    BaseCommand(const std::string& name, const std::string& desc, Callback callback) : mName(name), mDesc(desc),
             mCallback(std::move(callback)) {}
     virtual ~BaseCommand() = default;
 
     [[nodiscard]] CommandID id() const { return mCmdId; }
     virtual void run(int val, int valhw, int relmode, HWND hwnd) = 0;
 protected:
-    const char* mName;
-    const char* mDesc;
+    std::string mName;
+    std::string mDesc;
     CommandID mCmdId = 0;
     Callback mCallback;
 };
