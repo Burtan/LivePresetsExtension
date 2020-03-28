@@ -67,12 +67,9 @@ void LivePresetEditController::onInitDlg() {
         defWndProc = (WNDPROC) SetWindowLongPtr(mHwnd, GWLP_WNDPROC, (LONG_PTR) wndProc);
     }
 
-    //hide combo in ce version
-    if (!Licensing_IsUltimate()) {
-        ShowWindow(GetDlgItem(mHwnd, IDC_LABEL1), SW_HIDE);
-        ShowWindow(GetDlgItem(mHwnd, IDC_COMBO), SW_HIDE);
-        ShowWindow(GetDlgItem(mHwnd, IDC_SETTINGS), SW_HIDE);
-    }
+    ShowWindow(GetDlgItem(mHwnd, IDC_LABEL1), SW_HIDE);
+    ShowWindow(GetDlgItem(mHwnd, IDC_COMBO), SW_HIDE);
+    ShowWindow(GetDlgItem(mHwnd, IDC_SETTINGS), SW_HIDE);
 
     //create combobox
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
