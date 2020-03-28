@@ -30,7 +30,8 @@
 #include <utility>
 #include <set>
 #include <data/models/base/ParameterInfo.h>
-#include <plugins/lpe_ultimate.h>
+#include <data/models/FilterPreset.h>
+
 
 ParameterInfo::ParameterInfo(ProjectStateContext* ctx) {
     initFromChunk(ctx);
@@ -105,9 +106,33 @@ bool ParameterInfo::keyExists(int key) const {
 }
 
 FilterPreset* ParameterInfo::extractFilterPreset() {
-    return ParameterInfo_ExtractFilterPreset(this);
+    FilterPreset::ItemIdentifier id{};
+    auto childs = std::vector<FilterPreset*>();
+    for (auto param : mParams) {
+        childs.push_back(param.second.extractFilterPreset());
+    }
+    return new FilterPreset(id, PARAMS, mFilter, childs);
 }
 
 bool ParameterInfo::applyFilterPreset(FilterPreset *preset) {
-    return ParameterInfo_ApplyFilterPreset(this, preset);
+    if (preset->mType == PARAMS) {
+        mFilter = preset->mFilter;
+
+        auto toFilters = std::set<Filterable*>();
+        for (const auto& param : mParams) {
+            toFilters.insert((Filterable*) &param.second);
+        }
+
+        for (auto child : preset->mChilds) {
+            for (auto toFilter : toFilters) {
+                if (toFilter->applyFilterPreset(child)) {
+                    toFilters.erase(toFilter);
+                    goto cnt;
+                }
+            }
+            cnt:;
+        }
+        return true;
+    }
+    return false;
 }

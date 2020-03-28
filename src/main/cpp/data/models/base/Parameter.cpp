@@ -28,11 +28,13 @@
 ******************************************************************************/
 
 #include <data/models/base/Parameter.h>
-#include <plugins/lpe_ultimate.h>
+#include <data/models/FilterPreset.h>
 
 template<typename T>
 FilterPreset* Parameter<T>::extractFilterPreset() {
-    return Parameter_ExtractFilterPreset(this);
+    FilterPreset::ItemIdentifier id{};
+    id.key = mKey;
+    return new FilterPreset(id, PARAM, mFilter);
 }
 template FilterPreset* Parameter<double>::extractFilterPreset();
 template FilterPreset* Parameter<int>::extractFilterPreset();
@@ -41,7 +43,11 @@ template FilterPreset* Parameter<std::string>::extractFilterPreset();
 
 template<typename T>
 bool Parameter<T>::applyFilterPreset(FilterPreset *preset) {
-    return Parameter_ApplyFilterPreset(this, preset);
+    if (preset->mType == PARAM && preset->mId.key == mKey) {
+        mFilter = preset->mFilter;
+        return true;
+    }
+    return false;
 }
 template bool Parameter<double>::applyFilterPreset(FilterPreset *preset);
 template bool Parameter<int>::applyFilterPreset(FilterPreset *preset);

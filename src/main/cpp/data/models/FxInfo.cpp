@@ -28,6 +28,7 @@
 ******************************************************************************/
 
 #include <data/models/FxInfo.h>
+#include <data/models/FilterPreset.h>
 #include <util/util.h>
 #include <cfloat>
 #include <plugins/reaper_plugin_functions.h>
@@ -237,9 +238,38 @@ std::string FxInfo::getChunkId() const {
 }
 
 FilterPreset* FxInfo::extractFilterPreset() {
-    return FxInfo_ExtractFilterPreset(this);
+    FilterPreset::ItemIdentifier id{};
+    id.guid = mGuid;
+
+    auto childs = std::vector<FilterPreset*>();
+
+    childs.push_back(mParamInfo.extractFilterPreset());
+    childs.push_back(mEnabled.extractFilterPreset());
+    childs.push_back(mIndex.extractFilterPreset());
+    childs.push_back(mPresetName.extractFilterPreset());
+
+    return new FilterPreset(id, FX, mFilter, childs);
 }
 
 bool FxInfo::applyFilterPreset(FilterPreset *preset) {
-    return FxInfo_ApplyFilterPreset(this, preset);
-}
+    if (preset->mType == FX && GuidsEqual(preset->mId.guid, mGuid)) {
+        mFilter = preset->mFilter;
+
+        auto toFilters = std::set<Filterable*>();
+        toFilters.insert((Filterable*) &mParamInfo);
+        toFilters.insert((Filterable*) &mEnabled);
+        toFilters.insert((Filterable*) &mIndex);
+        toFilters.insert((Filterable*) &mPresetName);
+
+        for (auto child : preset->mChilds) {
+            for (auto toFilter : toFilters) {
+                if (toFilter->applyFilterPreset(child)) {
+                    toFilters.erase(toFilter);
+                    goto cnt;
+                }
+            }
+            cnt:;
+        }
+        return true;
+    }
+    return false;}

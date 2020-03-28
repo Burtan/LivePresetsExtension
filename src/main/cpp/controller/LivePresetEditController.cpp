@@ -31,6 +31,7 @@
 #include <controller/ConfirmationController.h>
 #include <LivePresetsExtension.h>
 #include <resources/resource.h>
+#include <data/models/FilterPreset.h>
 
 WNDPROC LivePresetEditController::defWndProc;
 
@@ -172,7 +173,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
                         return;
                     }
                 }
-                FilterPreset_SetName(filter, name);
+                filter->mId.name = name;
                 FilterPreset_AddPreset(g_lpe->mModel.mFilterPresets, filter);
                 mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
                 mTree->invalidate();

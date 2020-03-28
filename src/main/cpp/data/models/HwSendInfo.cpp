@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
-#include <plugins/lpe_ultimate.h>
 #include <data/models/HwSendInfo.h>
 #include <data/models/base/BaseTrackInfo.h>
 #include <plugins/reaper_plugin_functions.h>
+#include <data/models/FilterPreset.h>
 #include <util/util.h>
 
 /**
@@ -192,9 +192,24 @@ std::string HwSendInfo::getChunkId() const {
 }
 
 FilterPreset* HwSendInfo::extractFilterPreset() {
-    return HwSendInfo_ExtractFilterPreset(this);
+    FilterPreset::ItemIdentifier id{};
+    id.data = mParamInfo.at(I_DSTCHAN).mValue;
+
+    auto childs = std::vector<FilterPreset*>();
+    childs.push_back(mParamInfo.extractFilterPreset());
+
+    return new FilterPreset(id, SEND, mFilter, childs);
 }
 
 bool HwSendInfo::applyFilterPreset(FilterPreset *preset) {
-    return HwSendInfo_ApplyFilterPreset(this, preset);
+    if (preset->mType == SEND && preset->mId.data == mParamInfo.at(I_DSTCHAN).mValue) {
+        mFilter = preset->mFilter;
+        for (auto& child : preset->mChilds) {
+            if (mParamInfo.applyFilterPreset(child)) {
+                continue;
+            }
+        }
+        return true;
+    }
+    return false;
 }
