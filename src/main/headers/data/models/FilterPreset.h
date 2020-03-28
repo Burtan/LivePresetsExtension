@@ -5,7 +5,6 @@
 #include <memory>
 #include <data/models/base/Persistable.h>
 #include <data/models/base/Filterable.h>
-#include "data/models/ControlInfo.h"
 
 class FilterPreset : public Persistable {
 public:
