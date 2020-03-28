@@ -50,11 +50,8 @@ void SettingsController::onInitDlg() {
     CheckDlgButton(mHwnd, IDC_RECALL_ACTIVE_PRESETS, g_lpe->mModel.mIsReselectLivePresetByValueRecall);
     CheckDlgButton(mHwnd, IDC_HIDE_MUTED_TRACKS, g_lpe->mModel.mIsHideMutedTracks);
 
-    //hide combo in ce version
-    if (!Licensing_IsUltimate()) {
-        ShowWindow(GetDlgItem(mHwnd, IDC_LABEL1), SW_HIDE);
-        ShowWindow(GetDlgItem(mHwnd, IDC_COMBO), SW_HIDE);
-    }
+    ShowWindow(GetDlgItem(mHwnd, IDC_LABEL1), SW_HIDE);
+    ShowWindow(GetDlgItem(mHwnd, IDC_COMBO), SW_HIDE);
 
     //create combo add FilterPreset names and select default
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
