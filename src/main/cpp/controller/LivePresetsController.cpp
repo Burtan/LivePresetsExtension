@@ -159,7 +159,7 @@ void LivePresetsController::onContextMenu(HMENU menu) {
     auto indices = mList->getSelectedIndices();
     auto filters = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
 
-    if (Licensing_IsUltimate() && !indices.empty()) {
+    if (!indices.empty()) {
 
         //show list of filter presets
         HMENU subMenu = CreatePopupMenu();
