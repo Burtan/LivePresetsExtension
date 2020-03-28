@@ -44,7 +44,7 @@
 #include <data/models/base/Persistable.h>
 #include <data/models/base/Filterable.h>
 
-class ControlInfo : Filterable{};
+class ControlInfo : public Filterable{};
 class Hardware{};
 class Control{};
 class ControlViewController{};
