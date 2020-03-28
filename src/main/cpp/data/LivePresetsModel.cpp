@@ -109,9 +109,7 @@ bool LivePresetsModel::initFromChunkHandler(std::string &key, ProjectStateContex
         return true;
     }
     if (key == "FILTERPRESET") {
-        if (auto preset = FilterPreset_Create(ctx)) {
-            mFilterPresets.push_back(preset);
-        }
+        mFilterPresets.push_back(new FilterPreset(ctx));
         return true;
     }
     if (key == "HARDWARE") {
@@ -215,7 +213,7 @@ void LivePresetsModel::persistHandler(WDL_FastString &str) const {
     }
 
     for (const auto preset : mFilterPresets) {
-        FilterPreset_Persist(preset, str);
+        preset->persist(str);
     }
 
     for (const auto hardware : mHardwares) {

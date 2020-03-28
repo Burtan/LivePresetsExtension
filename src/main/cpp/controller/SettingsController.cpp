@@ -29,7 +29,6 @@
 
 #include <controller/SettingsController.h>
 #include <ui/FilterPresetsComboAdapter.h>
-#include <plugins/lpe_ultimate.h>
 #include <resources/resource.h>
 #include <plugins/reaper_plugin_functions.h>
 #include <LivePresetsExtension.h>

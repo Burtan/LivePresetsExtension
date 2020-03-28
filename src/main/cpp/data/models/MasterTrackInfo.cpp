@@ -27,9 +27,9 @@
 /
 ******************************************************************************/
 
-#include <plugins/lpe_ultimate.h>
 #include <data/models/MasterTrackInfo.h>
 #include <plugins/reaper_plugin_functions.h>
+#include <data/models/FilterPreset.h>
 
 MasterTrackInfo::MasterTrackInfo() {
     MasterTrackInfo::saveCurrentState(false);
@@ -78,11 +78,40 @@ char* MasterTrackInfo::getTreeText() const {
 }
 
 FilterPreset* MasterTrackInfo::extractFilterPreset() {
-    return MasterTrackInfo_ExtractFilterPreset(this);
-}
+    FilterPreset::ItemIdentifier id{};
+
+    auto childs = std::vector<FilterPreset*>();
+
+    childs.push_back(mParamInfo.extractFilterPreset());
+
+    for (auto hwSend : mHwSends) {
+        childs.push_back(hwSend->extractFilterPreset());
+    }
+    for (auto fx : mFxs) {
+        childs.push_back(fx->extractFilterPreset());
+    }
+
+    return new FilterPreset(id, MASTERTRACK, mFilter, childs);}
 
 bool MasterTrackInfo::applyFilterPreset(FilterPreset *preset) {
-    return MasterTrackInfo_ApplyFilterPreset(this, preset);
-}
+    if (preset->mType == MASTERTRACK) {
+        mFilter = preset->mFilter;
+        auto toFilters = std::set<Filterable*>();
+        toFilters.insert((Filterable*) &mParamInfo);
+        toFilters.insert(mHwSends.begin(), mHwSends.end());
+        toFilters.insert(mFxs.begin(), mFxs.end());
+
+        for (auto child : preset->mChilds) {
+            for (auto toFilter : toFilters) {
+                if (toFilter->applyFilterPreset(child)) {
+                    toFilters.erase(toFilter);
+                    goto cnt;
+                }
+            }
+            cnt:;
+        }
+        return true;
+    }
+    return false;}
 
 MasterTrackInfo::~MasterTrackInfo() {}

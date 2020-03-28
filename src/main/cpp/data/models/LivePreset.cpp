@@ -28,8 +28,8 @@
 ******************************************************************************/
 
 #include <data/models/LivePreset.h>
-#include <plugins/lpe_ultimate.h>
 #include <util/util.h>
+#include <data/models/FilterPreset.h>
 #include <LivePresetsExtension.h>
 #include <functional>
 
@@ -279,9 +279,49 @@ std::string LivePreset::getChunkId() const {
 }
 
 FilterPreset* LivePreset::extractFilterPreset() {
-    return LivePreset_ExtractFilterPreset(this);
+    FilterPreset::ItemIdentifier id{};
+    id.guid = mGuid;
+
+    auto childs = std::vector<FilterPreset*>();
+
+    childs.push_back(mMasterTrack->extractFilterPreset());
+
+    for (auto track : mTracks) {
+        childs.push_back(track->extractFilterPreset());
+    }
+
+    for (const auto& ctrl : mControlInfos) {
+        childs.push_back(ctrl->extractFilterPreset());
+    }
+
+    return new FilterPreset(id, LIVEPRESET, mFilter, childs);
 }
 
 bool LivePreset::applyFilterPreset(FilterPreset *preset) {
-    return LivePreset_ApplyFilterPreset(this, preset);
+    if (preset->mType == LIVEPRESET) {
+        mFilter = preset->mFilter;
+
+        auto toFilters = std::set<Filterable*>();
+        toFilters.insert((Filterable*) mMasterTrack);
+        toFilters.insert(mTracks.begin(), mTracks.end());
+
+        //convert shared_ptr to raw pointer
+        auto temp = std::vector<ControlInfo*>();
+        for (const auto& ctrl : mControlInfos) {
+            temp.push_back(ctrl.get());
+        }
+        toFilters.insert(temp.begin(), temp.end());
+
+        for (auto& child : preset->mChilds) {
+            for (auto toFilter : toFilters) {
+                if (toFilter->applyFilterPreset(child)) {
+                    toFilters.erase(toFilter);
+                    goto cnt;
+                }
+            }
+            cnt:;
+        }
+        return true;
+    }
+    return false;
 }
