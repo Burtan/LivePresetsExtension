@@ -36,34 +36,26 @@
 template<typename T>
 class Parameter : public Filterable {
 public:
-    explicit Parameter(std::string name, T value, FilterMode filter = RECALLED);
-    explicit Parameter(int name, T value, FilterMode filter = RECALLED);
+    explicit Parameter(Filterable* parent, std::string name, T value, FilterMode filter = RECALLED);
+    explicit Parameter(Filterable* parent, int name, T value, FilterMode filter = RECALLED);
 
     std::string mKey;
     T mValue;
 
     FilterPreset* extractFilterPreset() override;
     bool applyFilterPreset(FilterPreset *preset) override;
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
 };
 
 template<typename T>
-Parameter<T>::Parameter(std::string name, T value, FilterMode filter)
-        : Filterable(filter), mKey(std::move(name)), mValue(std::move(value))
+Parameter<T>::Parameter(Filterable* parent, std::string name, T value, FilterMode filter)
+        : Filterable(parent, filter), mKey(std::move(name)), mValue(std::move(value))
 {}
 
 template<typename T>
-Parameter<T>::Parameter(int name, T value, FilterMode filter)
-        : Filterable(filter), mKey(std::to_string(name)), mValue(std::move(value))
+Parameter<T>::Parameter(Filterable* parent, int name, T value, FilterMode filter)
+        : Filterable(parent, filter), mKey(std::to_string(name)), mValue(std::move(value))
 {}
-
-template<typename T>
-char* Parameter<T>::getTreeText() const {
-    std::string newText = getFilterText() + " " + mKey;
-    newText.copy(mTreeText, newText.length());
-    mTreeText[newText.length()] = '\0';
-    return mTreeText;
-}
 
 
 #endif //LPE_PARAMINFO_H

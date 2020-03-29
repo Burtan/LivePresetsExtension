@@ -85,6 +85,7 @@ static bool loadAPI(void* (*getFunc)(const char*)) {
             REQUIRED_API(TrackFX_GetPreset),
             REQUIRED_API(TrackFX_SetPreset),
             REQUIRED_API(TrackFX_GetEnabled),
+            REQUIRED_API(TrackFX_SetEnabled),
             REQUIRED_API(TrackFX_GetNumParams),
             REQUIRED_API(TrackFX_GetParam),
             REQUIRED_API(TrackFX_SetParam),

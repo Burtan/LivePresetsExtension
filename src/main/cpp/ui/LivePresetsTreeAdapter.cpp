@@ -27,12 +27,11 @@
 /
 ******************************************************************************/
 
+#include <ui/base/TreeView.h>
 #include "ui/LivePresetsTreeAdapter.h"
 #include "data/models/TrackInfo.h"
 
-LivePresetsTreeAdapter::LivePresetsTreeAdapter(LivePreset *preset) : mPreset(preset) {
-
-}
+LivePresetsTreeAdapter::LivePresetsTreeAdapter(LivePreset *preset) : mPreset(preset) {}
 
 void LivePresetsTreeAdapter::onAction(HWND hwnd, HTREEITEM hItem) {
     TVITEM qItem{};
@@ -73,13 +72,14 @@ void LivePresetsTreeAdapter::onAction(HWND hwnd, HTREEITEM hItem) {
         }
         case TYPE::PARAM: {
             auto* param = (Parameter<double>*) data.lParam;
-            param->shuffleFilter();
+            param->shuffleFilter(true);
             qItem.pszText = param->getTreeText();
             break;
         }
-        case TYPE::LIVEPRESET:
         case TYPE::CTRL:
+        case TYPE::LIVEPRESET:
         case TYPE::NOTHING:
+            //should not happen
             break;
     }
     TreeView_SetItem(hwnd, &qItem);
@@ -98,8 +98,9 @@ std::vector<TVITEM> LivePresetsTreeAdapter::getChilds(TVITEM* parent) {
             child.pszText = mPreset->mMasterTrack->getTreeText();
             child.cchTextMax = sizeof(mPreset->mMasterTrack->getTreeText());
 
-            mData.push_back({TYPE::MASTERTRACK, (LPARAM) mPreset->mMasterTrack, TYPE::LIVEPRESET});
-            child.lParam = (LPARAM) mData.size() - 1;
+            auto lparam = (LPARAM) mPreset->mMasterTrack;
+            mData[lparam] = {TYPE::MASTERTRACK, lparam, TYPE::LIVEPRESET};
+            child.lParam = lparam;
 
             child.state = TVIS_EXPANDED;
             childs.push_back(child);
@@ -112,8 +113,9 @@ std::vector<TVITEM> LivePresetsTreeAdapter::getChilds(TVITEM* parent) {
             child.pszText = track->getTreeText();
             child.cchTextMax = sizeof(track->getTreeText());
 
-            mData.push_back({TYPE::TRACK, (LPARAM) track, TYPE::LIVEPRESET});
-            child.lParam = (LPARAM) mData.size() - 1;
+            auto lparam = (LPARAM) track;
+            mData[lparam] = {TYPE::TRACK, lparam, TYPE::LIVEPRESET};
+            child.lParam = lparam;
 
             child.state = TVIS_EXPANDED;
             childs.push_back(child);
@@ -162,8 +164,9 @@ void LivePresetsTreeAdapter::addChildsForTrack(TrackInfo* item, std::vector<TVIT
         child.pszText = item->mName.getTreeText();
         child.cchTextMax = sizeof(item->mName.getTreeText());
 
-        mData.push_back({TYPE::NOTHING, (LPARAM) &item->mName, TYPE::TRACK});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mName;
+        mData[lparam] = {TYPE::PARAM, lparam, TYPE::TRACK};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -175,8 +178,9 @@ void LivePresetsTreeAdapter::addChildsForTrack(TrackInfo* item, std::vector<TVIT
         child.pszText = item->mParamInfo.getTreeText();
         child.cchTextMax = sizeof(item->mParamInfo.getTreeText());
 
-        mData.push_back({TYPE::PARAMS, (LPARAM) &item->mParamInfo, TYPE::TRACK});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mParamInfo;
+        mData[lparam] = {TYPE::PARAMS, lparam, TYPE::TRACK};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -188,8 +192,9 @@ void LivePresetsTreeAdapter::addChildsForTrack(TrackInfo* item, std::vector<TVIT
         child.pszText = fxInfo->getTreeText();
         child.cchTextMax = sizeof(fxInfo->getTreeText());
 
-        mData.push_back({TYPE::FX, (LPARAM) fxInfo, TYPE::TRACK});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) fxInfo;
+        mData[lparam] = {TYPE::FX, lparam, TYPE::TRACK};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -201,8 +206,9 @@ void LivePresetsTreeAdapter::addChildsForTrack(TrackInfo* item, std::vector<TVIT
         child.pszText = fxInfo->getTreeText();
         child.cchTextMax = sizeof(fxInfo->getTreeText());
 
-        mData.push_back({TYPE::FX, (LPARAM) fxInfo, TYPE::TRACK});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) fxInfo;
+        mData[lparam] = {TYPE::FX, lparam, TYPE::TRACK};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -224,8 +230,9 @@ void LivePresetsTreeAdapter::addChildsForMasterTrack(MasterTrackInfo* item, std:
         child.pszText = item->mParamInfo.getTreeText();
         child.cchTextMax = sizeof(item->mParamInfo.getTreeText());
 
-        mData.push_back({TYPE::PARAMS, (LPARAM) &item->mParamInfo, TYPE::MASTERTRACK});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mParamInfo;
+        mData[lparam] = {TYPE::PARAMS, lparam, TYPE::MASTERTRACK};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -237,8 +244,9 @@ void LivePresetsTreeAdapter::addChildsForMasterTrack(MasterTrackInfo* item, std:
         child.pszText = fxInfo->getTreeText();
         child.cchTextMax = sizeof(fxInfo->getTreeText());
 
-        mData.push_back({TYPE::FX, (LPARAM) fxInfo, TYPE::MASTERTRACK});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) fxInfo;
+        mData[lparam] = {TYPE::FX, lparam, TYPE::MASTERTRACK};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -257,8 +265,9 @@ void LivePresetsTreeAdapter::addChildsForParams(ParameterInfo* item, std::vector
         child.pszText = (char*) param.getTreeText();
         child.cchTextMax = sizeof(param.getTreeText());
 
-        mData.push_back({TYPE::PARAM, (LPARAM) &param, TYPE::PARAMS});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &param;
+        mData[lparam] = {TYPE::PARAM, lparam, TYPE::PARAMS};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -273,8 +282,10 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         child.pszText = (char*) item->mIndex.getTreeText();
         child.cchTextMax = sizeof(item->mIndex.getTreeText());
 
-        mData.push_back({TYPE::NOTHING, (LPARAM) &item->mIndex, TYPE::FX});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mIndex;
+
+        mData[lparam] = {TYPE::PARAM, lparam, TYPE::FX};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -285,8 +296,9 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         child.pszText = (char*) item->mEnabled.getTreeText();
         child.cchTextMax = sizeof(item->mEnabled.getTreeText());
 
-        mData.push_back({TYPE::NOTHING, (LPARAM) &item->mEnabled, TYPE::FX});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mEnabled;
+        mData[lparam] = {TYPE::PARAM, lparam, TYPE::FX};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -297,8 +309,9 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         child.pszText = (char*) item->mPresetName.getTreeText();
         child.cchTextMax = sizeof(item->mPresetName.getTreeText());
 
-        mData.push_back({TYPE::NOTHING, (LPARAM) &item->mPresetName, TYPE::FX});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mPresetName;
+        mData[lparam] = {TYPE::PARAM, lparam, TYPE::FX};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -309,8 +322,9 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         child.pszText = (char*) item->mParamInfo.getTreeText();
         child.cchTextMax = sizeof(item->mParamInfo.getTreeText());
 
-        mData.push_back({TYPE::PARAMS, (LPARAM) &item->mParamInfo, TYPE::FX});
-        child.lParam = (LPARAM) mData.size() - 1;
+        auto lparam = (LPARAM) &item->mParamInfo;
+        mData[lparam] = {TYPE::PARAMS, lparam, TYPE::FX};
+        child.lParam = lparam;
 
         childs->push_back(child);
     }
@@ -323,8 +337,9 @@ void LivePresetsTreeAdapter::addChildsForSend(BaseSendInfo* item, std::vector<TV
     child.pszText = item->mParamInfo.getTreeText();
     child.cchTextMax = sizeof(item->mParamInfo.getTreeText());
 
-    mData.push_back({TYPE::PARAMS, (LPARAM) &item->mParamInfo, TYPE::SEND});
-    child.lParam = (LPARAM) mData.size() - 1;
+    auto lparam = (LPARAM) &item->mParamInfo;
+    mData[lparam] = {TYPE::PARAMS, lparam, TYPE::SEND};
+    child.lParam = lparam;
 
     childs->push_back(child);
 }
@@ -336,11 +351,10 @@ void LivePresetsTreeAdapter::addSendInfoChild(BaseSendInfo *item, std::vector<TV
     child.pszText = item->getTreeText();
     child.cchTextMax = sizeof(item->getTreeText());
 
-    mData.push_back({TYPE::SEND, (LPARAM) item, TYPE::SEND});
-    child.lParam = (LPARAM) mData.size() - 1;
+    auto lparam = (LPARAM) item;
+    mData[lparam] = {TYPE::SEND, lparam, TYPE::SEND};
+    child.lParam = lparam;
 
     childs->push_back(child);
 }
-
-
 

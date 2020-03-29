@@ -29,6 +29,8 @@
 
 #include <data/models/base/BaseInfo.h>
 
+BaseInfo::BaseInfo(Filterable *parent) : Filterable(parent) {}
+
 /**
  * Function to help persisting data
  * BaseInfo persists ParameterInfo and Filter
@@ -47,7 +49,11 @@ void BaseInfo::persistHandler(WDL_FastString &str) const {
  */
 bool BaseInfo::initFromChunkHandler(std::string &key, ProjectStateContext* ctx) {
     if (key == "PARAMETERINFO") {
-        mParamInfo = ParameterInfo(ctx);
+        mParamInfo = ParameterInfo(this, ctx);
+        //fix parent after copy assignment
+        for (auto& entry : mParamInfo.mParams) {
+            entry.second.mParent = &mParamInfo;
+        }
         return true;
     }
     return false;

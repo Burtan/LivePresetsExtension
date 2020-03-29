@@ -57,8 +57,8 @@
 
 class BaseSendInfo : public BaseInfo {
 public:
-    explicit BaseSendInfo() = default;
-    BaseSendInfo(GUID trackGuid, int sendidx);
+    explicit BaseSendInfo(Filterable* parent);
+    BaseSendInfo(Filterable* parent, GUID trackGuid, int sendidx);
 
     //not persisted!!
     mutable std::string mName = "Send";

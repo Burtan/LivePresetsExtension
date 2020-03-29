@@ -34,17 +34,18 @@
 #include <plugins/reaper_plugin_functions.h>
 #include <LivePresetsExtension.h>
 
-FxInfo::FxInfo(GUID trackGuid, GUID fxGuid) : mTrackGuid(trackGuid), mGuid(fxGuid) {
+FxInfo::FxInfo(Filterable* parent, GUID trackGuid, GUID fxGuid) : BaseInfo(parent),
+        mTrackGuid(trackGuid), mGuid(fxGuid) {
     FxInfo::saveCurrentState(false);
 }
 
-FxInfo::FxInfo(ProjectStateContext* ctx) {
+FxInfo::FxInfo(Filterable* parent, ProjectStateContext* ctx) : BaseInfo(parent) {
     initFromChunk(ctx);
 }
 
 void FxInfo::saveCurrentState(bool update) {
     int index = getCurrentIndex();
-    mIndex = Parameter<int>("INDEX", index, update ? mIndex.mFilter : RECALLED);
+    mIndex = Parameter<int>(this, "INDEX", index, update ? mIndex.mFilter : RECALLED);
 
     //dont save any more info is the Fx cannot be found
     if (index == -1)
@@ -55,23 +56,25 @@ void FxInfo::saveCurrentState(bool update) {
     mName = buffer;
 
     TrackFX_GetPreset(getTrack(), index, buffer, sizeof(buffer));
-    mPresetName = Parameter<std::string>("PRESETNAME", buffer, update ? mPresetName.mFilter : RECALLED);
+    mPresetName = Parameter<std::string>(this, "PRESETNAME", buffer, update ? mPresetName.mFilter : RECALLED);
 
-    mEnabled = Parameter<bool>("ENABLED", TrackFX_GetEnabled(getTrack(), index), update ? mEnabled.mFilter : RECALLED);
+    mEnabled = Parameter<bool>(this, "ENABLED", TrackFX_GetEnabled(getTrack(), index), update ? mEnabled.mFilter : RECALLED);
 
     auto min = DBL_MIN;
     auto max = DBL_MAX;
 
     for (int i = 0; i < TrackFX_GetNumParams(getTrack(), index); i++) {
         auto filter = update ? (mParamInfo.keyExists(i) ? mParamInfo.at(i).mFilter : RECALLED) : RECALLED;
-        auto param = Parameter<double>(i, TrackFX_GetParam(getTrack(), index, i, &min, &max), filter);
+        auto param = Parameter<double>(&mParamInfo, i, TrackFX_GetParam(getTrack(), index, i, &min, &max), filter);
         mParamInfo.insert(i, param);
     }
 }
 
 void FxInfo::recallSettings(FilterMode parentFilter) const {
+    //dont continue recalling when parent filter or own filter is IGNORED
     if (parentFilter == IGNORED || mFilter == IGNORED)
         return;
+    //combine parent filter and own filter
     FilterMode cFilter = Merge(parentFilter, mFilter);
 
     int index = getCurrentIndex();
@@ -203,15 +206,15 @@ bool FxInfo::initFromChunkHandler(std::string &key, std::vector<const char*> &pa
         return true;
     }
     if (key == "ENABLED") {
-        mEnabled = Parameter<bool>("ENABLED", params[0], (FilterMode) std::stoi(params[1]));
+        mEnabled = Parameter<bool>(this, "ENABLED", std::stoi(params[0]), (FilterMode) std::stoi(params[1]));
         return true;
     }
     if (key == "INDEX") {
-        mIndex = Parameter<int>("INDEX", std::stoi(params[0]), (FilterMode) std::stoi(params[1]));
+        mIndex = Parameter<int>(this, "INDEX", std::stoi(params[0]), (FilterMode) std::stoi(params[1]));
         return true;
     }
     if (key == "PRESET") {
-        mPresetName = Parameter<std::string>("PRESET", params[0], (FilterMode) std::stoi(params[1]));
+        mPresetName = Parameter<std::string>(this, "PRESET", params[0], (FilterMode) std::stoi(params[1]));
         return true;
     }
 
@@ -226,7 +229,7 @@ std::set<std::string> FxInfo::getKeys() const {
     return set;
 }
 
-char* FxInfo::getTreeText() const {
+char * FxInfo::getTreeText() const {
     std::string newText = getFilterText() + " " + mName;
     newText.copy(mTreeText, newText.length());
     mTreeText[newText.length()] = '\0';

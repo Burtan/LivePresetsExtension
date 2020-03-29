@@ -57,11 +57,11 @@ public:
     int mRecallId = -1;
 
     //data that can be recalled
-    MasterTrackInfo* mMasterTrack;
+    MasterTrackInfo* mMasterTrack = nullptr;
     std::vector<TrackInfo*> mTracks;
     std::vector<std::shared_ptr<ControlInfo>> mControlInfos;
 
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
     void recallSettings(FilterMode filter) const override;
     void saveCurrentState(bool update) override;
     FilterPreset* extractFilterPreset() override;

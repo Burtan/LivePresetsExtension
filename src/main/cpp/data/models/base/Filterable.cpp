@@ -30,7 +30,17 @@
 #include <cstdarg>
 #include <data/models/base/Filterable.h>
 
-Filterable::Filterable(FilterMode mFilter) : mFilter(mFilter) {}
+Filterable::Filterable(Filterable* parent, FilterMode mFilter) : mFilter(mFilter), mParent(parent) {}
+
+bool Filterable::isFilteredInChain() const {
+    FilterMode filter = mFilter;
+    Filterable* parent = mParent;
+    while (parent != nullptr) {
+        filter = MergeUpstream(parent->mFilter, filter);
+        parent = parent->mParent;
+    }
+    return filter == IGNORED;
+}
 
 std::string Filterable::getFilterText() const {
     switch (mFilter) {
@@ -43,6 +53,16 @@ std::string Filterable::getFilterText() const {
         default:
             return "";
     }
+}
+
+/**
+ * Used to determine if the last child in the filter chain is filtered or not by going up the filter chain
+ * Highest IGNORED or RECALLED determines the child behaviour
+ */
+FilterMode Filterable::MergeUpstream(FilterMode parent, FilterMode obj) {
+    if (parent == CHILD)
+        return obj;
+    return parent;
 }
 
 FilterMode Filterable::Merge(int num, ...) {
@@ -68,10 +88,14 @@ FilterMode Filterable::Merge(int num, ...) {
     return outFilter;
 }
 
-void Filterable::shuffleFilter() {
+void Filterable::shuffleFilter(bool noChild) {
     switch (mFilter) {
         case RECALLED:
-            mFilter = CHILD;
+            if (noChild) {
+                mFilter = IGNORED;
+            } else {
+                mFilter = CHILD;
+            }
             break;
         case CHILD:
             mFilter = IGNORED;
@@ -81,5 +105,3 @@ void Filterable::shuffleFilter() {
             break;
     }
 }
-
-

@@ -61,6 +61,7 @@ class BaseTrackInfo : public BaseInfo {
 public:
     static const GUID MASTER_GUID;
 
+    BaseTrackInfo(Filterable* parent);
     ~BaseTrackInfo();
 
     //data to persist
@@ -77,9 +78,12 @@ protected:
     void persistHandler(WDL_FastString &str) const override;
     [[nodiscard]] virtual MediaTrack* getMediaTrack() const = 0;
     void recallHwSends(FilterMode parentFilter) const;
-    static void saveSwSendState(std::vector<SwSendInfo*>& swSends, MediaTrack* track, const GUID* guid, bool update);
-    static void saveHwSendState(std::vector<HwSendInfo*>& hwSends, MediaTrack* track, const GUID* guid, bool update);
-    static void saveFxState(std::vector<FxInfo*>& fxs, MediaTrack* track, const GUID* guid, bool update, bool rec = false);
+    static void saveSwSendState(Filterable *parent, std::vector<SwSendInfo *> &swSends, MediaTrack *track,
+            const GUID *guid, bool update);
+    static void saveHwSendState(Filterable *parent, std::vector<HwSendInfo *> &hwSends, MediaTrack *track,
+            const GUID *guid, bool update);
+    static void saveFxState(Filterable *parent, std::vector<FxInfo *> &fxs, MediaTrack *track, const GUID *guid,
+            bool update, bool rec = false);
 };
 
 

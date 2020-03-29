@@ -37,19 +37,19 @@ public:
     //adept to RecFx indices: 0x1000000..0x1000000+n
     static const int RECFX_INDEX_FACTOR = 0x1000000;
 
-    explicit FxInfo(GUID trackGuid, GUID fxGuid);
-    explicit FxInfo(ProjectStateContext* ctx);
+    explicit FxInfo(Filterable* parent, GUID trackGuid, GUID fxGuid);
+    explicit FxInfo(Filterable* parent, ProjectStateContext* ctx);
 
     GUID mGuid;
     GUID mTrackGuid;
     std::string mName;
 
     //data that can be recalled
-    Parameter<int> mIndex = Parameter<int>("INDEX", 0);
-    Parameter<bool> mEnabled = Parameter<bool>("ENABLED", true);
-    Parameter<std::string> mPresetName = Parameter<std::string>("PRESETNAME", "");
+    Parameter<int> mIndex = Parameter<int>(this, "INDEX", 0);
+    Parameter<bool> mEnabled = Parameter<bool>(this, "ENABLED", true);
+    Parameter<std::string> mPresetName = Parameter<std::string>(this, "PRESETNAME", "");
 
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
     void recallSettings(FilterMode filter) const override;
     void saveCurrentState(bool update) override;
     FilterPreset* extractFilterPreset() override;

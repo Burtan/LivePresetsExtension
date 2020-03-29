@@ -36,10 +36,11 @@
 
 class BaseInfo : public Filterable, public Persistable {
 public:
-    ParameterInfo mParamInfo;
+    explicit BaseInfo(Filterable* parent);
+
+    ParameterInfo mParamInfo = ParameterInfo(this);
 
     virtual void recallSettings(FilterMode filter) const = 0;
-
     virtual void saveCurrentState(bool update) = 0;
 protected:
     [[nodiscard]] virtual std::set<std::string> getKeys() const;

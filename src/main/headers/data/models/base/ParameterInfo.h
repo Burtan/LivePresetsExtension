@@ -37,8 +37,10 @@
 
 class ParameterInfo : public Filterable, public Persistable {
 public:
-    ParameterInfo() = default;
-    explicit ParameterInfo(ProjectStateContext* ctx);
+    explicit ParameterInfo(Filterable* parent);
+    explicit ParameterInfo(Filterable* parent, ProjectStateContext* ctx);
+
+    std::map<std::string, Parameter<double>> mParams;
 
     [[nodiscard]] std::vector<std::string> getKeys();
     [[nodiscard]] const Parameter<double>& at(const std::string &key) const;
@@ -48,11 +50,9 @@ public:
     [[nodiscard]] int size() const;
     void clear();
     [[nodiscard]] bool keyExists(int key) const;
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
     FilterPreset* extractFilterPreset() override;
     bool applyFilterPreset(FilterPreset *preset) override;
-
-    std::map<std::string, Parameter<double>> mParams;
 protected:
     void persistHandler(WDL_FastString &str) const override;
     bool initFromChunkHandler(std::string &key, std::vector<const char*> &params) override;

@@ -49,18 +49,18 @@
 
 class TrackInfo : public BaseTrackInfo {
 public:
-    explicit TrackInfo(MediaTrack* track);
-    explicit TrackInfo(ProjectStateContext* ctx);
+    explicit TrackInfo(Filterable* parent, MediaTrack* track);
+    explicit TrackInfo(Filterable* parent, ProjectStateContext* ctx);
     ~TrackInfo();
 
     //data to persist
     GUID mGuid = GUID();
     //data that can be recalled
-    Parameter<std::string> mName = Parameter<std::string>("NAME", "");
+    Parameter<std::string> mName = Parameter<std::string>(this, "NAME", "");
     std::vector<SwSendInfo*> mSwSends;
     std::vector<FxInfo*> mRecFxs;
 
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
     void saveCurrentState(bool update) override;
 
     void recallSettings(FilterMode parentFilter) const override;

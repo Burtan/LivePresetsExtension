@@ -50,36 +50,57 @@ void TreeView::invalidate() {
     }
 
     for (auto child : mAdapter->getChilds(nullptr)) {
-        addItem(child, TVI_ROOT);
+        addItem(child, TVI_ROOT, false);
     }
 }
 
-void TreeView::addItem(TVITEM tvi, HTREEITEM parent) {
-    TV_INSERTSTRUCT info;
-    info.hInsertAfter = TVI_LAST;
-    info.hParent = parent;
-    auto itemHwnd = TreeView_InsertItem(mHwnd, &info);
+void TreeView::invalidateChilds(HTREEITEM parent) {
+    TVITEM tvi{};
+    tvi.hItem = parent;
+    tvi.mask = TVIF_HANDLE | TVIF_PARAM;
+    TreeView_GetItem(mHwnd, &tvi);
+
+    for (auto child : mAdapter->getChilds(&tvi)) {
+        addItem(child, parent, true);
+    }
+}
+
+void TreeView::addItem(TVITEM tvi, HTREEITEM parent, bool update) {
+    HTREEITEM current = nullptr;
+    if (update) {
+        //update available items
+        current = mTreeItems[tvi.lParam];
+    } else {
+        //create new items
+        TV_INSERTSTRUCT info;
+        info.hInsertAfter = TVI_LAST;
+        info.hParent = parent;
+        current = TreeView_InsertItem(mHwnd, &info);
+        mTreeItems[tvi.lParam] = current;
+    }
 
     auto childs = mAdapter->getChilds(&tvi);
+
     tvi.mask |= TVIF_HANDLE | TVIF_CHILDREN;
-    tvi.hItem = itemHwnd;
+    tvi.hItem = current;
     tvi.cChildren = childs.size();
     TreeView_SetItem(mHwnd, &tvi);
 
     for (auto child : childs) {
-        addItem(child, itemHwnd);
+        addItem(child, current, update);
     }
 }
 
 int TreeView::onKey(MSG* msg, int iKeyState) {
     if (msg->message == WM_KEYDOWN) {
         if (!iKeyState) {
-            auto selected = TreeView_GetSelection(mHwnd);
+            HTREEITEM selected = TreeView_GetSelection(mHwnd);
             switch(msg->wParam) {
                 case VK_SPACE:
                 case VK_RETURN: {
                     if (mAdapter) {
                         mAdapter->onAction(mHwnd, selected);
+                        invalidateChilds(selected);
                         return 1;
                     }
                 }
@@ -95,6 +116,7 @@ int TreeView::onKey(MSG* msg, int iKeyState) {
  */
 void TreeView::setAdapter(std::unique_ptr<LivePresetsTreeAdapter> adapter) {
     mAdapter.swap(adapter);
+    mTreeItems.clear();
     invalidate();
 }
 
