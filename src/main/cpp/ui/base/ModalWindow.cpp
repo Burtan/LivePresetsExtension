@@ -75,7 +75,7 @@ void ModalWindow::initDialog(HWND hwndDlg) {
 }
 
 /**
- * Saves the maximum size in the passed pointer
+ * Save the minimum and maximum size in the passed pointer. It is not dpi aware.
  * @param pointer that stores the size infos
  */
 void ModalWindow::getMinMaxInfo(LPMINMAXINFO info) {
@@ -247,9 +247,19 @@ INT_PTR WINAPI ModalWindow::dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
                 wnd->showContextMenu(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), menu);
                 break;
             }
-            case WM_GETMINMAXINFO:
-                wnd->getMinMaxInfo((LPMINMAXINFO) lParam);
+            //define a minimum/maximum size
+            case WM_GETMINMAXINFO: {
+                auto info = (LPMINMAXINFO) lParam;
+                wnd->getMinMaxInfo(info);
+
+                //adjust to window decorations
+                RECT rClient, rWnd;
+                GetClientRect(wnd->mHwnd, &rClient);
+                GetWindowRect(wnd->mHwnd, &rWnd);
+                info->ptMinTrackSize.x += (rWnd.right - rWnd.left) - rClient.right;
+                info->ptMinTrackSize.y += (rWnd.bottom - rWnd.top) - rClient.bottom;
                 break;
+            }
             case WM_SIZE:
                 if (wParam != SIZE_MINIMIZED)
                     wnd->resize();
