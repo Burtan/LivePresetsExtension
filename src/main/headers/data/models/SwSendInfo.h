@@ -40,13 +40,13 @@
  */
 class SwSendInfo : public BaseSendInfo {
 public:
-    SwSendInfo(GUID srcGuid, int sendidx);
-    explicit SwSendInfo(ProjectStateContext *ctx);
+    SwSendInfo(Filterable* parent, GUID srcGuid, int sendidx);
+    explicit SwSendInfo(Filterable* parent, ProjectStateContext *ctx);
 
     GUID mDstTrackGuid = GUID();
 
     void saveCurrentState(bool update) override;
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
 
     void recallSettings(FilterMode filter) const override;
     FilterPreset* extractFilterPreset() override;

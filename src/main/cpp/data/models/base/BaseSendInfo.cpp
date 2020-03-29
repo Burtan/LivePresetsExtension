@@ -30,12 +30,15 @@
 #include <data/models/base/BaseSendInfo.h>
 #include <plugins/reaper_plugin_functions.h>
 
+BaseSendInfo::BaseSendInfo(Filterable *parent) : BaseInfo(parent) {}
+
 /**
  * Create a new SendInfo object from a track
  * @param trackGuid the track guid
  * @param sendidx the id of the send
  */
-BaseSendInfo::BaseSendInfo(GUID trackGuid, int sendidx) : mSrcTrackGuid(trackGuid), mSendIdx(sendidx) {
+BaseSendInfo::BaseSendInfo(Filterable* parent, GUID trackGuid, int sendidx) : BaseInfo(parent),
+        mSrcTrackGuid(trackGuid), mSendIdx(sendidx) {
     BaseSendInfo::saveCurrentState(false);
 }
 
@@ -47,7 +50,7 @@ bool BaseSendInfo::initFromChunkHandler(std::string& key, std::vector<const char
         return true;
     }
 
-    mParamInfo.insert(key, Parameter<double>(key, std::stod(params[0]), (FilterMode) std::stoi(params[1])));
+    mParamInfo.insert(key, Parameter<double>(&mParamInfo, key, std::stod(params[0]), (FilterMode) std::stoi(params[1])));
     return true;
 }
 

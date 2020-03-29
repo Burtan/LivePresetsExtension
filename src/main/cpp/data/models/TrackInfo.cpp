@@ -32,11 +32,11 @@
 #include <data/models/FilterPreset.h>
 #include <plugins/reaper_plugin_functions.h>
 
-TrackInfo::TrackInfo(MediaTrack *track) : mGuid(*GetTrackGUID(track)) {
+TrackInfo::TrackInfo(Filterable* parent, MediaTrack *track) : BaseTrackInfo(parent), mGuid(*GetTrackGUID(track)) {
     TrackInfo::saveCurrentState(false);
 }
 
-TrackInfo::TrackInfo(ProjectStateContext* ctx) {
+TrackInfo::TrackInfo(Filterable* parent, ProjectStateContext* ctx) : BaseTrackInfo(parent) {
     initFromChunk(ctx);
 }
 
@@ -57,13 +57,13 @@ void TrackInfo::saveCurrentState(bool update) {
 
     char buffer[256];
     GetTrackName(getMediaTrack(), buffer, sizeof(buffer));
-    mName = Parameter<std::string>("NAME", buffer, update ? mName.mFilter : RECALLED);
+    mName = Parameter<std::string>(this, "NAME", buffer, update ? mName.mFilter : RECALLED);
 
     //only manage sends and hardware outputs, receives are automatically created by sends
-    BaseTrackInfo::saveSwSendState(mSwSends, getMediaTrack(), &mGuid, update);
-    BaseTrackInfo::saveHwSendState(mHwSends, getMediaTrack(), &mGuid, update);
-    BaseTrackInfo::saveFxState(mFxs, getMediaTrack(), &mGuid, update);
-    BaseTrackInfo::saveFxState(mRecFxs, getMediaTrack(), &mGuid, update, true);
+    BaseTrackInfo::saveSwSendState(nullptr, mSwSends, getMediaTrack(), &mGuid, update);
+    BaseTrackInfo::saveHwSendState(nullptr, mHwSends, getMediaTrack(), &mGuid, update);
+    BaseTrackInfo::saveFxState(nullptr, mFxs, getMediaTrack(), &mGuid, update, false);
+    BaseTrackInfo::saveFxState(nullptr, mRecFxs, getMediaTrack(), &mGuid, update, true);
 }
 
 bool TrackInfo::initFromChunkHandler(std::string& key, std::vector<const char*>& params) {
@@ -72,7 +72,7 @@ bool TrackInfo::initFromChunkHandler(std::string& key, std::vector<const char*>&
         return true;
     }
     if (key == "NAME") {
-        mName = Parameter<std::string>("NAME", params[0], (FilterMode) std::stoi(params[1]));
+        mName = Parameter<std::string>(this, "NAME", params[0], (FilterMode) std::stoi(params[1]));
         return true;
     }
     return BaseTrackInfo::initFromChunkHandler(key, params);
@@ -80,11 +80,11 @@ bool TrackInfo::initFromChunkHandler(std::string& key, std::vector<const char*>&
 
 bool TrackInfo::initFromChunkHandler(std::string &key, ProjectStateContext *ctx) {
     if (key == "RECFXINFO") {
-        mRecFxs.push_back(new FxInfo(ctx));
+        mRecFxs.push_back(new FxInfo(this, ctx));
         return true;
     }
     if (key == "SWSENDINFO") {
-        mSwSends.push_back(new SwSendInfo(ctx));
+        mSwSends.push_back(new SwSendInfo(this, ctx));
         return true;
     }
     return BaseTrackInfo::initFromChunkHandler(key, ctx);
@@ -199,7 +199,7 @@ std::set<std::string> TrackInfo::getKeys() const {
     return set;
 }
 
-char* TrackInfo::getTreeText() const {
+char * TrackInfo::getTreeText() const {
     std::string newText = getFilterText() + " Track: " + mName.mValue;
     newText.copy(mTreeText, newText.length());
     mTreeText[newText.length()] = '\0';

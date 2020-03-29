@@ -33,9 +33,8 @@
 #include <LivePresetsExtension.h>
 #include <functional>
 
-LivePreset::LivePreset(std::string name, std::string description) : mName(std::move(name)),
-        mDescription(std::move(description))
-{
+LivePreset::LivePreset(std::string name, std::string description) : BaseInfo(nullptr), mName(std::move(name)),
+        mDescription(std::move(description)) {
     genGuid(&mGuid);
     LivePreset::saveCurrentState(false);
 
@@ -47,7 +46,8 @@ LivePreset::LivePreset(std::string name, std::string description) : mName(std::m
     }
 }
 
-LivePreset::LivePreset(ProjectStateContext *ctx, BaseCommand::CommandID recallCmdId) : mRecallCmdId(recallCmdId) {
+LivePreset::LivePreset(ProjectStateContext *ctx, BaseCommand::CommandID recallCmdId) : BaseInfo(nullptr),
+        mRecallCmdId(recallCmdId) {
     initFromChunk(ctx);
 
     if (mRecallCmdId == 0) {
@@ -140,14 +140,14 @@ void LivePreset::saveCurrentState(bool update) {
         }
 
         for (const GUID* trackNew : tracksNew) {
-            auto* info = new TrackInfo(GetTrackByGUID(*trackNew));
+            auto* info = new TrackInfo(nullptr, GetTrackByGUID(*trackNew));
             mTracks.push_back(info);
         }
 
     } else {
-        mMasterTrack = new MasterTrackInfo();
+        mMasterTrack = new MasterTrackInfo(nullptr);
         for (int i = 0; i < GetNumTracks(); i++) {
-            auto* info = new TrackInfo(GetTrack(nullptr, i));
+            auto* info = new TrackInfo(nullptr, GetTrack(nullptr, i));
             mTracks.push_back(info);
         }
         //TODO save assignments
@@ -232,11 +232,11 @@ bool LivePreset::initFromChunkHandler(std::string &key, std::vector<const char *
 
 bool LivePreset::initFromChunkHandler(std::string &key, ProjectStateContext *ctx) {
     if (key == "MASTERTRACKINFO") {
-        mMasterTrack = new MasterTrackInfo(ctx);
+        mMasterTrack = new MasterTrackInfo(nullptr, ctx);
         return true;
     }
     if (key == "TRACKINFO") {
-        mTracks.emplace_back(new TrackInfo(ctx));
+        mTracks.emplace_back(new TrackInfo(nullptr, ctx));
         return true;
     }
     if (key == "CONTROLINFO") {
@@ -267,7 +267,7 @@ std::set<std::string> LivePreset::getKeys() const {
     return BaseInfo::getKeys();
 }
 
-char* LivePreset::getTreeText() const {
+char * LivePreset::getTreeText() const {
     std::string newText = Filterable::getFilterText() + " " + mName;
     newText.copy(mTreeText, newText.length());
     mTreeText[newText.length()] = '\0';

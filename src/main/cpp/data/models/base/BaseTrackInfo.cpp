@@ -38,6 +38,8 @@
 
 const GUID BaseTrackInfo::MASTER_GUID = GUID{0, 0, 0, 0};
 
+BaseTrackInfo::BaseTrackInfo(Filterable *parent) : BaseInfo(parent) {}
+
 void BaseTrackInfo::saveCurrentState(bool update) {
 
     //get track settings
@@ -51,7 +53,7 @@ void BaseTrackInfo::saveCurrentState(bool update) {
         }
 #endif
 
-        auto param = Parameter<double>(key, val, update ? mParamInfo.at(key).mFilter : RECALLED);
+        auto param = Parameter<double>(&mParamInfo, key, val, update ? mParamInfo.at(key).mFilter : RECALLED);
         mParamInfo.insert(key, param);
     }
 }
@@ -61,11 +63,11 @@ bool BaseTrackInfo::initFromChunkHandler(std::string& key, ProjectStateContext* 
         return true;
 
     if (key == "FXINFO") {
-        mFxs.push_back(new FxInfo(ctx));
+        mFxs.push_back(new FxInfo(this, ctx));
         return true;
     }
     if (key == "HWSENDINFO") {
-        mHwSends.push_back(new HwSendInfo(ctx));
+        mHwSends.push_back(new HwSendInfo(this, ctx));
         return true;
     }
     return false;
@@ -75,7 +77,7 @@ bool BaseTrackInfo::initFromChunkHandler(std::string& key, std::vector<const cha
     if (BaseInfo::initFromChunkHandler(key, params))
         return true;
 
-    mParamInfo.insert(key, Parameter<double>(key, std::stod(params[0]), (FilterMode) std::stoi(params[1])));
+    mParamInfo.insert(key, Parameter<double>(&mParamInfo, key, std::stod(params[0]), (FilterMode) std::stoi(params[1])));
     return true;
 }
 
@@ -177,7 +179,8 @@ std::set<std::string> BaseTrackInfo::getKeys() const {
     return set;
 }
 
-void BaseTrackInfo::saveHwSendState(std::vector<HwSendInfo*>& hwSends, MediaTrack* track, const GUID* guid, bool update) {
+void BaseTrackInfo::saveHwSendState(Filterable *parent, std::vector<HwSendInfo *> &hwSends, MediaTrack *track,
+                                    const GUID *guid, bool update) {
     if (update) {
         //search for matching output channels and resave these
         auto savedHwSends = std::vector<HwSendInfo*>(hwSends);
@@ -215,18 +218,19 @@ void BaseTrackInfo::saveHwSendState(std::vector<HwSendInfo*>& hwSends, MediaTrac
         }
 
         for (std::pair<int, int>& hwSendNew : hwSendsNew) {
-            auto info = new HwSendInfo(*guid, hwSendNew.second);
+            auto info = new HwSendInfo(parent, *guid, hwSendNew.second);
             hwSends.push_back(info);
         }
     } else {
         for (int i = 0; i < GetTrackNumSends(track, 1); i++) {
-            auto info = new HwSendInfo(*guid, i);
+            auto info = new HwSendInfo(parent, *guid, i);
             hwSends.push_back(info);
         }
     }
 }
 
-void BaseTrackInfo::saveSwSendState(std::vector<SwSendInfo*>& swSends, MediaTrack* track, const GUID* guid, bool update) {
+void BaseTrackInfo::saveSwSendState(Filterable *parent, std::vector<SwSendInfo *> &swSends, MediaTrack *track,
+                                    const GUID *guid, bool update) {
     if (update) {
         //search for matching output channels and resave these
         auto savedSwSends = std::vector<SwSendInfo*>(swSends);
@@ -239,7 +243,8 @@ void BaseTrackInfo::saveSwSendState(std::vector<SwSendInfo*>& swSends, MediaTrac
             currentSwSends.push_back(val);
         }
 
-        bool (*cmp)(SwSendInfo*&, std::pair<const GUID*, int>&) = [](SwSendInfo*& a, std::pair<const GUID*, int>& b) -> bool {
+        bool (*cmp)(SwSendInfo*&, std::pair<const GUID*, int>&) =
+                [](SwSendInfo*& a, std::pair<const GUID*, int>& b) -> bool {
             return GuidsEqual(a->mDstTrackGuid, *b.first);
         };
 
@@ -265,18 +270,19 @@ void BaseTrackInfo::saveSwSendState(std::vector<SwSendInfo*>& swSends, MediaTrac
         }
 
         for (auto& swSendNew : swSendsNew) {
-            auto info = new SwSendInfo(*guid, swSendNew.second);
+            auto info = new SwSendInfo(parent, *guid, swSendNew.second);
             swSends.push_back(info);
         }
     } else {
         for (int i = 0; i < GetTrackNumSends(track, 0); i++) {
-            auto info = new SwSendInfo(*guid, i);
+            auto info = new SwSendInfo(parent, *guid, i);
             swSends.push_back(info);
         }
     }
 }
 
-void BaseTrackInfo::saveFxState(std::vector<FxInfo*>& fxs, MediaTrack* track, const GUID* guid, bool update, bool rec) {
+void BaseTrackInfo::saveFxState(Filterable *parent, std::vector<FxInfo *> &fxs, MediaTrack *track, const GUID *guid,
+                                bool update, bool rec) {
     if (update) {
         auto savedFxs = std::vector<FxInfo*>(fxs);
 
@@ -316,20 +322,20 @@ void BaseTrackInfo::saveFxState(std::vector<FxInfo*>& fxs, MediaTrack* track, co
         }
 
         for (const GUID* fxNew : fxsNew) {
-            auto info = new FxInfo(*guid, *fxNew);
+            auto info = new FxInfo(parent, *guid, *fxNew);
             fxs.push_back(info);
         }
     } else {
         if (rec) {
             for (int i = FxInfo::RECFX_INDEX_FACTOR; i < FxInfo::RECFX_INDEX_FACTOR + TrackFX_GetRecCount(track); i++) {
                 auto fxGuid = *TrackFX_GetFXGUID(track, i);
-                auto info = new FxInfo(*guid, fxGuid);
+                auto info = new FxInfo(parent, *guid, fxGuid);
                 fxs.push_back(info);
             }
         } else {
             for (int i = 0; i < TrackFX_GetCount(track); i++) {
                 auto fxGuid = *TrackFX_GetFXGUID(track, i);
-                auto info = new FxInfo(*guid, fxGuid);
+                auto info = new FxInfo(parent, *guid, fxGuid);
                 fxs.push_back(info);
             }
         }

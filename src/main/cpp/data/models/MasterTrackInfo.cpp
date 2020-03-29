@@ -31,11 +31,11 @@
 #include <plugins/reaper_plugin_functions.h>
 #include <data/models/FilterPreset.h>
 
-MasterTrackInfo::MasterTrackInfo() {
+MasterTrackInfo::MasterTrackInfo(Filterable* parent) : BaseTrackInfo(parent) {
     MasterTrackInfo::saveCurrentState(false);
 }
 
-MasterTrackInfo::MasterTrackInfo(ProjectStateContext* ctx) {
+MasterTrackInfo::MasterTrackInfo(Filterable* parent, ProjectStateContext* ctx) : BaseTrackInfo(parent) {
     initFromChunk(ctx);
 }
 
@@ -44,7 +44,7 @@ void MasterTrackInfo::saveCurrentState(bool update) {
 
     //only manage sends and hardware outputs, receives are automatically created by sends
     saveHwSendState(update);
-    BaseTrackInfo::saveFxState(mFxs, getMediaTrack(), &MASTER_GUID, update);
+    BaseTrackInfo::saveFxState(nullptr, mFxs, getMediaTrack(), &MASTER_GUID, update, false);
 }
 
 void MasterTrackInfo::saveHwSendState(bool update) {
@@ -52,7 +52,7 @@ void MasterTrackInfo::saveHwSendState(bool update) {
         mHwSends.clear();
     }
     for (int i = 0; i < GetTrackNumSends(getMediaTrack(), 1); i++) {
-        auto info = new HwSendInfo(MASTER_GUID, i);
+        auto info = new HwSendInfo(this, MASTER_GUID, i);
         mHwSends.push_back(info);
     }
 }
@@ -70,7 +70,7 @@ std::set<std::string> MasterTrackInfo::getKeys() const {
     return BaseTrackInfo::getKeys();
 }
 
-char* MasterTrackInfo::getTreeText() const {
+char * MasterTrackInfo::getTreeText() const {
     std::string newText = getFilterText() + " Master";
     newText.copy(mTreeText, newText.length());
     mTreeText[newText.length()] = '\0';

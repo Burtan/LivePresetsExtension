@@ -37,10 +37,10 @@
  */
 class HwSendInfo : public BaseSendInfo {
 public:
-    HwSendInfo(GUID srcGuid, int sendidx);
-    explicit HwSendInfo(ProjectStateContext *ctx);
+    HwSendInfo(Filterable* parent, GUID srcGuid, int sendidx);
+    explicit HwSendInfo(Filterable* parent, ProjectStateContext *ctx);
 
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
 
     void saveCurrentState(bool update) override;
     void recallSettings(FilterMode filter) const override;

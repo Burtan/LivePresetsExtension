@@ -4,18 +4,18 @@
 
 
 TEST(Persist, ParameterInfoTest) {
-   auto params = ParameterInfo();
+   auto params = ParameterInfo(nullptr);
 
    for (int i = 0; i < 10; i ++) {
        double val = i * i;
-       params.insert(i, Parameter<double>(i, val));
+       params.insert(i, Parameter<double>(nullptr, i, val));
    }
 
    auto str = WDL_FastString();
    params.persist(str);
 
    auto ctx = StringProjectStateContext(str);
-   auto paramsRestored = ParameterInfo((ProjectStateContext*) &ctx);
+   auto paramsRestored = ParameterInfo(nullptr, (ProjectStateContext*) &ctx);
 
    ASSERT_EQ(params.size(), paramsRestored.size());
    for (auto& key : params.getKeys()) {
@@ -24,14 +24,14 @@ TEST(Persist, ParameterInfoTest) {
 
     for (int i = 0; i < 10; i ++) {
         double val = (i * i) / 11.0;
-        params.insert(i, Parameter<double>(i, val));
+        params.insert(i, Parameter<double>(nullptr, i, val));
     }
 
     auto str2 = WDL_FastString();
     params.persist(str2);
 
     auto ctx2 = StringProjectStateContext(str2);
-    auto paramsRestored2 = ParameterInfo((ProjectStateContext*) &ctx2);
+    auto paramsRestored2 = ParameterInfo(nullptr, (ProjectStateContext*) &ctx2);
 
     ASSERT_EQ(params.size(), paramsRestored2.size());
     for (auto& key : params.getKeys()) {
