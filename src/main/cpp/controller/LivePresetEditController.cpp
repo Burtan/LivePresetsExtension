@@ -31,6 +31,7 @@
 #include <controller/ConfirmationController.h>
 #include <LivePresetsExtension.h>
 #include <resources/resource.h>
+#include <data/models/FilterPreset.h>
 
 WNDPROC LivePresetEditController::defWndProc;
 
@@ -64,13 +65,6 @@ void LivePresetEditController::onInitDlg() {
     } else {
         SetWindowLongPtr(mHwnd, GWLP_USERDATA, (LONG_PTR) this);
         defWndProc = (WNDPROC) SetWindowLongPtr(mHwnd, GWLP_WNDPROC, (LONG_PTR) wndProc);
-    }
-
-    //hide combo in ce version
-    if (!Licensing_IsUltimate()) {
-        ShowWindow(GetDlgItem(mHwnd, IDC_LABEL1), SW_HIDE);
-        ShowWindow(GetDlgItem(mHwnd, IDC_COMBO), SW_HIDE);
-        ShowWindow(GetDlgItem(mHwnd, IDC_SETTINGS), SW_HIDE);
     }
 
     //create combobox
@@ -172,7 +166,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
                         return;
                     }
                 }
-                FilterPreset_SetName(filter, name);
+                filter->mId.name = name;
                 FilterPreset_AddPreset(g_lpe->mModel.mFilterPresets, filter);
                 mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
                 mTree->invalidate();

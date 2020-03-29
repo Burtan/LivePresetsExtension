@@ -35,7 +35,6 @@
 #include <controller/ControlViewController.h>
 #include <data/models/Hardware.h>
 #include <data/models/ControlInfo.h>
-#include <data/models/FilterPreset.h>
 #include <ui/ControlsListAdapter.h>
 #include <util/Licensing.h>
 #else //LPE_ULTIMATE
@@ -45,11 +44,10 @@
 #include <data/models/base/Persistable.h>
 #include <data/models/base/Filterable.h>
 
-class ControlInfo{};
+class ControlInfo : public Filterable{};
 class Hardware{};
 class Control{};
 class ControlViewController{};
-class FilterPreset{};
 
 inline bool Licensing_IsUltimate() { return false; }
 
@@ -63,41 +61,6 @@ inline Hardware* Hardware_Create(ProjectStateContext* ctx) { return nullptr; }
 inline void ControlInfo_Persist(ControlInfo* info, WDL_FastString& str) {}
 inline ControlInfo* ControlInfo_Create(ProjectStateContext* ctx) { return nullptr; }
 inline void ControlInfo_RecallSettings(ControlInfo* info, FilterMode filter) {}
-
-inline std::vector<std::string*> FilterPreset_GetNames(std::vector<FilterPreset*>& presets) { return std::vector<std::string*>(); }
-inline FilterPreset* FilterPreset_GetFilterByName(const std::vector<FilterPreset*>& presets, std::string* name) { return nullptr; }
-inline void FilterPreset_SetName(FilterPreset* preset, const std::string& name) {}
-inline void FilterPreset_AddPreset(std::vector<FilterPreset*>& presets, FilterPreset* preset) {}
-
-inline void FilterPreset_Persist(FilterPreset* preset, WDL_FastString& str) {}
-inline FilterPreset* FilterPreset_Create(ProjectStateContext* ctx) { return nullptr; }
-
-inline FilterPreset* Parameter_ExtractFilterPreset(void* param) { return nullptr; }
-inline bool Parameter_ApplyFilterPreset(void* param, FilterPreset *preset) { return true; }
-
-inline FilterPreset* ControlInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool ControlInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* ParameterInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool ParameterInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* HwSendInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool HwSendInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* SwSendInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool SwSendInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* TrackInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool TrackInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* MasterTrackInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool MasterTrackInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* FxInfo_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool FxInfo_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
-
-inline FilterPreset* LivePreset_ExtractFilterPreset(void* paramInfo) { return nullptr; }
-inline bool LivePreset_ApplyFilterPreset(void* paramInfo, FilterPreset *preset) { return true; }
 #endif
 
 #endif //LPE_ULTIMATE_H

@@ -33,6 +33,7 @@
 
 #include <data/models/LivePreset.h>
 #include <data/models/base/Persistable.h>
+#include <data/models/FilterPreset.h>
 #include <plugins/lpe_ultimate.h>
 
 class LivePresetsModel : public Persistable {

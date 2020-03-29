@@ -67,10 +67,10 @@ STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFR
         FONT 8, "MS Shell Dlg"
 BEGIN
         PUSHBUTTON      "Add Hardware",IDC_ADD,8,8,72,16
-PUSHBUTTON      "Remove Hardware",IDC_REMOVE,88,8,72,16
-PUSHBUTTON      "Add Control",IDC_ADD2,456,8,72,16
-PUSHBUTTON      "Remove Control",IDC_REMOVE2,536,8,72,16
-CONTROL         "TabControl", IDC_TAB,"SysTabControl32",WS_TABSTOP,8,72,600,300
+        PUSHBUTTON      "Remove Hardware",IDC_REMOVE,88,8,72,16
+        PUSHBUTTON      "Add Control",IDC_ADD2,456,8,72,16
+        PUSHBUTTON      "Remove Control",IDC_REMOVE2,536,8,72,16
+        CONTROL         "TabControl", IDC_TAB,"SysTabControl32",WS_TABSTOP,8,72,600,300
 END
 
 IDD_ABOUT DIALOGEX 0, 0, 600, 300

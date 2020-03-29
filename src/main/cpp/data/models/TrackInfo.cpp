@@ -28,8 +28,8 @@
 ******************************************************************************/
 
 #include <data/models/TrackInfo.h>
-#include <plugins/lpe_ultimate.h>
 #include <util/util.h>
+#include <data/models/FilterPreset.h>
 #include <plugins/reaper_plugin_functions.h>
 
 TrackInfo::TrackInfo(MediaTrack *track) : mGuid(*GetTrackGUID(track)) {
@@ -211,9 +211,49 @@ std::string TrackInfo::getChunkId() const {
 }
 
 FilterPreset* TrackInfo::extractFilterPreset() {
-    return TrackInfo_ExtractFilterPreset(this);
-}
+    FilterPreset::ItemIdentifier id{};
+    id.guid = mGuid;
+
+    auto childs = std::vector<FilterPreset*>();
+
+    childs.push_back(mParamInfo.extractFilterPreset());
+    childs.push_back(mName.extractFilterPreset());
+    for (auto swSend : mSwSends) {
+        childs.push_back(swSend->extractFilterPreset());
+    }
+    for (auto hwSend : mHwSends) {
+        childs.push_back(hwSend->extractFilterPreset());
+    }
+    for (auto fx : mFxs) {
+        childs.push_back(fx->extractFilterPreset());
+    }
+    for (auto recFx : mRecFxs) {
+        childs.push_back(recFx->extractFilterPreset());
+    }
+
+    return new FilterPreset(id, TRACK, mFilter, childs);}
 
 bool TrackInfo::applyFilterPreset(FilterPreset *preset) {
-   return TrackInfo_ApplyFilterPreset(this, preset);
-}
+    if (preset->mType == TRACK && GuidsEqual(preset->mId.guid, mGuid)) {
+        mFilter = preset->mFilter;
+
+        auto toFilters = std::set<Filterable*>();
+        toFilters.insert((Filterable*) &mParamInfo);
+        toFilters.insert((Filterable*) &mName);
+        toFilters.insert(mSwSends.begin(), mSwSends.end());
+        toFilters.insert(mHwSends.begin(), mHwSends.end());
+        toFilters.insert(mFxs.begin(), mFxs.end());
+        toFilters.insert(mRecFxs.begin(), mRecFxs.end());
+
+        for (auto child : preset->mChilds) {
+            for (auto toFilter : toFilters) {
+                if (toFilter->applyFilterPreset(child)) {
+                    toFilters.erase(toFilter);
+                    goto cnt;
+                }
+            }
+            cnt:;
+        }
+        return true;
+    }
+    return false;}
