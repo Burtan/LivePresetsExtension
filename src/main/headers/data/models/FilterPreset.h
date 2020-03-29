@@ -1,8 +1,6 @@
 #ifndef LPE_FILTERPRESET_H
 #define LPE_FILTERPRESET_H
 
-#include <climits>
-#include <memory>
 #include <data/models/base/Persistable.h>
 #include <data/models/base/Filterable.h>
 
