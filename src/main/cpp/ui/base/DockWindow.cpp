@@ -83,13 +83,6 @@ void DockWindow::getMinMaxInfo(LPMINMAXINFO info) {
     int w = 150;
     int h = 150;
 
-    if (!isDocked()) {
-        RECT rClient, rWnd;
-        GetClientRect(mHwnd, &rClient);
-        GetWindowRect(mHwnd, &rWnd);
-        w += (rWnd.right - rWnd.left) - rClient.right;
-        h += (rWnd.bottom - rWnd.top) - rClient.bottom;
-    }
     info->ptMinTrackSize.x = w;
     info->ptMinTrackSize.y = h;
 }
@@ -349,9 +342,20 @@ INT_PTR WINAPI DockWindow::sWndProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
                 wnd->showContextMenu(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), menu);
                 break;
             }
-            case WM_GETMINMAXINFO:
-                wnd->getMinMaxInfo((LPMINMAXINFO) lParam);
+            case WM_GETMINMAXINFO: {
+                auto info = (LPMINMAXINFO) lParam;
+                wnd->getMinMaxInfo(info);
+
+                //adjust to window decorations
+                if (!wnd->isDocked()) {
+                    RECT rClient, rWnd;
+                    GetClientRect(wnd->mHwnd, &rClient);
+                    GetWindowRect(wnd->mHwnd, &rWnd);
+                    info->ptMinTrackSize.x += (rWnd.right - rWnd.left) - rClient.right;
+                    info->ptMinTrackSize.y += (rWnd.bottom - rWnd.top) - rClient.bottom;
+                }
                 break;
+            }
             case WM_SIZE:
                 if (wParam != SIZE_MINIMIZED)
                     wnd->resize();
