@@ -36,8 +36,9 @@
 #else
 
 #endif
-#include "ui/base/TreeViewAdapter.h"
-#include "ui/LivePresetsTreeAdapter.h"
+#include <ui/base/TreeViewAdapter.h>
+#include <ui/LivePresetsTreeAdapter.h>
+#include <map>
 
 
 class TreeView {
@@ -54,8 +55,11 @@ public:
     LivePresetsTreeAdapter* getAdapter();
     virtual void onDestroy() {};
 private:
+    //save HTREEITEMS for LPARAMS as a work around for missing TreeView_GetParent function on SWELL
+    std::map<LPARAM, HTREEITEM> mTreeItems;
     std::unique_ptr<LivePresetsTreeAdapter> mAdapter = nullptr;
-    void addItem(TVITEM tvi, HTREEITEM parent);
+    void invalidateChilds(HTREEITEM parent);
+    void addItem(TVITEM tvi, HTREEITEM parent, bool update = false);
 };
 
 

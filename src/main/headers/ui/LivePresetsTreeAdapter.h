@@ -38,7 +38,6 @@
 #endif
 
 #include <map>
-#include <vector>
 #include <memory>
 #include <string>
 #include <plugins/lpe_ultimate.h>
@@ -60,7 +59,7 @@ private:
     } ItemData;
 
     //used to keep a reference of ItemData that it doesn't leak
-    std::vector<ItemData> mData;
+    std::map<int, ItemData> mData;
     LivePreset* mPreset;
     void addChildsForMasterTrack(MasterTrackInfo *item, std::vector<TVITEM> *childs);
     void addChildsForTrack(TrackInfo *item, std::vector<TVITEM> *childs);

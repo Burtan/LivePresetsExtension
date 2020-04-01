@@ -53,3 +53,44 @@ template bool Parameter<double>::applyFilterPreset(FilterPreset *preset);
 template bool Parameter<int>::applyFilterPreset(FilterPreset *preset);
 template bool Parameter<bool>::applyFilterPreset(FilterPreset *preset);
 template bool Parameter<std::string>::applyFilterPreset(FilterPreset *preset);
+
+template<>
+char * Parameter<double>::getTreeText() const {
+    std::string newText = getFilterText() + " " + mKey;
+    if (!isFilteredInChain()) {
+        newText = newText + " = " + std::to_string(mValue);
+    }
+    newText.copy(mTreeText, newText.length());
+    mTreeText[newText.length()] = '\0';
+    return mTreeText;
+}
+template<>
+char * Parameter<int>::getTreeText() const {
+    std::string newText = getFilterText() + " " + mKey;
+    if (!isFilteredInChain()) {
+        newText = newText + " = " + std::to_string(mValue);
+    }
+    newText.copy(mTreeText, newText.length());
+    mTreeText[newText.length()] = '\0';
+    return mTreeText;
+}
+template<>
+char * Parameter<bool>::getTreeText() const {
+    std::string newText = getFilterText() + " " + mKey;
+    if (!isFilteredInChain()) {
+        newText = newText + " = " + std::to_string(mValue);
+    }
+    newText.copy(mTreeText, newText.length());
+    mTreeText[newText.length()] = '\0';
+    return mTreeText;
+}
+template<>
+char * Parameter<std::string>::getTreeText() const {
+    std::string newText = getFilterText() + " " + mKey;
+    if (!isFilteredInChain()) {
+        newText = newText + " = " + mValue;
+    }
+    newText.copy(mTreeText, newText.length());
+    mTreeText[newText.length()] = '\0';
+    return mTreeText;
+}

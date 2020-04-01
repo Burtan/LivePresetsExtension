@@ -34,11 +34,11 @@
 
 class MasterTrackInfo : public BaseTrackInfo {
 public:
-    MasterTrackInfo();
-    explicit MasterTrackInfo(ProjectStateContext* ctx);
+    MasterTrackInfo(Filterable* parent);
+    explicit MasterTrackInfo(Filterable* parent, ProjectStateContext* ctx);
     ~MasterTrackInfo();
 
-    [[nodiscard]] char* getTreeText() const override;
+    [[nodiscard]] char *getTreeText() const override;
 
     void saveCurrentState(bool update) override;
     FilterPreset* extractFilterPreset() override;

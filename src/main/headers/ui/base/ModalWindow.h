@@ -65,6 +65,7 @@ protected:
     virtual void onInitDlg() {}
     virtual int onKey(MSG* msg, int iKeyState) { return 0; } // return 1 for "processed key"
     virtual INT_PTR onUnhandledMsg(UINT uMsg, WPARAM wParam, LPARAM lParam) { return 0; }
+    virtual void getMinMaxInfo(LPMINMAXINFO info);
 
     HWND mHwnd;
     int mCmdId;
@@ -75,8 +76,6 @@ protected:
 private:
     static LRESULT screensetCallback(int action, const char* id, void* param, void* actionParm, int actionParmSize);
     static INT_PTR WINAPI dlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    static void getMinMaxInfo(LPMINMAXINFO info);
     void initDialog(HWND hwndDlg);
     void resize();
     void onDestroy();

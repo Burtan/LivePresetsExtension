@@ -58,16 +58,21 @@ class Filterable {
 public:
     static FilterMode Merge(int num...);
 
-    explicit Filterable(FilterMode mFilter = RECALLED);
+    explicit Filterable(Filterable* parent, FilterMode mFilter = CHILD);
 
-    FilterMode mFilter = RECALLED;
-    void shuffleFilter();
+    FilterMode mFilter = CHILD;
+    Filterable* mParent = nullptr;
+
+    void shuffleFilter(bool noChild = false);
     virtual FilterPreset * extractFilterPreset() = 0;
     virtual bool applyFilterPreset(FilterPreset *preset) = 0;
-    [[nodiscard]] virtual char* getTreeText() const = 0;
+    [[nodiscard]] virtual char *getTreeText() const = 0;
+    [[nodiscard]] bool isFilteredInChain() const;
 protected:
-    mutable char mTreeText[256];
+    mutable char mTreeText[256] = {};
     [[nodiscard]] std::string getFilterText() const;
+private:
+    static FilterMode MergeUpstream(FilterMode a, FilterMode b);
 };
 
 

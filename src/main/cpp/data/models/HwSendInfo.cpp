@@ -38,7 +38,7 @@
  * @param srcGuid the track guid
  * @param sendidx the id of the send
  */
-HwSendInfo::HwSendInfo(GUID srcGuid, int sendidx) : BaseSendInfo(srcGuid, sendidx) {
+HwSendInfo::HwSendInfo(Filterable* parent, GUID srcGuid, int sendidx) : BaseSendInfo(parent, srcGuid, sendidx) {
     HwSendInfo::saveCurrentState(false);
 }
 
@@ -46,7 +46,7 @@ HwSendInfo::HwSendInfo(GUID srcGuid, int sendidx) : BaseSendInfo(srcGuid, sendid
  * Recreate a saved SendInfo from a reaper chunk
  * @param ctx
  */
-HwSendInfo::HwSendInfo(ProjectStateContext* ctx) : BaseSendInfo() {
+HwSendInfo::HwSendInfo(Filterable* parent, ProjectStateContext* ctx) : BaseSendInfo(parent) {
     initFromChunk(ctx);
 }
 
@@ -61,7 +61,7 @@ void HwSendInfo::saveCurrentState(bool update) {
     //get track settings
     for (const auto& key : getKeys()) {
         FilterMode filter = update ? mParamInfo.at(key).mFilter : RECALLED;
-        auto param = Parameter<double>(key, GetTrackSendInfo_Value(getSrcTrack(), 1, mSendIdx, key.data()), filter);
+        auto param = Parameter<double>(&mParamInfo, key, GetTrackSendInfo_Value(getSrcTrack(), 1, mSendIdx, key.data()), filter);
         mParamInfo.insert(key, param);
     }
 }
@@ -114,7 +114,7 @@ std::set<std::string> HwSendInfo::getKeys() const {
     return set;
 }
 
-char* HwSendInfo::getTreeText() const {
+char * HwSendInfo::getTreeText() const {
     mName.clear();
     mName.append("Send from ");
 

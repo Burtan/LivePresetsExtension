@@ -32,8 +32,10 @@
 #include <data/models/base/ParameterInfo.h>
 #include <data/models/FilterPreset.h>
 
+ParameterInfo::ParameterInfo(Filterable* parent) : Filterable(parent)
+{}
 
-ParameterInfo::ParameterInfo(ProjectStateContext* ctx) {
+ParameterInfo::ParameterInfo(Filterable* parent, ProjectStateContext* ctx) : Filterable(parent) {
     initFromChunk(ctx);
 }
 
@@ -75,13 +77,13 @@ bool ParameterInfo::initFromChunkHandler(std::string &key, std::vector<const cha
     if (key == "FILTERMODE") {
         mFilter = (FilterMode) std::stoi(params[0]);
     } else {
-        auto value = Parameter<double>(key, std::stod(params[0]), (FilterMode) std::stoi(params[1]));
+        auto value = Parameter<double>(this, key, std::stod(params[0]), (FilterMode) std::stoi(params[1]));
         mParams.insert(std::make_pair(key, value));
     }
     return true;
 }
 
-char* ParameterInfo::getTreeText() const {
+char * ParameterInfo::getTreeText() const {
     std::string newText = getFilterText() + " Parameters";
     newText.copy(mTreeText, newText.length());
     mTreeText[newText.length()] = '\0';
