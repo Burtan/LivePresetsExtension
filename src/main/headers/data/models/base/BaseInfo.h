@@ -40,7 +40,7 @@ public:
 
     ParameterInfo mParamInfo = ParameterInfo(this);
 
-    virtual void recallSettings(FilterMode filter) const = 0;
+    virtual void recallSettings() const = 0;
     virtual void saveCurrentState(bool update) = 0;
 protected:
     [[nodiscard]] virtual std::set<std::string> getKeys() const;

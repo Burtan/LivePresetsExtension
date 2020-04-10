@@ -67,7 +67,7 @@ public:
     //persisted
     GUID mSrcTrackGuid = GUID();
 
-    void recallSettings(FilterMode filter) const override;
+    void recallSettings() const override;
     void saveCurrentState(bool update) override;
 protected:
     bool initFromChunkHandler(std::string &key, std::vector<const char*> &params) override;

@@ -66,8 +66,8 @@ void HwSendInfo::saveCurrentState(bool update) {
     }
 }
 
-void HwSendInfo::recallSettings(FilterMode filter) const {
-    BaseSendInfo::recallSettings(filter);
+void HwSendInfo::recallSettings() const {
+    BaseSendInfo::recallSettings();
 
     MediaTrack* tr = getSrcTrack();
 

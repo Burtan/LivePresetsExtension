@@ -48,7 +48,7 @@ public:
     void saveCurrentState(bool update) override;
     [[nodiscard]] char *getTreeText() const override;
 
-    void recallSettings(FilterMode filter) const override;
+    void recallSettings() const override;
     FilterPreset* extractFilterPreset() override;
     bool applyFilterPreset(FilterPreset *preset) override;
 protected:

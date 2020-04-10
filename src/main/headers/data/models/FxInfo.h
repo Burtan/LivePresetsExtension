@@ -50,7 +50,7 @@ public:
     Parameter<std::string> mPresetName = Parameter<std::string>(this, "PRESETNAME", "");
 
     [[nodiscard]] char *getTreeText() const override;
-    void recallSettings(FilterMode filter) const override;
+    void recallSettings() const override;
     void saveCurrentState(bool update) override;
     FilterPreset* extractFilterPreset() override;
     bool applyFilterPreset(FilterPreset *preset) override;

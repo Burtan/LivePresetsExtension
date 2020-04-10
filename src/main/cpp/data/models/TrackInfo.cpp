@@ -90,11 +90,10 @@ bool TrackInfo::initFromChunkHandler(std::string &key, ProjectStateContext *ctx)
     return BaseTrackInfo::initFromChunkHandler(key, ctx);
 }
 
-void TrackInfo::recallSettings(FilterMode parentFilter) const {
-    if (parentFilter == IGNORED || mFilter == IGNORED)
+void TrackInfo::recallSettings() const {
+    if (isFilteredInChain())
         return;
-    BaseTrackInfo::recallSettings(parentFilter);
-    FilterMode filter = Merge(parentFilter, mFilter);
+    BaseTrackInfo::recallSettings();
 
     //name can only be recalled by SetTrackStateChunk
 /*    if (Merge(filter, mName.mFilter) == RECALLED) {
@@ -132,19 +131,19 @@ void TrackInfo::recallSettings(FilterMode parentFilter) const {
     int index = 0;
     for (const SwSendInfo* send : matchingSends) {
         send->mSendIdx = index;
-        send->recallSettings(parentFilter);
+        send->recallSettings();
         index++;
     }
     for (const SwSendInfo* send : nonMatchingSends) {
         send->mSendIdx = -1;
-        send->recallSettings(parentFilter);
+        send->recallSettings();
     }
 
     //assign input plugin settings
     auto muted = (bool) mParamInfo.at(B_MUTE).mValue;
     if (!muted) {
         for (const auto recFxInfo : mRecFxs) {
-            recFxInfo->recallSettings(filter);
+            recFxInfo->recallSettings();
         }
     }
 }

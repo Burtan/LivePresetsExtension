@@ -240,7 +240,7 @@ bool LivePreset::initFromChunkHandler(std::string &key, ProjectStateContext *ctx
         return true;
     }
     if (key == "CONTROLINFO") {
-        if (auto info = ControlInfo_Create(ctx)) {
+        if (auto info = ControlInfo_Create(this, ctx)) {
             mControlInfos.emplace_back(info);
         }
         return true;
@@ -249,17 +249,14 @@ bool LivePreset::initFromChunkHandler(std::string &key, ProjectStateContext *ctx
     return BaseInfo::initFromChunkHandler(key, ctx);
 }
 
-void LivePreset::recallSettings(FilterMode parentFilter) const {
-    if (parentFilter == IGNORED || mFilter == IGNORED)
-        return;
-    FilterMode filter = Merge(parentFilter, mFilter);
+void LivePreset::recallSettings() const {
 
-    mMasterTrack->recallSettings(filter);
+    mMasterTrack->recallSettings();
     for (const auto track : mTracks) {
-        track->recallSettings(filter);
+        track->recallSettings();
     }
     for (const auto& info : mControlInfos) {
-        ControlInfo_RecallSettings(info.get(), filter);
+        ControlInfo_RecallSettings(info.get());
     }
 }
 

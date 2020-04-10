@@ -32,6 +32,11 @@
 
 Filterable::Filterable(Filterable* parent, FilterMode mFilter) : mFilter(mFilter), mParent(parent) {}
 
+/**
+ * Checks the parent filter chain for RECALLED and IGNORED filters
+ * The highest order RECALLED or IGNORED filter defines child behaviour
+ * @return true when the param is filtered (IGNORED)
+ */
 bool Filterable::isFilteredInChain() const {
     FilterMode filter = mFilter;
     Filterable* parent = mParent;
@@ -63,29 +68,6 @@ FilterMode Filterable::MergeUpstream(FilterMode parent, FilterMode obj) {
     if (parent == CHILD)
         return obj;
     return parent;
-}
-
-FilterMode Filterable::Merge(int num, ...) {
-    va_list list;
-    va_start(list, num);
-    FilterMode outFilter = CHILD;
-
-    for (int i = 0; i < num; i++) {
-        auto filter = (FilterMode) va_arg(list, int);
-        switch (filter) {
-            case RECALLED:
-                outFilter = RECALLED;
-                goto filtered;
-            case IGNORED:
-                outFilter = IGNORED;
-                goto filtered;
-            case CHILD: {}
-        }
-    }
-    filtered:
-
-    va_end(list);
-    return outFilter;
 }
 
 void Filterable::shuffleFilter(bool noChild) {

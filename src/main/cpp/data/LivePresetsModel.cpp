@@ -154,7 +154,7 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
     if (mDoUndo) {
         Undo_BeginBlock();
         PreventUIRefresh(1);
-        preset->recallSettings(FilterMode::CHILD);
+        preset->recallSettings();
         mActivePreset = preset;
         if (g_lpe->mController.mList)
             g_lpe->mController.mList->invalidate();
@@ -163,7 +163,7 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
         Undo_EndBlock("Recall LivePreset", UNDO_STATE_ALL);
     } else {
         PreventUIRefresh(1);
-        preset->recallSettings(FilterMode::CHILD);
+        preset->recallSettings();
         mActivePreset = preset;
         if (g_lpe->mController.mList)
             g_lpe->mController.mList->invalidate();

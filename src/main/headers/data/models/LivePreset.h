@@ -62,7 +62,7 @@ public:
     std::vector<std::shared_ptr<ControlInfo>> mControlInfos;
 
     [[nodiscard]] char *getTreeText() const override;
-    void recallSettings(FilterMode filter) const override;
+    void recallSettings() const override;
     void saveCurrentState(bool update) override;
     FilterPreset* extractFilterPreset() override;
     bool applyFilterPreset(FilterPreset *preset) override;

@@ -81,16 +81,17 @@ bool BaseTrackInfo::initFromChunkHandler(std::string& key, std::vector<const cha
     return true;
 }
 
-void BaseTrackInfo::recallSettings(FilterMode parentFilter) const {
-    if (parentFilter == IGNORED || mFilter == IGNORED)
+void BaseTrackInfo::recallSettings() const {
+    if (isFilteredInChain())
         return;
-    FilterMode filter = Merge(parentFilter, mFilter);
 
     //assign track settings, only change when needed
     //recall parameters
     for (const auto& key : getKeys()) {
+        if (mParamInfo.at(key).isFilteredInChain())
+            continue;
+
         double value = mParamInfo.at(key).mValue;
-        FilterMode recall = Merge(filter, mParamInfo.at(key).mFilter);
 
 #ifndef _MACOS
         //mac scales different to linux and win on 4k screens, recall half the height and save double the height
@@ -104,25 +105,24 @@ void BaseTrackInfo::recallSettings(FilterMode parentFilter) const {
             value = 0;
         }
 
-        if (recall == RECALLED && GetMediaTrackInfo_Value(getMediaTrack(), key.data()) != value)
+        if (GetMediaTrackInfo_Value(getMediaTrack(), key.data()) != value)
             SetMediaTrackInfo_Value(getMediaTrack(), key.data(), value);
     }
 
-    recallHwSends(parentFilter);
+    recallHwSends();
 
     auto muted = (bool) mParamInfo.at(B_MUTE).mValue;
     if (!muted) {
         for (const auto fxInfo : mFxs) {
-            fxInfo->recallSettings(filter);
+            fxInfo->recallSettings();
         }
     }
 }
 
 /**
  * All hw sends can be adepted to fit specific parameters so only make sure the count is matching
- * @param parentFilter
  */
-void BaseTrackInfo::recallHwSends(FilterMode parentFilter) const {
+void BaseTrackInfo::recallHwSends() const {
     MediaTrack* track = getMediaTrack();
 
     while (GetTrackNumSends(track, 1) > mHwSends.size())
@@ -134,7 +134,7 @@ void BaseTrackInfo::recallHwSends(FilterMode parentFilter) const {
     int index = 0;
     for (const auto send : mHwSends) {
         send->mSendIdx = index;
-        send->recallSettings(parentFilter);
+        send->recallSettings();
         index++;
     }
 }

@@ -54,8 +54,8 @@ bool BaseSendInfo::initFromChunkHandler(std::string& key, std::vector<const char
     return true;
 }
 
-void BaseSendInfo::recallSettings(FilterMode parentFilter) const {
-    if (parentFilter == IGNORED || mFilter == IGNORED)
+void BaseSendInfo::recallSettings() const {
+    if (isFilteredInChain())
         return;
 }
 

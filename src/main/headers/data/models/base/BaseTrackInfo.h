@@ -69,7 +69,7 @@ public:
     std::vector<FxInfo*> mFxs;
     std::vector<HwSendInfo*> mHwSends;
 
-    void recallSettings(FilterMode filter) const override;
+    void recallSettings() const override;
     void saveCurrentState(bool update) override;
 protected:
     [[nodiscard]] std::set<std::string> getKeys() const override;
@@ -77,7 +77,7 @@ protected:
     bool initFromChunkHandler(std::string& key, ProjectStateContext *ctx) override;
     void persistHandler(WDL_FastString &str) const override;
     [[nodiscard]] virtual MediaTrack* getMediaTrack() const = 0;
-    void recallHwSends(FilterMode parentFilter) const;
+    void recallHwSends() const;
     static void saveSwSendState(Filterable *parent, std::vector<SwSendInfo *> &swSends, MediaTrack *track,
             const GUID *guid, bool update);
     static void saveHwSendState(Filterable *parent, std::vector<HwSendInfo *> &hwSends, MediaTrack *track,

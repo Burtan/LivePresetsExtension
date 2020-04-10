@@ -59,8 +59,8 @@ inline void Hardware_Persist(Hardware* hw, WDL_FastString& str) {}
 inline Hardware* Hardware_Create(ProjectStateContext* ctx) { return nullptr; }
 
 inline void ControlInfo_Persist(ControlInfo* info, WDL_FastString& str) {}
-inline ControlInfo* ControlInfo_Create(ProjectStateContext* ctx) { return nullptr; }
-inline void ControlInfo_RecallSettings(ControlInfo* info, FilterMode filter) {}
+inline ControlInfo* ControlInfo_Create(Filterable* parent, ProjectStateContext* ctx) { return nullptr; }
+inline void ControlInfo_RecallSettings(ControlInfo* info) {}
 #endif
 
 #endif //LPE_ULTIMATE_H

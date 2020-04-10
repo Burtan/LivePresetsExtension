@@ -70,26 +70,22 @@ void FxInfo::saveCurrentState(bool update) {
     }
 }
 
-void FxInfo::recallSettings(FilterMode parentFilter) const {
+void FxInfo::recallSettings() const {
     //dont continue recalling when parent filter or own filter is IGNORED
-    if (parentFilter == IGNORED || mFilter == IGNORED)
+    if (isFilteredInChain())
         return;
-    //combine parent filter and own filter
-    FilterMode cFilter = Merge(parentFilter, mFilter);
 
     int index = getCurrentIndex();
     //dont recall any more info is the Fx cannot be found
     if (index == -1)
         return;
 
-    FilterMode filter = Merge(cFilter, mIndex.mFilter);
-    if (filter == RECALLED && index != mIndex.mValue) {
+    if (!mIndex.isFilteredInChain() && index != mIndex.mValue) {
         TrackFX_CopyToTrack(getTrack(), getCurrentIndex(), getTrack(), mIndex.mValue, true);
         index = mIndex.mValue;
     }
 
-    filter = Merge(cFilter, mEnabled.mFilter);
-    if (filter == RECALLED && TrackFX_GetEnabled(getTrack(), index) != mEnabled.mValue)
+    if (!mEnabled.isFilteredInChain() && TrackFX_GetEnabled(getTrack(), index) != mEnabled.mValue)
         TrackFX_SetEnabled(getTrack(), index, mEnabled.mValue);
 
     auto min = DBL_MIN;
@@ -106,9 +102,8 @@ void FxInfo::recallSettings(FilterMode parentFilter) const {
             break;
         case PluginRecallStrategies::PRESET: {
             //load reaper preset
-            filter = Merge(parentFilter, mPresetName.mFilter);
             TrackFX_GetPreset(getTrack(), index, (char*) name, 256);
-            if (filter == RECALLED && (g_lpe->mModel.mIsReselectFxPreset || name != mPresetName.mValue.data())) {
+            if (!mPresetName.isFilteredInChain() && (g_lpe->mModel.mIsReselectFxPreset || name != mPresetName.mValue.data())) {
                 TrackFX_SetPreset(getTrack(), index, mPresetName.mValue.data());
             }
             break;
@@ -116,10 +111,8 @@ void FxInfo::recallSettings(FilterMode parentFilter) const {
         case PluginRecallStrategies::PARAMETERS: {
             //recall parameters once
             for (int i = 0; i < mParamInfo.size(); i++) {
-                filter = Merge(parentFilter, mParamInfo.mFilter, mParamInfo.at(i).mFilter);
-
                 auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
-                if (filter == RECALLED && currentValue != mParamInfo.at(i).mValue)
+                if (!mParamInfo.at(i).isFilteredInChain() && currentValue != mParamInfo.at(i).mValue)
                     TrackFX_SetParam(getTrack(), index, i, mParamInfo.at(i).mValue);
             }
             break;
@@ -127,9 +120,7 @@ void FxInfo::recallSettings(FilterMode parentFilter) const {
         case PluginRecallStrategies::PARAMETERS_RETRY:
             //recall parameters and check if it succeeded, try up to 5 times
             for (int i = 0; i < mParamInfo.size(); i++) {
-                filter = Merge(parentFilter, mParamInfo.mFilter, mParamInfo.at(i).mFilter);
-
-                if (filter == RECALLED) {
+                if (!mParamInfo.at(i).isFilteredInChain()) {
                     int count = 0;
                     auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
 

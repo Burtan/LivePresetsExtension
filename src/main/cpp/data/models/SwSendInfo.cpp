@@ -71,8 +71,8 @@ void SwSendInfo::saveCurrentState(bool update) {
 * @param sendidx >= 0 means there is already a fitting send whose attributes can be changed; < 0 means a new send has
 * to be created
 */
-void SwSendInfo::recallSettings(FilterMode filter) const {
-    BaseSendInfo::recallSettings(filter);
+void SwSendInfo::recallSettings() const {
+    BaseSendInfo::recallSettings();
 
     MediaTrack* tr = getSrcTrack();
 
