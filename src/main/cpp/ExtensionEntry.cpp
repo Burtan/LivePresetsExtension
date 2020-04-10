@@ -79,6 +79,7 @@ static bool loadAPI(void* (*getFunc)(const char*)) {
             REQUIRED_API(CountTracks),
             REQUIRED_API(CountSelectedTracks),
             REQUIRED_API(GetTrackName),
+            REQUIRED_API(TrackFX_CopyToTrack),
             REQUIRED_API(TrackFX_GetCount),
             REQUIRED_API(TrackFX_GetRecCount),
             REQUIRED_API(TrackFX_GetFXName),
