@@ -65,6 +65,11 @@ public:
     void recallPresetByGuid(int data1, int data2, int data3, HWND data4);
     void onRecallPreset(int val, int valhw, int relmode, HWND hwnd);
 private:
+    void createPreset();
+    void updatePreset();
+    void editPreset();
+    void removePresets();
+    void showSettings();
     void toggleMutedTracksVisibility();
     void toggleMainWindow();
     void toggleAboutWindow();

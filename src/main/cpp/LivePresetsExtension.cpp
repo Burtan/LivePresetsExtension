@@ -75,6 +75,36 @@ LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd)
             std::bind(&LPE::toggleMutedTracksVisibility, this)
     ));
 
+    mActions.add(new HotkeyCommand(
+            "LPE_ADDPRESET",
+            "LPE - Creates a new preset",
+            std::bind(&LPE::createPreset, this)
+    ));
+
+    mActions.add(new HotkeyCommand(
+            "LPE_UPDATEPRESET",
+            "LPE - Updates the selected preset",
+            std::bind(&LPE::updatePreset, this)
+    ));
+
+    mActions.add(new HotkeyCommand(
+            "LPE_EDITPRESET",
+            "LPE - Edits the selected preset",
+            std::bind(&LPE::editPreset, this)
+    ));
+
+    mActions.add(new HotkeyCommand(
+            "LPE_REMOVEORESET",
+            "LPE - Removes the selected presets",
+            std::bind(&LPE::removePresets, this)
+    ));
+
+    mActions.add(new HotkeyCommand(
+            "LPE_SHOWSETTINGS",
+            "LPE - Shows/Hides the settings menu",
+            std::bind(&LPE::showSettings, this)
+    ));
+
     using namespace std::placeholders;
     mActions.add(new ActionCommand(
             "LPE_SELECTPRESET",
@@ -219,6 +249,38 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
     }
 }
 
+/**
+ * Creates a new preset
+ */
+void LPE::createPreset() {
+    mController.createPreset();
+}
+
+/**
+ * Updates the selected preset
+ */
+void LPE::updatePreset() {
+    mController.updateSelectedPreset();
+}
+
+/**
+ * Edits the selected preset
+ */
+void LPE::editPreset() {
+    mController.editSelectedPreset();
+}
+
+/**
+ * Removes the selected preset
+ */
+void LPE::removePresets() {
+    mController.removeSelectedPresets();
+}
+
+void LPE::showSettings() {
+    mController.showSettings();
+}
+
 /*
  * Recall a preset by its GUID which is encoded in all 4 variables
  */
@@ -320,7 +382,7 @@ bool LPE::recallState(ProjectStateContext* ctx, bool) {
     while (!ctx->GetLine(buf, sizeof(buf)) && !lp.parse(buf)) {
 
         // objects start with <OBJECTNAME
-        auto token = lp.gettoken_str(0);
+        const auto *token = lp.gettoken_str(0);
         if (strcmp(token, "<LIVEPRESETSMODEL") == 0) {
             mModel = LivePresetsModel(ctx);
         }
