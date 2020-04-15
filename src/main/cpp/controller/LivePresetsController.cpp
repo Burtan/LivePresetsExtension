@@ -60,7 +60,7 @@ void LivePresetsController::onInitDlg() {
     mList->addListViewEventListener([this](NMLISTVIEW* event) -> void {
         switch (event->hdr.code)         {
             case NM_DBLCLK: {
-                const auto preset = mList->getAdapter()->getItem(event->iItem);
+                auto *const preset = mList->getAdapter()->getItem(event->iItem);
                 recallLivePreset(preset);
                 break;
             }
@@ -75,18 +75,20 @@ void LivePresetsController::recallLivePreset(LivePreset* preset) {
 /**
  * Opens the edit dialog and creates the preset when the result is not cancelled
  */
-void LivePresetsController::createPreset() {
-    auto preset = g_lpe->mModel.getCurrentSettingsAsPreset();
-    if (auto filter = FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &g_lpe->mModel.mDefaultFilterPreset)) {
+void LivePresetsController::createPreset() const {
+    auto *preset = g_lpe->mModel.getCurrentSettingsAsPreset();
+    if (auto *filter = FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &g_lpe->mModel.mDefaultFilterPreset)) {
         preset->applyFilterPreset(filter);
     }
 
     //keep track of the recallCmdId to remove it if the created preset is removed
     auto tempCmdId = preset->mRecallCmdId;
-    auto editedPreset = editPreset(preset);
+    auto *editedPreset = editPreset(preset);
 
     if (editedPreset != nullptr) {
         g_lpe->mModel.addPreset(editedPreset, false);
+        if (!mList)
+            return;
         mList->invalidate();
         int index = mList->getAdapter()->getIndex(editedPreset);
         mList->selectIndex(index);
@@ -100,21 +102,27 @@ void LivePresetsController::createPreset() {
  */
 LivePreset* LivePresetsController::editPreset(LivePreset* preset) {
     auto dlg = LivePresetEditController(preset);
-    auto result = (LivePreset*) dlg.show();
+    auto *result = (LivePreset*) dlg.show();
     return result;
 }
 
-void LivePresetsController::updateSelectedPreset() {
+void LivePresetsController::updateSelectedPreset() const {
+    if (!mList)
+        return;
+
     auto indices = mList->getSelectedIndices();
     if (indices.size() != 1)
         return;
 
-    auto preset = mList->getAdapter()->getItem(indices.front());
+    auto *preset = mList->getAdapter()->getItem(indices.front());
     preset->saveCurrentState(true);
     Undo_OnStateChangeEx2(nullptr, "Update LivePreset", UNDO_STATE_MISCCFG, -1);
 }
 
-void LivePresetsController::removeSelectedPresets() {
+void LivePresetsController::removeSelectedPresets() const {
+    if (!mList)
+        return;
+
     std::vector<LivePreset*> presets;
     for (auto index : mList->getSelectedIndices()) {
         presets.push_back(mList->getAdapter()->getItem(index));
@@ -127,19 +135,22 @@ void LivePresetsController::removeSelectedPresets() {
  * Creates a copy of the currently selected preset and opens the edit dialog for it. When the dialog is confirmed
  * The copy is saved in place of the original one
  */
-void LivePresetsController::editSelectedPreset() {
+void LivePresetsController::editSelectedPreset() const {
+    if (!mList)
+        return;
+
     auto indices = mList->getSelectedIndices();
     if (indices.size() != 1)
         return;
 
-    auto preset = mList->getAdapter()->getItem(indices.front());
+    auto *preset = mList->getAdapter()->getItem(indices.front());
 
     WDL_FastString str;
     preset->persist(str);
     auto ctx = StringProjectStateContext(str);
-    auto presetToEdit = new LivePreset((ProjectStateContext*) &ctx, preset->mRecallCmdId);
+    auto *presetToEdit = new LivePreset((ProjectStateContext*) &ctx, preset->mRecallCmdId);
 
-    auto editedPreset = editPreset(presetToEdit);
+    auto *editedPreset = editPreset(presetToEdit);
 
     if (editedPreset != nullptr) {
         g_lpe->mModel.replacePreset(preset, editedPreset);
@@ -178,7 +189,7 @@ void LivePresetsController::onContextMenu(HMENU menu) {
         InsertMenuItem(menu, 0, true, &mii);
 
         int index = 0;
-        for (auto filter : filters) {
+        for (auto *filter : filters) {
             mii = MENUITEMINFO();
 
             mii.fMask |= MIIM_TYPE | MIIM_ID | MIIM_DATA;
@@ -197,7 +208,7 @@ void LivePresetsController::onContextMenu(HMENU menu) {
     }
 }
 
-void LivePresetsController::applyFilterToSelectedTracks(int filterIndex) {
+void LivePresetsController::applyFilterToSelectedTracks(int filterIndex) const {
     for (auto index : mList->getSelectedIndices()) {
         mList->getAdapter()->getItem(index)->applyFilterPreset(g_lpe->mModel.mFilterPresets[filterIndex]);
     }
@@ -268,10 +279,15 @@ void LivePresetsController::onClose() {
         mList->onDestroy();
 }
 
-void LivePresetsController::reset() {
+void LivePresetsController::reset() const {
     if (mList) {
         auto adapter = std::make_unique<LivePresetsListAdapter>(&g_lpe->mModel.mPresets);
         mList->setAdapter(std::move(adapter));
         mList->invalidate();
     }
+}
+
+void LivePresetsController::getMinMaxInfo(LPMINMAXINFO info) {
+    info->ptMinTrackSize.x = 1284;
+    info->ptMinTrackSize.y = 625;
 }

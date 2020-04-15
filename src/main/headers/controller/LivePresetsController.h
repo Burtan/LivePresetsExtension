@@ -40,7 +40,12 @@ public:
 	LivePresetsController();
     std::unique_ptr<ListView<LivePreset>> mList = nullptr;
 
-    void reset();
+    void reset() const;
+    void createPreset() const;
+    void updateSelectedPreset() const;
+    void removeSelectedPresets() const;
+    void editSelectedPreset() const;
+    static void showSettings();
 protected:
 	void onCommand(WPARAM wParam, LPARAM lParam) override;
 	void onContextMenu(HMENU menu) override;
@@ -48,14 +53,10 @@ protected:
     int onNotify(WPARAM wParam, LPARAM lParam) override;
     void onClose() override;
     void onInitDlg() override;
+    void getMinMaxInfo(LPMINMAXINFO info) override;
 private:
     static void recallLivePreset(LivePreset* preset);
-    void applyFilterToSelectedTracks(int filterIndex);
-    void createPreset();
-    void updateSelectedPreset();
-    void removeSelectedPresets();
-    void editSelectedPreset();
-    static void showSettings();
+    void applyFilterToSelectedTracks(int filterIndex) const;
     static LivePreset * editPreset(LivePreset *preset);
 };
 

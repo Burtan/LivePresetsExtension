@@ -33,5 +33,8 @@ private:
 void FilterPreset_AddPreset(std::vector<FilterPreset*>& presets, FilterPreset* newPreset);
 std::vector<std::string*> FilterPreset_GetNames(const std::vector<FilterPreset*>& presets);
 FilterPreset* FilterPreset_GetFilterByName(const std::vector<FilterPreset*>& presets, std::string* name);
+bool FilterPreset_IsEqual(FilterPreset *a, FilterPreset *b);
+void FilterPreset_SortChilds(FilterPreset *a);
+
 
 #endif //LPE_FILTERPRESET_H
