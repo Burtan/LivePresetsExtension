@@ -56,7 +56,7 @@ void SettingsController::onInitDlg() {
     auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(filterNames);
     mCombo->setAdapter(std::move(comboAdapter));
     int index = 0;
-    for (auto filter : filterNames) {
+    for (auto *filter : filterNames) {
         if (*filter == g_lpe->mModel.mDefaultFilterPreset) {
             SendMessage(mCombo->mHwnd, CB_SETCURSEL, 0, index);
         }
@@ -80,13 +80,13 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
     switch (wParam) {
         case IDC_RECALL: {
             auto cmdId = NamedCommandLookup("_LPE_SELECTPRESET");
-            auto section = SectionFromUniqueID(0);
+            auto *section = SectionFromUniqueID(0);
             DoActionShortcutDialog(mHwnd, section, cmdId, 0);
             break;
         }
         case IDC_TOGGLETRACKVISIBILITY: {
             auto cmdId = NamedCommandLookup("_LPE_TOGGLEMUTEDVISIBILITY");
-            auto section = SectionFromUniqueID(0);
+            auto *section = SectionFromUniqueID(0);
             DoActionShortcutDialog(mHwnd, section, cmdId, 0);
             break;
         }
