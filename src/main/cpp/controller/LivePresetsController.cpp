@@ -286,3 +286,8 @@ void LivePresetsController::reset() const {
         mList->invalidate();
     }
 }
+
+void LivePresetsController::getMinMaxInfo(LPMINMAXINFO info) {
+    info->ptMinTrackSize.x = 1284;
+    info->ptMinTrackSize.y = 625;
+}

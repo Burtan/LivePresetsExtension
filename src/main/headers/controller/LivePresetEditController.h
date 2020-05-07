@@ -49,6 +49,7 @@ protected:
     int onKey(MSG* msg, int iKeyState) override;
     void onClose() override;
     LPARAM result() override;
+    void getMinMaxInfo(LPMINMAXINFO info) override;
     int onNotify(WPARAM wParam, LPARAM lParam) override;
 private:
     static WNDPROC defWndProc;

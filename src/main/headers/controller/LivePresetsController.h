@@ -53,6 +53,7 @@ protected:
     int onNotify(WPARAM wParam, LPARAM lParam) override;
     void onClose() override;
     void onInitDlg() override;
+    void getMinMaxInfo(LPMINMAXINFO info) override;
 private:
     static void recallLivePreset(LivePreset* preset);
     void applyFilterToSelectedTracks(int filterIndex) const;

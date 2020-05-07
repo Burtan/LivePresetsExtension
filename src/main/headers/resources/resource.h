@@ -32,3 +32,6 @@
 #define IDC_LABEL1                      1370
 #define IDC_TAB                         1371
 #define IDC_ASSIGNINFO                  1372
+
+//styles
+#define DEFAULT_FONT 8, "MS Shell Dlg"

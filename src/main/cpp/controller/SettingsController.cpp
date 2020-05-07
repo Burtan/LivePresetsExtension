@@ -90,6 +90,16 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
             DoActionShortcutDialog(mHwnd, section, cmdId, 0);
             break;
         }
+        case IDC_REMOVE: {
+            int index = SendMessage(mCombo->mHwnd, CB_GETCURSEL, 0, 0);
+            if (index == CB_ERR)
+                break;
+            g_lpe->mModel.mFilterPresets.erase(g_lpe->mModel.mFilterPresets.begin() + index);
+            SendMessage(mCombo->mHwnd, CB_SETCURSEL, -1, 0);
+            mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
+            mCombo->invalidate();
+            break;
+        }
         case IDC_SAVE:
             close();
             break;

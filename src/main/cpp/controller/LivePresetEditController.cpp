@@ -71,6 +71,15 @@ void LivePresetEditController::onInitDlg() {
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
     auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(FilterPreset_GetNames(g_lpe->mModel.mFilterPresets));
     mCombo->setAdapter(std::move(comboAdapter));
+
+    int index = 0;
+    for (auto *af : g_lpe->mModel.mFilterPresets) {
+        auto *bf = mPreset->extractFilterPreset();
+        if (FilterPreset_IsEqual(af, bf)) {
+            SendMessage(mCombo->mHwnd, CB_SETCURSEL, index, 0);
+        }
+        index++;
+    }
 }
 
 LRESULT WINAPI LivePresetEditController::wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -89,7 +98,7 @@ LRESULT WINAPI LivePresetEditController::wndProc(HWND hwnd, UINT uMsg, WPARAM wP
         msg.wParam = wParam;
         msg.lParam = lParam;
 
-        if (auto handled = tree->onKey(&msg, lParam & 24)) {
+        if (auto handled = tree->onKey(&msg, (int) lParam & 24)) {
             return handled;
         }
     }
@@ -144,7 +153,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
             break;
         case IDC_RECALL: {
             if (mPreset->mRecallCmdId != 0) {
-                auto section = SectionFromUniqueID(0);
+                auto *section = SectionFromUniqueID(0);
                 DoActionShortcutDialog(mHwnd, section, mPreset->mRecallCmdId, 0);
             }
         }
@@ -152,7 +161,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
             showFilterSettings();
             break;
         case IDC_ADD: {
-            auto filter = mPreset->extractFilterPreset();
+            auto *filter = mPreset->extractFilterPreset();
             std::string name = "New preset";
             auto dlg = ConfirmationController("Save filter...", &name);
             if (dlg.show()) {
@@ -241,4 +250,7 @@ void LivePresetEditController::showFilterSettings() {
     TrackPopupMenu(menu, TPM_LEFTALIGN | TPM_TOPALIGN, r.left, r.bottom, 0, mHwnd, nullptr);
 }
 
-
+void LivePresetEditController::getMinMaxInfo(LPMINMAXINFO info) {
+    info->ptMinTrackSize.x = 1400;
+    info->ptMinTrackSize.y = 1200;
+}
