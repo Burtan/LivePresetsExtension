@@ -285,7 +285,7 @@ void LPE::showSettings() {
  * Recall a preset by its GUID which is encoded in all 4 variables
  */
 void LPE::recallPresetByGuid(int data1, int data2, int data3, HWND data4) {
-    mModel.recallPresetByGuid(IntsToGuid(data1, data2, data3, (long) data4));
+    mModel->recallPresetByGuid(IntsToGuid(data1, data2, data3, (long) data4));
 }
 
 /**
@@ -298,14 +298,14 @@ void LPE::recallPresetByGuid(int data1, int data2, int data3, HWND data4) {
 void LPE::onRecallPreset(int val, int valhw, int, HWND) {
     if (valhw == -1) {
         //MIDI CC value
-        mModel.recallByValue(val);
+        mModel->recallByValue(val);
     } else {
         //OSC or MIDI pitch value
         //calculate integer as float value (0-16383)
         auto osc = (127 - val) * 128 + (128 - valhw);
         if (osc == 16384) osc = 0;
 
-        mModel.recallByValue(osc);
+        mModel->recallByValue(osc);
     }
 }
 
@@ -353,7 +353,7 @@ void LPE::onApplySelectedTrackConfigsToAllPresets() {
         selectedTracks.push_back(GetSelectedTrack(nullptr, i));
     }
 
-    mModel.onApplySelectedTrackConfigsToAllPresets(selectedTracks);
+    mModel->onApplySelectedTrackConfigsToAllPresets(selectedTracks);
 }
 
 void LPE::toggleMainWindow() {
@@ -373,6 +373,16 @@ void LPE::toggleAboutWindow() {
  **********************************************************************************************************************/
 
 /*
+ * Change the current project
+ */
+void LPE::onProjectChanged(ReaProject *proj) {
+    mProject = proj;
+    mModel = &mModels[proj];
+    mController.reset();
+    ControlViewController_Reset(&mControlView);
+}
+
+/*
  * Extension data is read here. Is also called on Undo/Redo to get an old persisted state
  */
 bool LPE::recallState(ProjectStateContext* ctx, bool) {
@@ -382,9 +392,10 @@ bool LPE::recallState(ProjectStateContext* ctx, bool) {
     while (!ctx->GetLine(buf, sizeof(buf)) && !lp.parse(buf)) {
 
         // objects start with <OBJECTNAME
+        auto *proj = GetCurrentProjectInLoadSave();
         const auto *token = lp.gettoken_str(0);
         if (strcmp(token, "<LIVEPRESETSMODEL") == 0) {
-            mModel = LivePresetsModel(ctx);
+            mModels[proj] = LivePresetsModel(ctx);
         }
 
         // data finished on >
@@ -394,7 +405,7 @@ bool LPE::recallState(ProjectStateContext* ctx, bool) {
 
     //Update ui after loading data or returning to persisted state via undo/redo
     if (mController.mList) {
-        auto adapter = std::make_unique<LivePresetsListAdapter>(&mModel.mPresets);
+        auto adapter = std::make_unique<LivePresetsListAdapter>(&mModel->mPresets);
         mController.mList->setAdapter(move(adapter));
     }
 
@@ -402,8 +413,10 @@ bool LPE::recallState(ProjectStateContext* ctx, bool) {
 }
 
 void LPE::saveState(ProjectStateContext* ctx, bool) {
+    auto *proj = GetCurrentProjectInLoadSave();
+
     WDL_FastString chunk;
-    mModel.persist(chunk);
+    mModels[proj].persist(chunk);
 
     std::string out;
     std::istringstream ss(chunk.Get());
@@ -414,7 +427,9 @@ void LPE::saveState(ProjectStateContext* ctx, bool) {
 
 void LPE::resetState(bool) {
     //cleaning data from model
-    mModel.reset();
+    auto *proj = GetCurrentProjectInLoadSave();
+
+    mModels[proj].reset();
 
     //cleaning data from ui
     mController.reset();

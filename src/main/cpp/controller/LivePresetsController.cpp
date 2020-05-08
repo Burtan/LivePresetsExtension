@@ -55,7 +55,7 @@ void LivePresetsController::onInitDlg() {
 
     //create ListView and add event listeners
     mList = std::make_unique<ListView<LivePreset>>(GetDlgItem(mHwnd, IDC_LIST));
-    auto adapter = std::make_unique<LivePresetsListAdapter>(&g_lpe->mModel.mPresets);
+    auto adapter = std::make_unique<LivePresetsListAdapter>(&g_lpe->mModel->mPresets);
     mList->setAdapter(std::move(adapter));
     mList->addListViewEventListener([this](NMLISTVIEW* event) -> void {
         switch (event->hdr.code)         {
@@ -69,15 +69,15 @@ void LivePresetsController::onInitDlg() {
 }
 
 void LivePresetsController::recallLivePreset(LivePreset* preset) {
-    g_lpe->mModel.recallPreset(preset);
+    g_lpe->mModel->recallPreset(preset);
 }
 
 /**
  * Opens the edit dialog and creates the preset when the result is not cancelled
  */
 void LivePresetsController::createPreset() const {
-    auto *preset = g_lpe->mModel.getCurrentSettingsAsPreset();
-    if (auto *filter = FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &g_lpe->mModel.mDefaultFilterPreset)) {
+    auto *preset = g_lpe->mModel->getCurrentSettingsAsPreset();
+    if (auto *filter = FilterPreset_GetFilterByName(g_lpe->mModel->mFilterPresets, &g_lpe->mModel->mDefaultFilterPreset)) {
         preset->applyFilterPreset(filter);
     }
 
@@ -86,7 +86,7 @@ void LivePresetsController::createPreset() const {
     auto *editedPreset = editPreset(preset);
 
     if (editedPreset != nullptr) {
-        g_lpe->mModel.addPreset(editedPreset, false);
+        g_lpe->mModel->addPreset(editedPreset, false);
         if (!mList)
             return;
         mList->invalidate();
@@ -127,7 +127,7 @@ void LivePresetsController::removeSelectedPresets() const {
     for (auto index : mList->getSelectedIndices()) {
         presets.push_back(mList->getAdapter()->getItem(index));
     }
-    g_lpe->mModel.removePresets(presets);
+    g_lpe->mModel->removePresets(presets);
     mList->invalidate();
 }
 
@@ -153,7 +153,7 @@ void LivePresetsController::editSelectedPreset() const {
     auto *editedPreset = editPreset(presetToEdit);
 
     if (editedPreset != nullptr) {
-        g_lpe->mModel.replacePreset(preset, editedPreset);
+        g_lpe->mModel->replacePreset(preset, editedPreset);
         //Undo_OnStateChangeEx2(nullptr, "Updated LivePreset", UNDO_STATE_MISCCFG, -1);
         mList->invalidate();
         int index = mList->getAdapter()->getIndex(editedPreset);
@@ -168,7 +168,7 @@ void LivePresetsController::showSettings() {
 
 void LivePresetsController::onContextMenu(HMENU menu) {
     auto indices = mList->getSelectedIndices();
-    auto filters = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
+    auto filters = FilterPreset_GetNames(g_lpe->mModel->mFilterPresets);
 
     if (!indices.empty()) {
 
@@ -210,7 +210,7 @@ void LivePresetsController::onContextMenu(HMENU menu) {
 
 void LivePresetsController::applyFilterToSelectedTracks(int filterIndex) const {
     for (auto index : mList->getSelectedIndices()) {
-        mList->getAdapter()->getItem(index)->applyFilterPreset(g_lpe->mModel.mFilterPresets[filterIndex]);
+        mList->getAdapter()->getItem(index)->applyFilterPreset(g_lpe->mModel->mFilterPresets[filterIndex]);
     }
 }
 
@@ -281,7 +281,7 @@ void LivePresetsController::onClose() {
 
 void LivePresetsController::reset() const {
     if (mList) {
-        auto adapter = std::make_unique<LivePresetsListAdapter>(&g_lpe->mModel.mPresets);
+        auto adapter = std::make_unique<LivePresetsListAdapter>(&g_lpe->mModel->mPresets);
         mList->setAdapter(std::move(adapter));
         mList->invalidate();
     }

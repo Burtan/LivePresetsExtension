@@ -37,6 +37,7 @@
 #include <data/models/base/PluginRecallStrategies.h>
 #include <controller/AboutController.h>
 #include <plugins/lpe_ultimate.h>
+#include <util/ProjectChangeListener.h>
 
 /**
  * LPE = LivePresetsExtension, main class that manages the base classes statically
@@ -45,11 +46,14 @@ class LPE {
 public:
     LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd);
 
-    LivePresetsModel mModel;
+    ReaProject* mProject;
+    LivePresetsModel* mModel;
+    std::map<ReaProject*, LivePresetsModel> mModels;
     PluginRecallStrategies mPrs;
     LivePresetsController mController;
     ControlViewController mControlView;
     AboutController mAboutController;
+    ProjectChangeListener mChangeListener;
 
     REAPER_PLUGIN_HINSTANCE mInstance;
     HWND mMainHwnd;
@@ -64,6 +68,7 @@ public:
     void resetState(bool isUndo);
     void recallPresetByGuid(int data1, int data2, int data3, HWND data4);
     void onRecallPreset(int val, int valhw, int relmode, HWND hwnd);
+    void onProjectChanged(ReaProject* proj);
 private:
     void createPreset();
     void updatePreset();

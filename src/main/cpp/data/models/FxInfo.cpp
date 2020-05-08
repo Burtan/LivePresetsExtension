@@ -103,7 +103,7 @@ void FxInfo::recallSettings() const {
         case PluginRecallStrategies::PRESET: {
             //load reaper preset
             TrackFX_GetPreset(getTrack(), index, (char*) name, 256);
-            if (!mPresetName.isFilteredInChain() && (g_lpe->mModel.mIsReselectFxPreset || name != mPresetName.mValue.data())) {
+            if (!mPresetName.isFilteredInChain() && (g_lpe->mModel->mIsReselectFxPreset || name != mPresetName.mValue.data())) {
                 TrackFX_SetPreset(getTrack(), index, mPresetName.mValue.data());
             }
             break;
@@ -255,8 +255,8 @@ bool FxInfo::applyFilterPreset(FilterPreset *preset) {
         toFilters.insert((Filterable*) &mIndex);
         toFilters.insert((Filterable*) &mPresetName);
 
-        for (auto child : preset->mChilds) {
-            for (auto toFilter : toFilters) {
+        for (auto *child : preset->mChilds) {
+            for (auto *toFilter : toFilters) {
                 if (toFilter->applyFilterPreset(child)) {
                     toFilters.erase(toFilter);
                     goto cnt;

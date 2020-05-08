@@ -70,8 +70,8 @@ const char* LivePresetsListAdapter::getLvItemText(int index, int column) {
     switch (column) {
         default:
         case COLUMN::ACTIVE: {
-            if (g_lpe->mModel.getActivePreset()) {
-                bool isActive = g_lpe->mModel.getActivePreset() == preset;
+            if (g_lpe->mModel->getActivePreset()) {
+                bool isActive = g_lpe->mModel->getActivePreset() == preset;
                 if (isActive) {
                     return (char*) "X";
                 }
@@ -118,15 +118,15 @@ void LivePresetsListAdapter::onChangedSortingColumn(LVCOLUMN col, bool reverse) 
         case COLUMN::ACTIVE:
             if (reverse) {
                 setComparator([](LivePreset* a, LivePreset* b) -> bool {
-                    bool aIsActive = g_lpe->mModel.getActivePreset() == a;
-                    bool bIsActive = g_lpe->mModel.getActivePreset() == b;
+                    bool aIsActive = g_lpe->mModel->getActivePreset() == a;
+                    bool bIsActive = g_lpe->mModel->getActivePreset() == b;
 
                     return aIsActive < bIsActive;
                 });
             } else {
                 setComparator([](LivePreset* a, LivePreset* b) -> bool {
-                    bool aIsActive = g_lpe->mModel.getActivePreset() == a;
-                    bool bIsActive = g_lpe->mModel.getActivePreset() == b;
+                    bool aIsActive = g_lpe->mModel->getActivePreset() == a;
+                    bool bIsActive = g_lpe->mModel->getActivePreset() == b;
 
                     return aIsActive > bIsActive;
                 });

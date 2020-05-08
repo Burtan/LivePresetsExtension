@@ -69,11 +69,11 @@ void LivePresetEditController::onInitDlg() {
 
     //create combobox
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
-    auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(FilterPreset_GetNames(g_lpe->mModel.mFilterPresets));
+    auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(FilterPreset_GetNames(g_lpe->mModel->mFilterPresets));
     mCombo->setAdapter(std::move(comboAdapter));
 
     int index = 0;
-    for (auto *af : g_lpe->mModel.mFilterPresets) {
+    for (auto *af : g_lpe->mModel->mFilterPresets) {
         auto *bf = mPreset->extractFilterPreset();
         if (FilterPreset_IsEqual(af, bf)) {
             SendMessage(mCombo->mHwnd, CB_SETCURSEL, index, 0);
@@ -121,7 +121,7 @@ void LivePresetEditController::save() {
     //surround with try/catch because stoi can fail when there is no valid id
     try {
         int id = std::stoi(buf);
-        mPreset->mRecallId = g_lpe->mModel.getRecallIdForPreset(mPreset, id);
+        mPreset->mRecallId = g_lpe->mModel->getRecallIdForPreset(mPreset, id);
     } catch (std::exception&) {}
 
     keepPreset = true;
@@ -138,7 +138,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
         char name[256];
         SendMessage((HWND) lparam, CB_GETLBTEXT, index, (LPARAM) name);
         auto tempName = std::string(name);
-        if (FilterPreset* preset = FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &tempName)) {
+        if (FilterPreset* preset = FilterPreset_GetFilterByName(g_lpe->mModel->mFilterPresets, &tempName)) {
             mPreset->applyFilterPreset(preset);
             mTree->invalidate();
         }
@@ -166,7 +166,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
             auto dlg = ConfirmationController("Save filter...", &name);
             if (dlg.show()) {
                 //When name is entered that exists ask for overwrite
-                if (FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &name)) {
+                if (FilterPreset_GetFilterByName(g_lpe->mModel->mFilterPresets, &name)) {
                     char title[256];
                     sprintf(title, "Overwrite %s?", name.data());
                     char msg[256];
@@ -176,8 +176,8 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
                     }
                 }
                 filter->mId.name = name;
-                FilterPreset_AddPreset(g_lpe->mModel.mFilterPresets, filter);
-                mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
+                FilterPreset_AddPreset(g_lpe->mModel->mFilterPresets, filter);
+                mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel->mFilterPresets);
                 mTree->invalidate();
                 mCombo->invalidate();
             }

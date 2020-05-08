@@ -92,7 +92,9 @@ static bool loadAPI(void* (*getFunc)(const char*)) {
             REQUIRED_API(TrackFX_SetParam),
             REQUIRED_API(TrackFX_GetFXGUID),
             REQUIRED_API(TrackList_AdjustWindows),
-            REQUIRED_API(GetLastTouchedFX)
+            REQUIRED_API(GetLastTouchedFX),
+            REQUIRED_API(GetMediaTrackInfo_Value),
+            REQUIRED_API(GetCurrentProjectInLoadSave)
     };
 
     for (const ApiFunc &func : funcs) {
@@ -208,6 +210,7 @@ int extensionInit(REAPER_PLUGIN_HINSTANCE hInstance, reaper_plugin_info_t* pInfo
     try {
         plugin_register("projectconfig", &config);
         g_lpe = std::make_unique<LPE>(hInstance, pInfo->hwnd_main);
+        plugin_register("csurf_inst", &g_lpe->mChangeListener);
     } catch (...) {
         return 0;
     }
@@ -222,6 +225,7 @@ int extensionExit() {
         plugin_register("-hookcustommenu", (void*) hookMenuProc);
         plugin_register("-toggleaction", (void *) toggleActionProc);
         plugin_register("-projectconfig", &config);
+        plugin_register("-csurf_inst", &g_lpe->mChangeListener);
     }
 
     return 0; // makes REAPER unloading us

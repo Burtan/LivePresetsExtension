@@ -101,7 +101,7 @@ void BaseTrackInfo::recallSettings() const {
 #endif
 
         //override show tracks when global option is active
-        if (key == B_SHOWINTCP && g_lpe->mModel.mIsHideMutedTracks && mParamInfo.at(B_MUTE).mValue == 1) {
+        if (key == B_SHOWINTCP && g_lpe->mModel->mIsHideMutedTracks && mParamInfo.at(B_MUTE).mValue == 1) {
             value = 0;
         }
 
@@ -113,7 +113,7 @@ void BaseTrackInfo::recallSettings() const {
 
     auto muted = (bool) mParamInfo.at(B_MUTE).mValue;
     if (!muted) {
-        for (const auto fxInfo : mFxs) {
+        for (auto *const fxInfo : mFxs) {
             fxInfo->recallSettings();
         }
     }
@@ -132,7 +132,7 @@ void BaseTrackInfo::recallHwSends() const {
         CreateTrackSend(track, nullptr);
 
     int index = 0;
-    for (const auto send : mHwSends) {
+    for (auto *const send : mHwSends) {
         send->mSendIdx = index;
         send->recallSettings();
         index++;
@@ -218,12 +218,12 @@ void BaseTrackInfo::saveHwSendState(Filterable *parent, std::vector<HwSendInfo *
         }
 
         for (std::pair<int, int>& hwSendNew : hwSendsNew) {
-            auto info = new HwSendInfo(parent, *guid, hwSendNew.second);
+            auto *info = new HwSendInfo(parent, *guid, hwSendNew.second);
             hwSends.push_back(info);
         }
     } else {
         for (int i = 0; i < GetTrackNumSends(track, 1); i++) {
-            auto info = new HwSendInfo(parent, *guid, i);
+            auto *info = new HwSendInfo(parent, *guid, i);
             hwSends.push_back(info);
         }
     }
@@ -238,7 +238,7 @@ void BaseTrackInfo::saveSwSendState(Filterable *parent, std::vector<SwSendInfo *
         auto currentSwSends = std::vector<std::pair<const GUID*, int>>();
         for (int i = 0; i < GetTrackNumSends(track, 0); i++) {
             auto dst = (long long) GetTrackSendInfo_Value(track, 0, i, P_DESTTRACK);
-            auto dstTrack = (MediaTrack*) dst;
+            auto *dstTrack = (MediaTrack*) dst;
             auto val = std::pair<const GUID*, int>(GetTrackGUID(dstTrack), i);
             currentSwSends.push_back(val);
         }
@@ -270,12 +270,12 @@ void BaseTrackInfo::saveSwSendState(Filterable *parent, std::vector<SwSendInfo *
         }
 
         for (auto& swSendNew : swSendsNew) {
-            auto info = new SwSendInfo(parent, *guid, swSendNew.second);
+            auto *info = new SwSendInfo(parent, *guid, swSendNew.second);
             swSends.push_back(info);
         }
     } else {
         for (int i = 0; i < GetTrackNumSends(track, 0); i++) {
-            auto info = new SwSendInfo(parent, *guid, i);
+            auto *info = new SwSendInfo(parent, *guid, i);
             swSends.push_back(info);
         }
     }
@@ -322,20 +322,20 @@ void BaseTrackInfo::saveFxState(Filterable *parent, std::vector<FxInfo *> &fxs, 
         }
 
         for (const GUID* fxNew : fxsNew) {
-            auto info = new FxInfo(parent, *guid, *fxNew);
+            auto *info = new FxInfo(parent, *guid, *fxNew);
             fxs.push_back(info);
         }
     } else {
         if (rec) {
             for (int i = FxInfo::RECFX_INDEX_FACTOR; i < FxInfo::RECFX_INDEX_FACTOR + TrackFX_GetRecCount(track); i++) {
                 auto fxGuid = *TrackFX_GetFXGUID(track, i);
-                auto info = new FxInfo(parent, *guid, fxGuid);
+                auto *info = new FxInfo(parent, *guid, fxGuid);
                 fxs.push_back(info);
             }
         } else {
             for (int i = 0; i < TrackFX_GetCount(track); i++) {
                 auto fxGuid = *TrackFX_GetFXGUID(track, i);
-                auto info = new FxInfo(parent, *guid, fxGuid);
+                auto *info = new FxInfo(parent, *guid, fxGuid);
                 fxs.push_back(info);
             }
         }
@@ -344,12 +344,12 @@ void BaseTrackInfo::saveFxState(Filterable *parent, std::vector<FxInfo *> &fxs, 
 }
 
 BaseTrackInfo::~BaseTrackInfo() {
-    for (auto hwSend : mHwSends) {
+    for (auto *hwSend : mHwSends) {
         delete hwSend;
     }
     mHwSends.clear();
 
-    for (auto fx : mFxs) {
+    for (auto *fx : mFxs) {
         delete fx;
     }
     mFxs.clear();
