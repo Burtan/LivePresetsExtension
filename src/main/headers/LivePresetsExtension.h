@@ -46,8 +46,8 @@ class LPE {
 public:
     LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd);
 
-    ReaProject* mProject;
-    LivePresetsModel* mModel;
+    ReaProject* mProject = nullptr;
+    LivePresetsModel* mModel = nullptr;
     std::map<ReaProject*, LivePresetsModel> mModels;
     PluginRecallStrategies mPrs;
     LivePresetsController mController;
