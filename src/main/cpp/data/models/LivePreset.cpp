@@ -39,7 +39,7 @@ LivePreset::LivePreset(std::string name, std::string description) : BaseInfo(nul
     LivePreset::saveCurrentState(false);
 
     //make sure that new presets get a recall id assigned
-    mRecallId = g_lpe->mModel.getRecallIdForPreset(this);
+    mRecallId = g_lpe->mModel->getRecallIdForPreset(this);
 
     if (mRecallCmdId == 0) {
         createRecallAction();
@@ -56,7 +56,7 @@ LivePreset::LivePreset(ProjectStateContext *ctx, BaseCommand::CommandID recallCm
 }
 
 LivePreset::~LivePreset() {
-    for (auto track : mTracks) {
+    for (auto *track : mTracks) {
         delete track;
     }
     mTracks.clear();
@@ -194,7 +194,7 @@ void LivePreset::persistHandler(WDL_FastString& str) const {
 
     mMasterTrack->persist(str);
 
-    for (const auto track : mTracks) {
+    for (auto *const track : mTracks) {
         track->persist(str);
     }
 
@@ -240,7 +240,7 @@ bool LivePreset::initFromChunkHandler(std::string &key, ProjectStateContext *ctx
         return true;
     }
     if (key == "CONTROLINFO") {
-        if (auto info = ControlInfo_Create(this, ctx)) {
+        if (auto *info = ControlInfo_Create(this, ctx)) {
             mControlInfos.emplace_back(info);
         }
         return true;
@@ -250,9 +250,8 @@ bool LivePreset::initFromChunkHandler(std::string &key, ProjectStateContext *ctx
 }
 
 void LivePreset::recallSettings() const {
-
     mMasterTrack->recallSettings();
-    for (const auto track : mTracks) {
+    for (auto *const track : mTracks) {
         track->recallSettings();
     }
     for (const auto& info : mControlInfos) {
@@ -283,7 +282,7 @@ FilterPreset* LivePreset::extractFilterPreset() {
 
     childs.push_back(mMasterTrack->extractFilterPreset());
 
-    for (auto track : mTracks) {
+    for (auto *track : mTracks) {
         childs.push_back(track->extractFilterPreset());
     }
 
@@ -310,7 +309,7 @@ bool LivePreset::applyFilterPreset(FilterPreset *preset) {
         toFilters.insert(temp.begin(), temp.end());
 
         for (auto& child : preset->mChilds) {
-            for (auto toFilter : toFilters) {
+            for (auto *toFilter : toFilters) {
                 if (toFilter->applyFilterPreset(child)) {
                     toFilters.erase(toFilter);
                     goto cnt;

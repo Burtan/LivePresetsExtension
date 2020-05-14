@@ -44,20 +44,20 @@ void SettingsController::onInitDlg() {
     mResizer.init_item(IDC_SAVE, 0.0, 1.0, 0.0, 1.0);
 
     //init checkboxes
-    CheckDlgButton(mHwnd, IDC_UNDO, g_lpe->mModel.mDoUndo);
-    CheckDlgButton(mHwnd, IDC_RECALL_ACTIVE_PLUGINPRESETS, g_lpe->mModel.mIsReselectFxPreset);
-    CheckDlgButton(mHwnd, IDC_RECALL_MUTED_PLUGINS, g_lpe->mModel.mIsLoadStateOnMute);
-    CheckDlgButton(mHwnd, IDC_RECALL_ACTIVE_PRESETS, g_lpe->mModel.mIsReselectLivePresetByValueRecall);
-    CheckDlgButton(mHwnd, IDC_HIDE_MUTED_TRACKS, g_lpe->mModel.mIsHideMutedTracks);
+    CheckDlgButton(mHwnd, IDC_UNDO, g_lpe->mModel->mDoUndo);
+    CheckDlgButton(mHwnd, IDC_RECALL_ACTIVE_PLUGINPRESETS, g_lpe->mModel->mIsReselectFxPreset);
+    CheckDlgButton(mHwnd, IDC_RECALL_MUTED_PLUGINS, g_lpe->mModel->mIsLoadStateOnMute);
+    CheckDlgButton(mHwnd, IDC_RECALL_ACTIVE_PRESETS, g_lpe->mModel->mIsReselectLivePresetByValueRecall);
+    CheckDlgButton(mHwnd, IDC_HIDE_MUTED_TRACKS, g_lpe->mModel->mIsHideMutedTracks);
 
     //create combo add FilterPreset names and select default
     mCombo = std::make_unique<ComboBox>(GetDlgItem(mHwnd, IDC_COMBO));
-    std::vector<std::string*> filterNames = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
+    std::vector<std::string*> filterNames = FilterPreset_GetNames(g_lpe->mModel->mFilterPresets);
     auto comboAdapter = std::make_unique<FilterPresetsComboAdapter>(filterNames);
     mCombo->setAdapter(std::move(comboAdapter));
     int index = 0;
     for (auto *filter : filterNames) {
-        if (*filter == g_lpe->mModel.mDefaultFilterPreset) {
+        if (*filter == g_lpe->mModel->mDefaultFilterPreset) {
             SendMessage(mCombo->mHwnd, CB_SETCURSEL, 0, index);
         }
         index++;
@@ -72,8 +72,8 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
         char name[256];
         SendMessage((HWND) lparam, CB_GETLBTEXT, index, (LPARAM) name);
         auto tempName = std::string(name);
-        if (FilterPreset_GetFilterByName(g_lpe->mModel.mFilterPresets, &tempName)) {
-            g_lpe->mModel.mDefaultFilterPreset = tempName;
+        if (FilterPreset_GetFilterByName(g_lpe->mModel->mFilterPresets, &tempName)) {
+            g_lpe->mModel->mDefaultFilterPreset = tempName;
         }
         return;
     }
@@ -94,9 +94,9 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
             int index = SendMessage(mCombo->mHwnd, CB_GETCURSEL, 0, 0);
             if (index == CB_ERR)
                 break;
-            g_lpe->mModel.mFilterPresets.erase(g_lpe->mModel.mFilterPresets.begin() + index);
+            g_lpe->mModel->mFilterPresets.erase(g_lpe->mModel->mFilterPresets.begin() + index);
             SendMessage(mCombo->mHwnd, CB_SETCURSEL, -1, 0);
-            mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel.mFilterPresets);
+            mCombo->getAdapter()->mItems = FilterPreset_GetNames(g_lpe->mModel->mFilterPresets);
             mCombo->invalidate();
             break;
         }
@@ -104,19 +104,19 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
             close();
             break;
         case IDC_UNDO:
-            g_lpe->mModel.mDoUndo = IsDlgButtonChecked(mHwnd, IDC_UNDO);
+            g_lpe->mModel->mDoUndo = IsDlgButtonChecked(mHwnd, IDC_UNDO);
             break;
         case IDC_RECALL_ACTIVE_PLUGINPRESETS:
-            g_lpe->mModel.mIsReselectFxPreset = IsDlgButtonChecked(mHwnd, IDC_RECALL_ACTIVE_PLUGINPRESETS);
+            g_lpe->mModel->mIsReselectFxPreset = IsDlgButtonChecked(mHwnd, IDC_RECALL_ACTIVE_PLUGINPRESETS);
             break;
         case IDC_RECALL_MUTED_PLUGINS:
-            g_lpe->mModel.mIsLoadStateOnMute = IsDlgButtonChecked(mHwnd, IDC_RECALL_MUTED_PLUGINS);
+            g_lpe->mModel->mIsLoadStateOnMute = IsDlgButtonChecked(mHwnd, IDC_RECALL_MUTED_PLUGINS);
             break;
         case IDC_RECALL_ACTIVE_PRESETS:
-            g_lpe->mModel.mIsReselectLivePresetByValueRecall = IsDlgButtonChecked(mHwnd, IDC_RECALL_ACTIVE_PRESETS);
+            g_lpe->mModel->mIsReselectLivePresetByValueRecall = IsDlgButtonChecked(mHwnd, IDC_RECALL_ACTIVE_PRESETS);
             break;
         case IDC_HIDE_MUTED_TRACKS:
-            g_lpe->mModel.mIsHideMutedTracks = IsDlgButtonChecked(mHwnd, IDC_HIDE_MUTED_TRACKS);
+            g_lpe->mModel->mIsHideMutedTracks = IsDlgButtonChecked(mHwnd, IDC_HIDE_MUTED_TRACKS);
             break;
         case IDC_UPDATE: {
             SetTimer(mHwnd, 1, 0, static_cast<TIMERPROC>(updateAllPresets));
@@ -127,10 +127,10 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
 }
 
 void CALLBACK SettingsController::updateAllPresets(HWND hwnd, UINT, UINT_PTR i, DWORD) {
-    if (i - 1 < g_lpe->mModel.mPresets.size()) {
-        LivePreset* preset = g_lpe->mModel.mPresets.at(i - 1);
+    if (i - 1 < g_lpe->mModel->mPresets.size()) {
+        LivePreset* preset = g_lpe->mModel->mPresets.at(i - 1);
         fprintf(stderr, "Updating: %s \n", preset->mName.data());
-        g_lpe->mModel.recallPreset(preset);
+        g_lpe->mModel->recallPreset(preset);
         preset->saveCurrentState(true);
 
         SetTimer(hwnd, i + 1, 100, static_cast<TIMERPROC>(updateAllPresets));
