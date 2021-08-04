@@ -125,8 +125,8 @@ bool ParameterInfo::applyFilterPreset(FilterPreset *preset) {
             toFilters.insert((Filterable*) &param.second);
         }
 
-        for (auto child : preset->mChilds) {
-            for (auto toFilter : toFilters) {
+        for (auto* child : preset->mChilds) {
+            for (auto* toFilter : toFilters) {
                 if (toFilter->applyFilterPreset(child)) {
                     toFilters.erase(toFilter);
                     goto cnt;

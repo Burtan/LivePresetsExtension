@@ -56,7 +56,7 @@ BaseCommand::CommandID CommandList::add(BaseCommand *command) {
 }
 
 void CommandList::remove(BaseCommand::CommandID cmdId) {
-    auto command = find(cmdId);
+    auto* command = find(cmdId);
     mCommands.erase(cmdId);
     delete command;
 }

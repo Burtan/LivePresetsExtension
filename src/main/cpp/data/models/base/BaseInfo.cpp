@@ -79,5 +79,5 @@ bool BaseInfo::initFromChunkHandler(std::string &key, std::vector<const char*> &
  * @return set of strings of keys
  */
 std::set<std::string> BaseInfo::getKeys() const {
-    return std::set<std::string>();
+    return {};
 }
