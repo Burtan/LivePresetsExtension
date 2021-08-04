@@ -266,4 +266,5 @@ bool FxInfo::applyFilterPreset(FilterPreset *preset) {
         }
         return true;
     }
-    return false;}
+    return false;
+}

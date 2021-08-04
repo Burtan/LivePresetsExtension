@@ -42,11 +42,11 @@ unitTest {
                 //somehow testing throws exceptions on windows
                 compileTask.get().source.setFrom(null)
 
-                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/user32.lib")
-                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/gdi32.lib")
-                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/advapi32.lib")
-                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/shell32.lib")
-                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/x64/comdlg32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64/user32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64/gdi32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64/advapi32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64/shell32.lib")
+                linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64/comdlg32.lib")
             }
         }
     }
@@ -98,11 +98,11 @@ library {
         }
 
         if (targetMachine.operatingSystemFamily.isWindows) {
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/user32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/gdi32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/advapi32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/shell32.lib")
-            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um/${arch}/comdlg32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/${arch}/user32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/${arch}/gdi32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/${arch}/advapi32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/${arch}/shell32.lib")
+            linkTask.get().lib("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/um/${arch}/comdlg32.lib")
 
             linkTask.get().linkedFile.set(file("$userPath/AppData/Roaming/REAPER/UserPlugins/$fileName.dll"))
 
@@ -110,9 +110,9 @@ library {
                 targetPlatform.set(compileTask.get().targetPlatform)
                 toolChain.set(compileTask.get().toolChain)
                 source.from("src/main/headers/resources/resource.rc")
-                includes("C:/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um")
-                includes("C:/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/shared")
-                includes("C:/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/ucrt")
+                includes("C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um")
+                includes("C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/shared")
+                includes("C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/ucrt")
                 includes("src/main/headers")
                 compilerArgs.addAll(toolChain.map {
                     when (it) {
