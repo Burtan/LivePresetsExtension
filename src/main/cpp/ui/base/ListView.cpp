@@ -93,6 +93,14 @@ void ListView<T>::invalidate() {
         selectedItems.insert(mAdapter->getItem(selectedIndex));
     }
 
+    for (auto i = 0; i < ListView_GetItemCount(mHwnd); i++) {
+        LVITEM lvItem = {};
+        lvItem.iItem = i;
+        ListView_GetItem(mHwnd, &lvItem);
+
+        auto a = 1;
+    }
+
     ListView_DeleteAllItems(mHwnd);
     mAdapter->filterAndSort();
 
