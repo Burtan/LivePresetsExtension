@@ -32,6 +32,7 @@
 #include <plugins/reaper_plugin_functions.h>
 #include <LivePresetsExtension.h>
 #include <util/util.h>
+#include <chrono>
 
 /*
  * Should be called to load LivePresetsModel from .rpp file.
@@ -113,7 +114,7 @@ bool LivePresetsModel::initFromChunkHandler(std::string &key, ProjectStateContex
         return true;
     }
     if (key == "HARDWARE") {
-        if (auto hw = Hardware_Create(ctx)) {
+        if (auto* hw = Hardware_Create(ctx)) {
             mHardwares.push_back(hw);
         }
         return true;
@@ -137,7 +138,7 @@ void LivePresetsModel::addPreset(LivePreset *preset, bool saveUndo) {
  * returns true when a preset was found
  */
 bool LivePresetsModel::recallPresetByGuid(GUID guid) {
-    for (auto preset : mPresets) {
+    for (auto* preset : mPresets) {
         if (GuidsEqual(preset->mGuid, guid)) {
             recallPreset(preset);
             return true;
@@ -150,6 +151,8 @@ bool LivePresetsModel::recallPresetByGuid(GUID guid) {
 void LivePresetsModel::recallPreset(LivePreset* preset) {
     if (!preset)
         return;
+
+    auto start = std::chrono::steady_clock::now();
 
     if (mDoUndo) {
         Undo_BeginBlock();
@@ -170,6 +173,18 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
         TrackList_AdjustWindows(true);
         PreventUIRefresh(-1);
     }
+
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+    auto resPath = std::string(GetResourcePath()) + "/LPE_LOG.txt";
+    auto startTime = start.time_since_epoch();
+    auto startTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(startTime).count();
+    WritePrivateProfileString(
+            "LOG",
+            ("RECALL " + std::to_string(startTimeMs)).data(),
+            ("Recalled " + preset->mName + " in " + elapsed + "ms").data(), resPath.data()
+    );
 }
 
 void LivePresetsModel::replacePreset(LivePreset *oldPreset, LivePreset *newPreset) {
@@ -191,7 +206,7 @@ void LivePresetsModel::removePreset(LivePreset* preset, bool saveUndo) {
 }
 
 void LivePresetsModel::removePresets(std::vector<LivePreset*>& presets) {
-    for (auto preset : presets) {
+    for (auto* preset : presets) {
         removePreset(preset, false);
     }
     Undo_OnStateChangeEx2(nullptr, "Remove src", UNDO_STATE_MISCCFG, -1);
@@ -208,21 +223,21 @@ void LivePresetsModel::persistHandler(WDL_FastString &str) const {
     str.AppendFormatted(4096, "DEFAULTFILTER \"%s\"\n", mDefaultFilterPreset.data());
 
     //add objects
-    for (const auto preset : mPresets) {
+    for (const auto* preset : mPresets) {
         preset->persist(str);
     }
 
-    for (const auto preset : mFilterPresets) {
+    for (const auto* preset : mFilterPresets) {
         preset->persist(str);
     }
 
-    for (const auto hardware : mHardwares) {
+    for (auto* hardware : mHardwares) {
         Hardware_Persist(hardware, str);
     }
 }
 
 void LivePresetsModel::recallByValue(int val) {
-    for (auto preset : mPresets) {
+    for (auto* preset : mPresets) {
         if (preset->mRecallId == val) {
             if (mIsReselectLivePresetByValueRecall || !mActivePreset || preset != mActivePreset)
                 recallPreset(preset);
@@ -237,7 +252,7 @@ void LivePresetsModel::recallByValue(int val) {
  * @param id the unique id
  */
 int LivePresetsModel::getRecallIdForPreset(LivePreset* preset, int id) {
-    for (auto mPreset : mPresets) {
+    for (auto* mPreset : mPresets) {
         if ((mPreset->mRecallId == id && !GuidsEqual(preset->mGuid, mPreset->mGuid)) || id == -1) {
             return getRecallIdForPreset(preset, id + 1);
         }
@@ -250,9 +265,9 @@ int LivePresetsModel::getRecallIdForPreset(LivePreset* preset, int id) {
  * @param tracks tracks to save
  */
 void LivePresetsModel::onApplySelectedTrackConfigsToAllPresets(const std::vector<MediaTrack*>& tracks) {
-    for (auto preset : mPresets) {
-        for (auto mTrack : preset->mTracks) {
-            for (auto track : tracks) {
+    for (auto* preset : mPresets) {
+        for (auto* mTrack : preset->mTracks) {
+            for (auto* track : tracks) {
                 if (GuidsEqual(*GetTrackGUID(track), mTrack->mGuid)) {
                     mTrack->saveCurrentState(true);
                     break;
@@ -271,12 +286,12 @@ std::string LivePresetsModel::getChunkId() const {
 }
 
 void LivePresetsModel::reset() {
-    for (auto hardware : mHardwares) {
+    for (auto* hardware : mHardwares) {
         delete hardware;
     }
     mHardwares.clear();
 
-    for (auto preset : mPresets) {
+    for (auto* preset : mPresets) {
         delete preset;
     }
     mPresets.clear();
