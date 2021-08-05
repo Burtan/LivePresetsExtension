@@ -32,6 +32,7 @@
 #include <data/models/FilterPreset.h>
 #include <LivePresetsExtension.h>
 #include <functional>
+#include <chrono>
 
 LivePreset::LivePreset(std::string name, std::string description) : BaseInfo(nullptr), mName(std::move(name)),
         mDescription(std::move(description)) {
@@ -250,6 +251,8 @@ bool LivePreset::initFromChunkHandler(std::string &key, ProjectStateContext *ctx
 }
 
 void LivePreset::recallSettings() const {
+    auto start = std::chrono::steady_clock::now();
+
     mMasterTrack->recallSettings();
     for (auto *const track : mTracks) {
         track->recallSettings();
@@ -257,6 +260,18 @@ void LivePreset::recallSettings() const {
     for (const auto& info : mControlInfos) {
         ControlInfo_RecallSettings(info.get());
     }
+
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+    auto resPath = std::string(GetResourcePath()) + "/LPE_LOG.txt";
+    auto startTime = start.time_since_epoch();
+    auto startTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(startTime).count();
+    WritePrivateProfileString(
+            "LOG",
+            ("RECALL " + std::to_string(startTimeMs)).data(),
+            ("Recalled " + mName + " in " + elapsed + "ms").data(), resPath.data()
+    );
 }
 
 std::set<std::string> LivePreset::getKeys() const {
