@@ -72,6 +72,7 @@ private:
     int sortedColumnIndex = 0;
     std::vector<Callback> listeners;
 
+    std::vector<LVCOLUMN> columns;
     void updateColumns();
     void sortByColumn(int columnIndex);
 };

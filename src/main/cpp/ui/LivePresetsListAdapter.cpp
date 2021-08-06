@@ -189,7 +189,8 @@ void LivePresetsListAdapter::onChangedSortingColumn(LVCOLUMN col, bool reverse) 
 
 void LivePresetsListAdapter::saveColumnWidths(HWND hwnd) {
     auto str = WDL_FastString();
-    for (int i = 0; i < getColumns().size(); i++) {
+    auto columns = getColumns().size();
+    for (int i = 0; i < columns; i++) {
         str.AppendFormatted(4096, "%i ", ListView_GetColumnWidth(hwnd, i));
     }
 

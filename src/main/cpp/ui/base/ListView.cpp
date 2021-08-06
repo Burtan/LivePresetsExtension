@@ -88,7 +88,6 @@ void ListView<T>::invalidate() {
     }
     mAdapter->filterAndSort();
 
-
     // check for changes in items. Old state is saved in ListView hwnd object, new state is saved in adapter
 
     std::vector<int> oldSelectedIndices = getSelectedIndices();
@@ -97,7 +96,6 @@ void ListView<T>::invalidate() {
         oldSelectedItems.insert(mAdapter->getItem(oldSelectedIndex));
     }
 
-    std::set<T*> newItems;
     std::set<T*> stayingItems;
     std::set<T*> deletedItems;
 
@@ -138,7 +136,7 @@ void ListView<T>::invalidate() {
         }
 
         //colIndex 1+ specifies the subItems
-        for (int colIndex = 0; colIndex < mAdapter->getColumns().size(); colIndex++) {
+        for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
             const char* text = mAdapter->getLvItemText(index, colIndex);
 
 #ifndef _WIN32
@@ -277,8 +275,10 @@ void ListView<T>::updateColumns() {
     while (ListView_DeleteColumn(mHwnd, 0)) {}
 
     if (mAdapter) {
+        // cache columns because adapter function reads filesystem!
+        columns = mAdapter->getColumns();
         //add columns
-        auto cols = mAdapter->getColumns();
+        auto cols = columns;
         int index = 0;
         for (auto col : cols) {
             ListView_InsertColumn(mHwnd, index, &col);
@@ -316,7 +316,7 @@ void ListView<T>::sortByColumn(int columnIndex) {
             }
         }
 
-        LVCOLUMN col = mAdapter->getColumns()[columnIndex];
+        LVCOLUMN col = columns[columnIndex];
         col.iSubItem = columnIndex;
 
         //change ui, draw arrows on sorted column, remove arrows from the rest
