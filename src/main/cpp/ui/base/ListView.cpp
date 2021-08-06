@@ -86,38 +86,56 @@ void ListView<T>::invalidate() {
         ListView_DeleteAllItems(mHwnd);
         return;
     }
+    mAdapter->filterAndSort();
 
-    std::vector<int> selectedIndices = getSelectedIndices();
-    std::set<void*> selectedItems;
-    for (auto selectedIndex : selectedIndices) {
-        selectedItems.insert(mAdapter->getItem(selectedIndex));
+
+    // check for changes in items. Old state is saved in ListView hwnd object, new state is saved in adapter
+
+    std::vector<int> oldSelectedIndices = getSelectedIndices();
+    std::set<T*> oldSelectedItems;
+    for (auto oldSelectedIndex : oldSelectedIndices) {
+        oldSelectedItems.insert(mAdapter->getItem(oldSelectedIndex));
     }
+
+    std::set<T*> newItems;
+    std::set<T*> stayingItems;
+    std::set<T*> deletedItems;
 
     for (auto i = 0; i < ListView_GetItemCount(mHwnd); i++) {
         LVITEM lvItem = {};
+        lvItem.mask = LVIF_PARAM;
         lvItem.iItem = i;
         ListView_GetItem(mHwnd, &lvItem);
 
-        auto a = 1;
-    }
+        T* item = (T*) lvItem.lParam;
+        auto index = mAdapter->getIndex(item);
 
-    ListView_DeleteAllItems(mHwnd);
-    mAdapter->filterAndSort();
+        if (index == -1) {
+            // item was removed
+            deletedItems.insert(item);
+        } else {
+            stayingItems.insert(item);
+        }
+    }
 
     //preset item count for better performance
     ListView_SetItemCount(mHwnd, mAdapter->getCount());
 
     //set values for all cells, index = row, colIndex = column
     for (int index = 0; index < mAdapter->getCount(); index++) {
-        void* item = mAdapter->getItem(index);
+        T* item = mAdapter->getItem(index);
+
         //colIndex 0 specifies the row lvItem
         LVITEM lvItem = mAdapter->getLvItem(index);
         lvItem.mask |= LVIF_STATE;
-        lvItem.iItem = index;
-        lvItem.iSubItem = 0;
-        lvItem.state = selectedItems.find(item) != selectedItems.end();
+        lvItem.state = oldSelectedItems.find(item) != oldSelectedItems.end();
         lvItem.stateMask = LVIS_SELECTED;
-        ListView_InsertItem(mHwnd, &lvItem);
+
+        if (stayingItems.find(item) != stayingItems.end()) {
+            ListView_SetItem(mHwnd, &lvItem);
+        } else {
+            ListView_InsertItem(mHwnd, &lvItem);
+        }
 
         //colIndex 1+ specifies the subItems
         for (int colIndex = 0; colIndex < mAdapter->getColumns().size(); colIndex++) {
@@ -129,6 +147,10 @@ void ListView<T>::invalidate() {
             ListView_SetItemText(mHwnd, index, colIndex, (char*) text);
 #endif
         }
+    }
+
+    for (auto* item : deletedItems) {
+        ListView_DeleteItem(mHwnd, ListView_GetItemCount(mHwnd) - 1);
     }
 }
 template void ListView<LivePreset>::invalidate();
@@ -152,7 +174,7 @@ std::vector<int> ListView<T>::getSelectedIndices() {
     if (!mAdapter)
         return selectedIndices;
 
-    for (int index = 0; index < mAdapter->getCount(); index++) {
+    for (int index = 0; index < ListView_GetItemCount(mHwnd); index++) {
         if (ListView_GetItemState(mHwnd, index, LVIS_SELECTED)) {
             selectedIndices.push_back(index);
         }

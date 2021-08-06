@@ -41,7 +41,7 @@ enum COLUMN {
 };
 
 int LivePresetsListAdapter::getCount() {
-    return mShowingItems.size();
+    return (int) mShowingItems.size();
 }
 
 LivePreset* LivePresetsListAdapter::getItem(int index) {
@@ -53,19 +53,25 @@ LivePreset* LivePresetsListAdapter::getItem(int index) {
 
 int LivePresetsListAdapter::getIndex(LivePreset* item) {
     auto index = std::find(mShowingItems.begin(), mShowingItems.end(), item);
-    return std::distance(mShowingItems.begin(), index);
+
+    if (index == mShowingItems.end())
+        return -1;
+
+    return (int) std::distance(mShowingItems.begin(), index);
 }
 
 LVITEM LivePresetsListAdapter::getLvItem(int index) {
-    auto preset = mShowingItems.at(index);
+    auto* preset = mShowingItems.at(index);
     LVITEM item;
     item.mask = LVIF_PARAM;
     item.lParam = (LPARAM) preset;
+    item.iItem = index;
+    item.iSubItem = 0;
     return item;
 }
 
 const char* LivePresetsListAdapter::getLvItemText(int index, int column) {
-    auto preset = mShowingItems.at(index);
+    auto* preset = mShowingItems.at(index);
 
     switch (column) {
         default:

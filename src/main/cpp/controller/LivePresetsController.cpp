@@ -182,7 +182,7 @@ void LivePresetsController::onContextMenu(HMENU menu) {
 
         std::string text = "Apply filter to selected presets";
         mii.dwTypeData = text.data();
-        mii.cch = text.size();
+        mii.cch = (int) text.size();
 
         mii.hSubMenu = subMenu;
 
@@ -197,7 +197,7 @@ void LivePresetsController::onContextMenu(HMENU menu) {
             mii.cbSize = sizeof(MENUITEMINFO);
 
             mii.dwTypeData = filter->data();
-            mii.cch = filter->size();
+            mii.cch = (int) filter->size();
 
             //wID specifies the commandId returned to sWndProc as wParam and WM_COMMAND onClick
             mii.wID = ID_APPLY_FILTER + index;

@@ -50,7 +50,7 @@ public:
     bool mIsLoadStateOnMute = false;
     bool mIsReselectFxPreset = false;
     bool mIsReselectLivePresetByValueRecall = false;
-    std::string mDefaultFilterPreset = "";
+    std::string mDefaultFilterPreset;
     std::vector<Hardware*> mHardwares;
     std::vector<LivePreset*> mPresets;
     std::vector<FilterPreset*> mFilterPresets;
