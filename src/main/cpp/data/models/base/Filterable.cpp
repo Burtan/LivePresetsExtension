@@ -27,7 +27,6 @@
 /
 ******************************************************************************/
 
-#include <cstdarg>
 #include <data/models/base/Filterable.h>
 
 Filterable::Filterable(Filterable* parent, FilterMode mFilter) : mFilter(mFilter), mParent(parent) {}

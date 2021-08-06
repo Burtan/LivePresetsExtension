@@ -34,12 +34,9 @@
 #include <functional>
 
 LivePreset::LivePreset(std::string name, std::string description) : BaseInfo(nullptr), mName(std::move(name)),
-        mDescription(std::move(description)) {
+        mDescription(std::move(description)), mRecallId(g_lpe->mModel->getRecallIdForPreset(this)) {
     genGuid(&mGuid);
     LivePreset::saveCurrentState(false);
-
-    //make sure that new presets get a recall id assigned
-    mRecallId = g_lpe->mModel->getRecallIdForPreset(this);
 
     if (mRecallCmdId == 0) {
         createRecallAction();

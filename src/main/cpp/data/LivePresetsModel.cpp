@@ -49,7 +49,7 @@ LivePresetsModel::~LivePresetsModel() {
 /**
  * Move assignment for LivePresetsModel
  */
-LivePresetsModel& LivePresetsModel::operator=(LivePresetsModel&& other) {
+LivePresetsModel& LivePresetsModel::operator=(LivePresetsModel&& other) noexcept {
     //reassign all rvalues of rvalue reference other
     mHardwares = other.mHardwares;
     mPresets = other.mPresets;
@@ -138,7 +138,7 @@ void LivePresetsModel::addPreset(LivePreset *preset, bool saveUndo) {
  * returns true when a preset was found
  */
 bool LivePresetsModel::recallPresetByGuid(GUID guid) {
-    for (auto* preset : mPresets) {
+    for (auto* preset : mPresets) { // NOLINT(readability-use-anyofallof)
         if (GuidsEqual(preset->mGuid, guid)) {
             recallPreset(preset);
             return true;

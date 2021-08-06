@@ -57,7 +57,7 @@ const Parameter<double>& ParameterInfo::at(int key) const {
 }
 
 int ParameterInfo::size() const {
-    return mParams.size();
+    return (int) mParams.size();
 }
 
 void ParameterInfo::clear() {

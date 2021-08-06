@@ -42,7 +42,7 @@ public:
 
     LivePresetsModel() = default;
     explicit LivePresetsModel(ProjectStateContext* ctx);
-    LivePresetsModel& operator=(LivePresetsModel&& other);
+    LivePresetsModel& operator=(LivePresetsModel&& other) noexcept;
     ~LivePresetsModel();
 
     bool mDoUndo = false;

@@ -41,12 +41,12 @@ TrackInfo::TrackInfo(Filterable* parent, ProjectStateContext* ctx) : BaseTrackIn
 }
 
 TrackInfo::~TrackInfo() {
-    for (auto swSend : mSwSends) {
+    for (auto* swSend : mSwSends) {
         delete swSend;
     }
     mSwSends.clear();
 
-    for (auto recFx : mRecFxs) {
+    for (auto* recFx : mRecFxs) {
         delete recFx;
     }
     mRecFxs.clear();
@@ -142,7 +142,7 @@ void TrackInfo::recallSettings() const {
     //assign input plugin settings
     auto muted = (bool) mParamInfo.at(B_MUTE).mValue;
     if (!muted) {
-        for (const auto recFxInfo : mRecFxs) {
+        for (const auto* recFxInfo : mRecFxs) {
             recFxInfo->recallSettings();
         }
     }
@@ -156,11 +156,11 @@ void TrackInfo::persistHandler(WDL_FastString &str) const {
     str.AppendFormatted(4096, "GUID %s\n", dest);
     str.AppendFormatted(4096, "NAME \"%s\" %u\n", mName.mValue.data(), mName.mFilter);
 
-    for (const auto recFx : mRecFxs) {
+    for (const auto* recFx : mRecFxs) {
         recFx->persist(str);
     }
 
-    for (const auto send : mSwSends) {
+    for (const auto* send : mSwSends) {
         send->persist(str);
     }
 }
@@ -217,16 +217,16 @@ FilterPreset* TrackInfo::extractFilterPreset() {
 
     childs.push_back(mParamInfo.extractFilterPreset());
     childs.push_back(mName.extractFilterPreset());
-    for (auto swSend : mSwSends) {
+    for (auto* swSend : mSwSends) {
         childs.push_back(swSend->extractFilterPreset());
     }
-    for (auto hwSend : mHwSends) {
+    for (auto* hwSend : mHwSends) {
         childs.push_back(hwSend->extractFilterPreset());
     }
-    for (auto fx : mFxs) {
+    for (auto* fx : mFxs) {
         childs.push_back(fx->extractFilterPreset());
     }
-    for (auto recFx : mRecFxs) {
+    for (auto* recFx : mRecFxs) {
         childs.push_back(recFx->extractFilterPreset());
     }
 
@@ -244,8 +244,8 @@ bool TrackInfo::applyFilterPreset(FilterPreset *preset) {
         toFilters.insert(mFxs.begin(), mFxs.end());
         toFilters.insert(mRecFxs.begin(), mRecFxs.end());
 
-        for (auto child : preset->mChilds) {
-            for (auto toFilter : toFilters) {
+        for (auto* child : preset->mChilds) {
+            for (auto* toFilter : toFilters) {
                 if (toFilter->applyFilterPreset(child)) {
                     toFilters.erase(toFilter);
                     goto cnt;
