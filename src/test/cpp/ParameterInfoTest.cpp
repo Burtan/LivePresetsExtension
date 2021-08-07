@@ -35,6 +35,6 @@ TEST(Persist, ParameterInfoTest) {
 
     ASSERT_EQ(params.size(), paramsRestored2.size());
     for (auto& key : params.getKeys()) {
-        ASSERT_NEAR(params.at(key).mValue, paramsRestored2.at(key).mValue, 0.00001);
+        ASSERT_EQ(params.at(key).mValue, paramsRestored2.at(key).mValue);
     }
 }
