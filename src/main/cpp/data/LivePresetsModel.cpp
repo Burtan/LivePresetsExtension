@@ -32,7 +32,6 @@
 #include <plugins/reaper_plugin_functions.h>
 #include <LivePresetsExtension.h>
 #include <util/util.h>
-#include <chrono>
 
 /*
  * Should be called to load LivePresetsModel from .rpp file.
@@ -152,8 +151,6 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
     if (!preset)
         return;
 
-    auto start = std::chrono::steady_clock::now();
-
     if (mDoUndo) {
         Undo_BeginBlock();
         PreventUIRefresh(1);
@@ -173,18 +170,6 @@ void LivePresetsModel::recallPreset(LivePreset* preset) {
         TrackList_AdjustWindows(true);
         PreventUIRefresh(-1);
     }
-
-    auto end = std::chrono::steady_clock::now();
-    auto elapsed = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-
-    auto resPath = std::string(GetResourcePath()) + "/LPE_LOG.txt";
-    auto startTime = start.time_since_epoch();
-    auto startTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(startTime).count();
-    WritePrivateProfileString(
-            "LOG",
-            ("RECALL " + std::to_string(startTimeMs)).data(),
-            ("Recalled " + preset->mName + " in " + elapsed + "ms").data(), resPath.data()
-    );
 }
 
 void LivePresetsModel::replacePreset(LivePreset *oldPreset, LivePreset *newPreset) {
