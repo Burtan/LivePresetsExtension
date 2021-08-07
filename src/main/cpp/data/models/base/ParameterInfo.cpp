@@ -67,7 +67,7 @@ void ParameterInfo::clear() {
 void ParameterInfo::persistHandler(WDL_FastString &str) const {
     for (const auto& pair : mParams) {
         const auto& param = pair.second;
-        str.AppendFormatted(4096, (pair.first + " %f %i\n").data(), param.mValue, param.mFilter);
+        str.AppendFormatted(4096, (pair.first + " %d %i\n").data(), param.mValue, param.mFilter);
     }
 
     str.AppendFormatted(4096, "FILTERMODE %u\n", mFilter);
