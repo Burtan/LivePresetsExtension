@@ -41,8 +41,7 @@ public:
     enum PluginRecallStrategy {
         NONE,
         PRESET,
-        PARAMETERS,
-        PARAMETERS_RETRY
+        PARAMETERS
     };
 
     PluginRecallStrategies();

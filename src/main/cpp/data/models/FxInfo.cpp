@@ -31,8 +31,8 @@
 #include <data/models/FilterPreset.h>
 #include <util/util.h>
 #include <cfloat>
-#include <plugins/reaper_plugin_functions.h>
 #include <LivePresetsExtension.h>
+#include <thread>
 
 FxInfo::FxInfo(Filterable* parent, GUID trackGuid, GUID fxGuid) : BaseInfo(parent),
         mTrackGuid(trackGuid), mGuid(fxGuid) {
@@ -117,21 +117,6 @@ void FxInfo::recallSettings() const {
             }
             break;
         }
-        case PluginRecallStrategies::PARAMETERS_RETRY:
-            //recall parameters and check if it succeeded, try up to 5 times
-            for (int i = 0; i < mParamInfo.size(); i++) {
-                if (!mParamInfo.at(i).isFilteredInChain()) {
-                    int count = 0;
-                    auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
-
-                    while (mParamInfo.at(i).mValue != currentValue && count < 5) {
-                        TrackFX_SetParam(getTrack(), index, i, mParamInfo.at(i).mValue);
-                        currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
-                        count++;
-                    }
-                }
-            }
-            break;
     }
 
 }

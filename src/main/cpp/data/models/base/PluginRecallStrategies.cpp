@@ -87,7 +87,7 @@ void PluginRecallStrategies::init() {
 }
 
 void PluginRecallStrategies::initVersion1() {
-    mStrategies.insert(std::pair<std::string, PluginRecallStrategy>("Kontakt", PARAMETERS_RETRY));
+    mStrategies.insert(std::pair<std::string, PluginRecallStrategy>("Kontakt", PARAMETERS));
     mStrategies.insert(std::pair<std::string, PluginRecallStrategy>("JS: MIDI", PARAMETERS));
     mStrategies.insert(std::pair<std::string, PluginRecallStrategy>("CFX", NONE));
 
