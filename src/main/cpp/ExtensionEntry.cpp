@@ -32,6 +32,8 @@
 
 #include <LivePresetsExtension.h>
 #include <plugins/reaper_plugin_functions.h>
+#include <thread>
+#include <iostream>
 
 static bool loadAPI(void* (*getFunc)(const char*)) {
     struct ApiFunc { void* *ptr; const char* name; bool required; };
@@ -243,6 +245,12 @@ extern "C" {
 
         if (!extensionInit(hInst, rec))
             return extensionExit();
+
+        std::thread t([](){
+            std::cout << "thread function\n";
+        });
+        std::cout << "main thread\n";
+        t.join();
 
         // hookcommand2 must be registered before hookcommand
         if (!rec->Register("hookcommand2", (void*) hookCommand2Proc))
