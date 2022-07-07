@@ -152,7 +152,7 @@ library {
             val genResTask = tasks.register("genRes${name.capitalize()}", Exec::class.java) {
                 //setWorkingDir("$projectDir/WDL-library/main/cpp/WDL/swell/")
                 executable = "php"
-                val scriptPath = "$projectDir/WDL-library/src/main/cpp/WDL/swell/mac_resgen.php"
+                val scriptPath = "$projectDir/WDL-library/src/main/cpp/WDL/swell/swell_resgen.php"
                 val rcPath = "$projectDir/src/main/headers/resources/resource.rc"
                 args(scriptPath, rcPath)
 
