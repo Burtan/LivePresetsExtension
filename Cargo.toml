@@ -1,0 +1,14 @@
+[package]
+name = "livepresets"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reaper-high = { git = "https://github.com/helgoboss/reaper-rs.git", branch = "master" }
+reaper-medium = { git = "https://github.com/helgoboss/reaper-rs.git", branch = "master" }
+reaper-low = { git = "https://github.com/helgoboss/reaper-rs.git", branch = "master" }
+reaper-macros = { git = "https://github.com/helgoboss/reaper-rs.git", branch = "master" }
+
+[lib]
+name = "LivePresetsExtension.rs"
+crate-type = ["cdylib"]
