@@ -1,5 +1,5 @@
-[submodule "thid_party/WDL/src/main/cpp"]
-	path = thid_party/WDL/src/main/cpp
+[submodule "thid_party/WDL"]
+	path = thid_party/WDL
 	url = https://github.com/justinfrankel/WDL
 [submodule "thid_party/LPE-U"]
 	path = thid_party/LPE-U
