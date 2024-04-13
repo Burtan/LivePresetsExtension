@@ -30,8 +30,8 @@
 #define REAPERAPI_IMPLEMENT
 #define REQUIRED_API(name) {reinterpret_cast<void **>(&name), #name, true}
 
-#include <LivePresetsExtension.h>
-#include <plugins/reaper_plugin_functions.h>
+#include "LivePresetsExtension.h"
+#include "src/plugins/reaper_plugin_functions.h"
 #include <thread>
 #include <iostream>
 
@@ -115,7 +115,7 @@ static bool loadAPI(void* (*getFunc)(const char*)) {
      NON_API: bool runCommand(int command, int flag);
             register("hookcommand",runCommand);
    note: it's OK to call Main_OnCommand() within your runCommand, however you MUST check for recursion if doing so!
-   in fact, any use of this hook should benefit from a simple reentrancy test...
+   in fact, any use of this hook should benefit from a simple reentrancy tests...
  * @param iCmd
  * @param flag is usually 0 but can sometimes have useful info depending on the message.
  * @return TRUE to eat (process) the command.
@@ -273,7 +273,7 @@ extern "C" {
 }   // end extern C
 
 #ifndef _WIN32
-    #include <resources/resource.h>
+    #include "src/resources/resource.h"
     #include "WDL/swell/swell-dlggen.h"
     #include "resource.rc_mac_dlg"
 #endif

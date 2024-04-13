@@ -31,13 +31,13 @@
 #define LPE_LIVEPRESETSEXTENSION_H
 
 
-#include <data/models/CommandList.h>
-#include <controller/LivePresetsController.h>
-#include <data/LivePresetsModel.h>
-#include <data/models/base/PluginRecallStrategies.h>
-#include <controller/AboutController.h>
-#include <plugins/lpe_ultimate.h>
-#include <util/ProjectChangeListener.h>
+#include "src/data/models/CommandList.h"
+#include "src/controller/LivePresetsController.h"
+#include "src/data/LivePresetsModel.h"
+#include "src/data/models/base/PluginRecallStrategies.h"
+#include "src/controller/AboutController.h"
+#include "src/main/headers/plugins/lpe_ultimate.h"
+#include "src/util/ProjectChangeListener.h"
 
 /**
  * LPE = LivePresetsExtension, main class that manages the base classes statically
