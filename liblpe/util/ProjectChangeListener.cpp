@@ -1,7 +1,7 @@
 /******************************************************************************
 / LivePresetsExtension
 /
-/ Represents a reaper action that can be triggered with a hotkey
+/ Listens for changes, especially changing projects
 /
 / Copyright (c) 2020 and later Dr. med. Frederik Bertling
 /
@@ -27,30 +27,25 @@
 /
 ******************************************************************************/
 
-#include <data/models/HotkeyCommand.h>
-#include "plugins/reaper_plugin_functions.h"
+#include <liblpe/LivePresetsExtension.h>
+#include <liblpe/util/ProjectChangeListener.h>
 
-HotkeyCommand::HotkeyCommand(const std::string& name, const std::string& desc, Callback callback)
-        : BaseCommand(name, desc, std::move(callback))
-{
-    mCmdId = plugin_register("command_id", mName.data());
-    gaccel_register_t g{};
-    g.accel.cmd = mCmdId;
-    g.desc = mDesc.data();
-    plugin_register("gaccel", &g);
+const char *ProjectChangeListener::GetTypeString() {
+    return "";
 }
 
-/*
- * Make sure that the associated action is unregistered from reaper
- */
-HotkeyCommand::~HotkeyCommand() {
-    mCmdId = plugin_register("-command_id", mName.data());
-    gaccel_register_t g{};
-    g.accel.cmd = mCmdId;
-    g.desc = mDesc.data();
-    plugin_register("-gaccel", &g);
+const char *ProjectChangeListener::GetDescString() {
+    return "";
 }
 
-void HotkeyCommand::run(int val, int valhw, int relmode, HWND hwnd) {
-    mCallback(val, valhw, relmode, hwnd);
+const char *ProjectChangeListener::GetConfigString() {
+    return "";
+}
+
+void ProjectChangeListener::SetTrackListChange() {
+    auto val = (long long) GetMediaTrackInfo_Value(GetMasterTrack(nullptr), "P_PROJECT");
+    auto *proj = (ReaProject*) val;
+    if (g_lpe->mProject != proj) {
+        g_lpe->onProjectChanged(proj);
+    }
 }

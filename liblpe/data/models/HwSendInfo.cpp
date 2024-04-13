@@ -89,7 +89,7 @@ void HwSendInfo::persistHandler(WDL_FastString &str) const {
 }
 
 /**
- * Helper function to get the MediaTrack* object for the src track
+ * Helper function to get the MediaTrack* object for the liblpe track
  * @return the MediaTrack*
  */
 MediaTrack* HwSendInfo::getSrcTrack() const {

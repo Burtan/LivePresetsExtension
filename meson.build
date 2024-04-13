@@ -19,11 +19,11 @@ subdir('third_party')
 # This is where you should add in include directories
 
 # This triggers the builds of sources
-subdir('src')
+subdir('liblpe')
 # This links all the static libs into the main source file to form a binary
 
-sample_cpp_project_bin = executable('livepresets',
-                                    main_source,
+sample_cpp_project_bin = shared_library('livepresets',
+                                    project_sources,
                                     include_directories : inc)
 
 gtest = subproject('gtest')

@@ -2052,7 +2052,7 @@ REAPERAPI_DEF //==============================================
 #if defined(REAPERAPI_WANT_GetMediaSourceParent) || !defined(REAPERAPI_MINIMAL)
 REAPERAPI_DEF //==============================================
 // GetMediaSourceParent
-// Returns the parent source, or NULL if src is the root source. This can be used to retrieve the parent properties of sections or reversed sources for example.
+// Returns the parent source, or NULL if liblpe is the root source. This can be used to retrieve the parent properties of sections or reversed sources for example.
 
   PCM_source* (*GetMediaSourceParent)(PCM_source* src);
 #endif
@@ -5009,7 +5009,7 @@ REAPERAPI_DEF //==============================================
 #if defined(REAPERAPI_WANT_PCM_Source_BuildPeaks) || !defined(REAPERAPI_MINIMAL)
 REAPERAPI_DEF //==============================================
 // PCM_Source_BuildPeaks
-// Calls and returns PCM_source::PeaksBuild_Begin() if mode=0, PeaksBuild_Run() if mode=1, and PeaksBuild_Finish() if mode=2. Normal use is to call PCM_Source_BuildPeaks(src,0), and if that returns nonzero, call PCM_Source_BuildPeaks(src,1) periodically until it returns zero (it returns the percentage of the file remaining), then call PCM_Source_BuildPeaks(src,2) to finalize. If PCM_Source_BuildPeaks(src,0) returns zero, then no further action is necessary.
+// Calls and returns PCM_source::PeaksBuild_Begin() if mode=0, PeaksBuild_Run() if mode=1, and PeaksBuild_Finish() if mode=2. Normal use is to call PCM_Source_BuildPeaks(liblpe,0), and if that returns nonzero, call PCM_Source_BuildPeaks(liblpe,1) periodically until it returns zero (it returns the percentage of the file remaining), then call PCM_Source_BuildPeaks(liblpe,2) to finalize. If PCM_Source_BuildPeaks(liblpe,0) returns zero, then no further action is necessary.
 
   int (*PCM_Source_BuildPeaks)(PCM_source* src, int mode);
 #endif

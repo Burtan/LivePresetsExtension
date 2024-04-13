@@ -29,13 +29,13 @@
 
 #include <sstream>
 #include <functional>
-#include "LivePresetsExtension.h"
-#include "src/plugins/lpe_ultimate.h"
-#include "src/plugins/reaper_plugin_functions.h"
-#include "src/data/models/HotkeyCommand.h"
-#include "src/data/models/ActionCommand.h"
-#include "src/ui/LivePresetsListAdapter.h"
-#include "src/util/util.h"
+#include <liblpe/LivePresetsExtension.h>
+#include <liblpe/plugins/lpe_ultimate.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/data/models/HotkeyCommand.h>
+#include <liblpe/data/models/ActionCommand.h>
+#include <liblpe/ui/LivePresetsListAdapter.h>
+#include <liblpe/util/util.h>
 
 /*
 Main entry point, is called when the extension is loaded.

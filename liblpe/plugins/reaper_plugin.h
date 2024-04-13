@@ -398,10 +398,10 @@ typedef struct
 #define PCM_SOURCE_EXT_ADDMIDIEVENTS 0x10005 // parm1=pointer to midi_realtime_write_struct_t, nch=1 for replace, =0 for overdub, parm2=midi_quantize_mode_t* (optional)
 #define PCM_SOURCE_EXT_GETASSOCIATED_RPP 0x10006 // parm1=pointer to char* that will receive a pointer to the string
 #define PCM_SOURCE_EXT_GETMETADATA 0x10007 // parm1=pointer to name string, parm2=pointer to buffer, parm3=(int)buffersizemax . returns length used. Defined strings are "DESC", "ORIG", "ORIGREF", "DATE", "TIME", "UMID", "CODINGHISTORY" (i.e. BWF)
-#define PCM_SOURCE_EXT_SETASSECONDARYSOURCE 0x10008  // parm1=optional pointer to src (same subtype as receiver), if supplied, set the receiver as secondary src for parm1's editor, if not supplied, receiver has to figure out if there is an appropriate editor open to attach to, parm2=trackidx, parm3=itemname
+#define PCM_SOURCE_EXT_SETASSECONDARYSOURCE 0x10008  // parm1=optional pointer to liblpe (same subtype as receiver), if supplied, set the receiver as secondary liblpe for parm1's editor, if not supplied, receiver has to figure out if there is an appropriate editor open to attach to, parm2=trackidx, parm3=itemname
 #define PCM_SOURCE_EXT_SHOWMIDIPREVIEW 0x10009  // parm1=(MIDI_eventlist*), can be NULL for all-notes-off (also to check if this source supports showing preview at this moment)
 #define PCM_SOURCE_EXT_SEND_EDITOR_MSG 0x1000A  // parm1=int: 1=focus editor to primary, 2=focus editor to all, 3=focus editor to all selected
-#define PCM_SOURCE_EXT_SETSECONDARYSOURCELIST 0x1000B // parm1=(PCM_source**)sourcelist, parm2=list size, parm3=close any existing src not in the list
+#define PCM_SOURCE_EXT_SETSECONDARYSOURCELIST 0x1000B // parm1=(PCM_source**)sourcelist, parm2=list size, parm3=close any existing liblpe not in the list
 #define PCM_SOURCE_EXT_ISOPENEDITOR 0x1000C // returns 1 if this source is currently open in an editor, parm1=1 to close
 #define PCM_SOURCE_EXT_GETITEMCONTEXT 0x10010 // parm1=MediaItem**, parm2=MediaItem_Take**, parm3=MediaTrack**
 #define PCM_SOURCE_EXT_CONFIGISFILENAME 0x20000
@@ -670,7 +670,7 @@ class REAPER_PeakBuild_Interface
 public:
   virtual ~REAPER_PeakBuild_Interface() { }
 
-  virtual void ProcessSamples(ReaSample **samples, int len, int nch, int offs, int spread)=0; // in case a sink wants to build its own peaks (make sure it was created with src=NULL)
+  virtual void ProcessSamples(ReaSample **samples, int len, int nch, int offs, int spread)=0; // in case a sink wants to build its own peaks (make sure it was created with liblpe=NULL)
   virtual int Run()=0; // or let it do it automatically (created with source!=NULL)
 
   virtual int GetLastSecondPeaks(int sz, ReaSample *buf)=0; // returns number of peaks in the last second, sz is maxsize

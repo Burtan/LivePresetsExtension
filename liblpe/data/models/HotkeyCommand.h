@@ -1,7 +1,7 @@
 /******************************************************************************
 / LivePresetsExtension
 /
-/ Listens for changes, especially changing projects
+/ Represents a reaper action that can be triggered with a hotkey
 /
 / Copyright (c) 2020 and later Dr. med. Frederik Bertling
 /
@@ -27,25 +27,19 @@
 /
 ******************************************************************************/
 
-#include <LivePresetsExtension.h>
-#include <util/ProjectChangeListener.h>
+#ifndef LPE_HOTKEYCOMMAND_H
+#define LPE_HOTKEYCOMMAND_H
 
-const char *ProjectChangeListener::GetTypeString() {
-    return "";
-}
+#include <liblpe/data/models/base/BaseCommand.h>
+#include <liblpe/plugins/reaper_plugin.h>
 
-const char *ProjectChangeListener::GetDescString() {
-    return "";
-}
+class HotkeyCommand : public BaseCommand {
+public:
+    HotkeyCommand(const std::string& name, const std::string& desc, Callback callback);
+    ~HotkeyCommand() override;
 
-const char *ProjectChangeListener::GetConfigString() {
-    return "";
-}
+    void run(int val, int valhw, int relmode, HWND hwnd) override;
+};
 
-void ProjectChangeListener::SetTrackListChange() {
-    auto val = (long long) GetMediaTrackInfo_Value(GetMasterTrack(nullptr), "P_PROJECT");
-    auto *proj = (ReaProject*) val;
-    if (g_lpe->mProject != proj) {
-        g_lpe->onProjectChanged(proj);
-    }
-}
+
+#endif //LPE_HOTKEYCOMMAND_H

@@ -30,8 +30,8 @@
 #ifndef LPE_ACTIONLIST_H
 #define LPE_ACTIONLIST_H
 
-#include "data/models/HotkeyCommand.h"
-#include "data/models/ActionCommand.h"
+#include <liblpe/data/models/HotkeyCommand.h>
+#include <liblpe/data/models/ActionCommand.h>
 #include <map>
 
 class CommandList {

@@ -27,19 +27,30 @@
 /
 ******************************************************************************/
 
-#ifndef LPE_HOTKEYCOMMAND_H
-#define LPE_HOTKEYCOMMAND_H
+#include <liblpe/data/models/HotkeyCommand.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 
-#include <data/models/base/BaseCommand.h>
-#include "plugins/reaper_plugin.h"
+HotkeyCommand::HotkeyCommand(const std::string& name, const std::string& desc, Callback callback)
+        : BaseCommand(name, desc, std::move(callback))
+{
+    mCmdId = plugin_register("command_id", mName.data());
+    gaccel_register_t g{};
+    g.accel.cmd = mCmdId;
+    g.desc = mDesc.data();
+    plugin_register("gaccel", &g);
+}
 
-class HotkeyCommand : public BaseCommand {
-public:
-    HotkeyCommand(const std::string& name, const std::string& desc, Callback callback);
-    ~HotkeyCommand() override;
+/*
+ * Make sure that the associated action is unregistered from reaper
+ */
+HotkeyCommand::~HotkeyCommand() {
+    mCmdId = plugin_register("-command_id", mName.data());
+    gaccel_register_t g{};
+    g.accel.cmd = mCmdId;
+    g.desc = mDesc.data();
+    plugin_register("-gaccel", &g);
+}
 
-    void run(int val, int valhw, int relmode, HWND hwnd) override;
-};
-
-
-#endif //LPE_HOTKEYCOMMAND_H
+void HotkeyCommand::run(int val, int valhw, int relmode, HWND hwnd) {
+    mCallback(val, valhw, relmode, hwnd);
+}

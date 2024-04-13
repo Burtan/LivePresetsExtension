@@ -118,7 +118,7 @@ MediaTrack* SwSendInfo::getDstTrack() const {
 }
 
 /**
- * Helper function to get the MediaTrack* object for the src track
+ * Helper function to get the MediaTrack* object for the liblpe track
  * @return the MediaTrack*
  */
 MediaTrack* SwSendInfo::getSrcTrack() const {

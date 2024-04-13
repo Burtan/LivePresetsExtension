@@ -184,7 +184,7 @@ static project_config_extension_t config = {                                    
          * Extension data is read here. Is also called on Undo/Redo to get an old persisted state
          */
         [](const char* firstLine, ProjectStateContext* ctx, bool isUndo, struct project_config_extension_t*) -> bool {
-            // src data is saved in the part starting with <LIVEPRESETS until the consecutive >
+            // liblpe data is saved in the part starting with <LIVEPRESETS until the consecutive >
             if (strcmp(firstLine, "<LIVEPRESETS") == 0) {
                 return g_lpe->recallState(ctx, isUndo);
             } else {
