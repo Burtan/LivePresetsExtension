@@ -31,7 +31,7 @@
 #ifdef _WIN32
     #include <windowsx.h>
 #else
-    #include <util/util.h>
+    #include <liblpe/util/util.h>
 #endif
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>

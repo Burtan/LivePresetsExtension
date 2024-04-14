@@ -31,7 +31,7 @@
 #include <liblpe/data/models/base/BaseTrackInfo.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <liblpe/data/models/FilterPreset.h>
-#include <util/util.h>
+#include <liblpe/util/util.h>
 
 /**
  * Create a new SendInfo object from a track

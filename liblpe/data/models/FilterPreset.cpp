@@ -29,7 +29,7 @@
 
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <utility>
-#include <util/util.h>
+#include <liblpe/util/util.h>
 #include <liblpe/data/models/FilterPreset.h>
 #include <algorithm>
 

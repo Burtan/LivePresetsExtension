@@ -29,7 +29,7 @@
 
 #include <liblpe/data/models/FxInfo.h>
 #include <liblpe/data/models/FilterPreset.h>
-#include <util/util.h>
+#include <liblpe/util/util.h>
 #include <cfloat>
 #include <liblpe/LivePresetsExtension.h>
 #include <thread>

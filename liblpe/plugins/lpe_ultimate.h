@@ -36,7 +36,7 @@
 #include <liblpe/data/models/Hardware.h>
 #include <liblpe/data/models/ControlInfo.h>
 #include <liblpe/ui/ControlsListAdapter.h>
-#include <util/Licensing.h>
+#include <liblpe/util/Licensing.h>
 #else //LPE_ULTIMATE
 //Only include this one in .cpp files for models not in .h files as that creates circular dependencies
 //stub classes and functions for ce version

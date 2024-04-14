@@ -34,7 +34,7 @@
 #include <liblpe/data/models/SwSendInfo.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
-#include <util/util.h>
+#include <liblpe/util/util.h>
 
 const GUID BaseTrackInfo::MASTER_GUID = GUID{0, 0, 0, 0};
 

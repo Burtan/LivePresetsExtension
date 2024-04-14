@@ -28,7 +28,7 @@
 ******************************************************************************/
 
 #include <liblpe/data/models/TrackInfo.h>
-#include <util/util.h>
+#include <liblpe/util/util.h>
 #include <liblpe/data/models/FilterPreset.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
 

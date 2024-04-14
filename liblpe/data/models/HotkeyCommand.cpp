@@ -33,7 +33,7 @@
 HotkeyCommand::HotkeyCommand(const std::string& name, const std::string& desc, Callback callback)
         : BaseCommand(name, desc, std::move(callback))
 {
-    mCmdId = plugin_register("command_id", mName.data());
+    mCmdId = plugin_register("command_id", (void*) mName.data());
     gaccel_register_t g{};
     g.accel.cmd = mCmdId;
     g.desc = mDesc.data();
@@ -44,7 +44,7 @@ HotkeyCommand::HotkeyCommand(const std::string& name, const std::string& desc, C
  * Make sure that the associated action is unregistered from reaper
  */
 HotkeyCommand::~HotkeyCommand() {
-    mCmdId = plugin_register("-command_id", mName.data());
+    mCmdId = plugin_register("-command_id", (void*) mName.data());
     gaccel_register_t g{};
     g.accel.cmd = mCmdId;
     g.desc = mDesc.data();
