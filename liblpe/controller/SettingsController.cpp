@@ -119,7 +119,7 @@ void SettingsController::onCommand(WPARAM wParam, LPARAM lparam) {
             g_lpe->mModel->mIsHideMutedTracks = IsDlgButtonChecked(mHwnd, IDC_HIDE_MUTED_TRACKS);
             break;
         case IDC_UPDATE: {
-            SetTimer(mHwnd, 1, 0, static_cast<TIMERPROC>(updateAllPresets));
+            SetTimer(mHwnd, 1, 0, updateAllPresets);
             break;
         }
         default: {}
@@ -133,13 +133,13 @@ void CALLBACK SettingsController::updateAllPresets(HWND hwnd, UINT, UINT_PTR i, 
         g_lpe->mModel->recallPreset(preset);
         preset->saveCurrentState(true);
 
-        SetTimer(hwnd, i + 1, 100, static_cast<TIMERPROC>(updateAllPresets));
+        SetTimer(hwnd, i + 1, 100, updateAllPresets);
     }
     KillTimer(hwnd, i);
 }
 
 LPARAM SettingsController::result() {
-    return (LPARAM) 0;
+    return 0;
 }
 
 /**

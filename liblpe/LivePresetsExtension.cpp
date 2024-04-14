@@ -168,7 +168,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.cbSize = sizeof(MENUITEMINFO);
 
         std::string text = "LivePresets";
-        mii.dwTypeData = (char*) text.data();
+        mii.dwTypeData = text.data();
         mii.cch = text.size();
 
         mii.hSubMenu = subMenu;
@@ -181,7 +181,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.fType = MFT_STRING;
 
         text = "Presets";
-        mii.dwTypeData = (char*) text.data();
+        mii.dwTypeData = text.data();
         mii.cch = text.size();
 
         mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_MAIN");
@@ -196,7 +196,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
             mii.fType = MFT_STRING;
 
             text = "Control View";
-            mii.dwTypeData = (char*) text.data();
+            mii.dwTypeData = text.data();
             mii.cch = text.size();
 
             mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_CONTROL");
@@ -216,7 +216,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.fType = MFT_STRING;
 
         text = "About LPE";
-        mii.dwTypeData = (char*) text.data();
+        mii.dwTypeData = text.data();
         mii.cch = text.size();
 
         mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_ABOUT");
@@ -231,7 +231,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.cbSize = sizeof(MENUITEMINFO);
 
         std::string text = "LivePresets";
-        mii.dwTypeData = (char*) text.data();
+        mii.dwTypeData = text.data();
         mii.cch = text.size();
 
         mii.hSubMenu = subMenu;
@@ -244,7 +244,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         smii.cbSize = sizeof(MENUITEMINFO);
 
         std::string subtext = "Save track settings to all presets";
-        smii.dwTypeData = (char*) subtext.data();
+        smii.dwTypeData = subtext.data();
         smii.cch = subtext.size();
 
         smii.wID = NamedCommandLookup("_LPE_TRACKSAVEALL");

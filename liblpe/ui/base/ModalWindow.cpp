@@ -48,7 +48,7 @@ ModalWindow::ModalWindow(int iResource, const char* cWndTitle, const char* cId, 
 
 ModalWindow::~ModalWindow() {
     if (mId.length())
-        screenset_unregister((char*) mId.data());
+        screenset_unregister(mId.data());
 
     if (mHwnd) {
         DestroyWindow(mHwnd);

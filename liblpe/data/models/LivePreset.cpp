@@ -295,7 +295,7 @@ bool LivePreset::applyFilterPreset(FilterPreset *preset) {
         mFilter = preset->mFilter;
 
         auto toFilters = std::set<Filterable*>();
-        toFilters.insert((Filterable*) mMasterTrack);
+        toFilters.insert(mMasterTrack);
         toFilters.insert(mTracks.begin(), mTracks.end());
 
         //convert shared_ptr to raw pointer

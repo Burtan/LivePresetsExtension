@@ -235,10 +235,10 @@ bool FxInfo::applyFilterPreset(FilterPreset *preset) {
         mFilter = preset->mFilter;
 
         auto toFilters = std::set<Filterable*>();
-        toFilters.insert((Filterable*) &mParamInfo);
-        toFilters.insert((Filterable*) &mEnabled);
-        toFilters.insert((Filterable*) &mIndex);
-        toFilters.insert((Filterable*) &mPresetName);
+        toFilters.insert(&mParamInfo);
+        toFilters.insert(&mEnabled);
+        toFilters.insert(&mIndex);
+        toFilters.insert(&mPresetName);
 
         for (auto *child : preset->mChilds) {
             for (auto *toFilter : toFilters) {

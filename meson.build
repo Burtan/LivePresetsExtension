@@ -1,9 +1,111 @@
 project('LivePresetsExtension', 'cpp',
-        version : '1.0',
-        license : ['MIT'],
-        meson_version : '>= 1.4.0',
-        default_options : [ 'warning_level=0', 'buildtype=debugoptimized', 'cpp_std=c++20' ]
+        version: '1.0',
+        license: ['MIT'],
+        meson_version: '>= 1.4.0',
+        default_options: [
+            'warning_level=0',
+            'buildtype=debugoptimized',
+            'cpp_std=c++20',
+            'build.cpp_std=c++20',
+        ]
 )
+
+# compiler options
+global_cpp_args = {
+    'gcc': [
+        '-fsigned-char', # defaults to unsigned on ARM
+        '-fstack-protector-strong',
+        '-fvisibility=hidden', # meson's gnu_symbol_visibility is per-target
+    ],
+    'msvc': [
+        '-DBUILD_VERSION="1.0.0"',
+        '-DBUILD_DATE="1231"'
+    ],
+}
+project_cpp_args = {
+    'gcc': [
+        '-Wno-deprecated-copy', # for eel_strings.h in GCC 12
+        '-Wno-missing-braces',  # for Xcode 9
+        '-Wno-missing-field-initializers',
+        '-Wno-multichar',
+        '-Wno-nonnull-compare',  # dynamic_cast(this)
+        '-Wno-unused-parameter', # for reaper-sdk and WDL
+    ],
+    'msvc': [
+        '/D_CRT_NONSTDC_NO_DEPRECATE',
+        '/D_CRT_SECURE_NO_WARNINGS',
+        '/DNOMINMAX',
+        #'/DUNICODE',
+
+        '/wd4244', # conversion from T1 to T2, possible loss of data
+        '/wd4267', # conversion from size_t to T, possible loss of data
+        '/wd4624', # destructor was implicitly defined as deleted
+    ],
+}
+project_objcpp_args = [
+    '-fobjc-arc',
+    '-Wno-deprecated-declarations',
+]
+link_args = {
+    'gcc': [
+        # remove unused code (-dead_strip on macOS)
+        '-Wl,-dead_strip', '-Wl,--gc-sections',
+        # fail at compile-time if we forgot to link against something
+        '-Wl,--no-undefined',
+    ],
+    'msvc': [
+        # store only the PDB file's basename instead of its full absolute path
+        '/PDBALTPATH:%_PDB%'
+    ]
+}
+
+if get_option('buildtype') == 'debug'
+    global_cpp_args += {'gcc':  global_cpp_args['gcc'] + [
+                            '-fno-lto' # meson is lacking a b_lto=if-release option
+                        ]}
+else
+    global_cpp_args += {'msvc':  global_cpp_args['msvc'] + [
+                            '/GL', # whole program optimization
+                            '/Gy', # enable function-level linking
+                            '/Zc:inline', # remove unreferenced COMDAT
+                            '/Zi', # generate a PDB file (implies /DEBUG and /Zo)
+                        ]}
+    link_args += {'msvc':  link_args['msvc'] + [
+                      '/LTCG',
+                      '/OPT:REF,ICF,LBR', # re-enable link-time optimizations when /DEBUG is set
+                  ]}
+endif
+
+native_set = [false]
+if meson.is_cross_build()
+    # not copying compiler flags to the native compiler unless in a cross build
+    # to avoid unnecessary duplicate supported argument check status messages
+    native_set += true
+endif
+foreach native : native_set
+    cpp = meson.get_compiler('cpp', native: native)
+    arg_syntax = cpp.get_argument_syntax()
+    add_global_arguments(
+        cpp.get_supported_arguments(global_cpp_args[arg_syntax]),
+        language: ['c', 'cpp', 'objcpp'],
+        native: native)
+    add_project_arguments(
+        cpp.get_supported_arguments(project_cpp_args[arg_syntax]),
+        language: ['c', 'cpp', 'objcpp'],
+        native: native)
+    add_global_link_arguments(
+        cpp.get_supported_link_arguments(link_args[arg_syntax]),
+        language: ['c', 'cpp', 'objcpp'],
+        native: native)
+endforeach
+
+if host_machine.system() == 'darwin'
+    add_languages('objcpp', native: false)
+    objcpp = meson.get_compiler('objcpp')
+    add_project_arguments(
+        objcpp.get_supported_arguments(project_objcpp_args),
+        language: 'objcpp')
+endif
 
 # Variables tracking sources and libraries
 library_path = []
@@ -16,7 +118,7 @@ subdir('third_party')
 subdir('liblpe')
 
 gtest = subproject('gtest')
-benchmark = subproject('benchmark')
+#benchmark = subproject('benchmark')
 wdl = subproject('WDL')
 
 if get_option('enable-tests')
@@ -34,8 +136,9 @@ else
     swell_dep = dependency('SWELL')
 endif
 
-livepresets = shared_library(
-    'livepresets',
-    project_sources,
-    dependencies: [wdl_dep, swell_dep]
+livepresets = shared_library('livepresets', project_sources,
+                             dependencies: [wdl_dep, swell_dep],
+                             name_prefix: '',
+                             install: true,
+                             install_dir: 'C:\Users\Frederik Bertling\AppData\Roaming\REAPER\UserPlugins'
 )

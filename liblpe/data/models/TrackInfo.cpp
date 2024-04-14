@@ -237,8 +237,8 @@ bool TrackInfo::applyFilterPreset(FilterPreset *preset) {
         mFilter = preset->mFilter;
 
         auto toFilters = std::set<Filterable*>();
-        toFilters.insert((Filterable*) &mParamInfo);
-        toFilters.insert((Filterable*) &mName);
+        toFilters.insert(&mParamInfo);
+        toFilters.insert(&mName);
         toFilters.insert(mSwSends.begin(), mSwSends.end());
         toFilters.insert(mHwSends.begin(), mHwSends.end());
         toFilters.insert(mFxs.begin(), mFxs.end());

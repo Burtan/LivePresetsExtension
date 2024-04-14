@@ -34,7 +34,6 @@
 
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
-#include <thread>
 
 static bool loadAPI(void* (*getFunc)(const char*)) {
     struct ApiFunc { void* *ptr; const char* name; bool required; };
@@ -188,9 +187,8 @@ static project_config_extension_t config = {                                    
             // liblpe data is saved in the part starting with <LIVEPRESETS until the consecutive >
             if (strcmp(firstLine, "<LIVEPRESETS") == 0) {
                 return g_lpe->recallState(ctx, isUndo);
-            } else {
-                return false;
             }
+            return false;
         },
         /*
          * Extension data is persisted here
@@ -246,12 +244,6 @@ extern "C" {
 
         if (!extensionInit(hInst, rec))
             return extensionExit();
-
-        // std::thread t([](){
-        //     std::cout << "thread function\n";
-        // });
-        // std::cout << "main thread\n";
-        // t.join();
 
         // hookcommand2 must be registered before hookcommand
         if (!rec->Register("hookcommand2", (void*) hookCommand2Proc))

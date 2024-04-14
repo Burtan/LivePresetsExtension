@@ -262,7 +262,7 @@ void LivePresetsTreeAdapter::addChildsForParams(ParameterInfo* item, std::vector
         TVITEM child;
         child.mask = TVIF_TEXT | TVIF_PARAM;
 
-        child.pszText = (char*) param.getTreeText();
+        child.pszText = param.getTreeText();
         child.cchTextMax = sizeof(param.getTreeText());
 
         auto lparam = (LPARAM) &param;
@@ -279,7 +279,7 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         TVITEM child;
         child.mask = TVIF_TEXT | TVIF_PARAM;
 
-        child.pszText = (char*) item->mIndex.getTreeText();
+        child.pszText = item->mIndex.getTreeText();
         child.cchTextMax = sizeof(item->mIndex.getTreeText());
 
         auto lparam = (LPARAM) &item->mIndex;
@@ -293,7 +293,7 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         TVITEM child;
         child.mask = TVIF_TEXT | TVIF_PARAM;
 
-        child.pszText = (char*) item->mEnabled.getTreeText();
+        child.pszText = item->mEnabled.getTreeText();
         child.cchTextMax = sizeof(item->mEnabled.getTreeText());
 
         auto lparam = (LPARAM) &item->mEnabled;
@@ -306,7 +306,7 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         TVITEM child;
         child.mask = TVIF_TEXT | TVIF_PARAM;
 
-        child.pszText = (char*) item->mPresetName.getTreeText();
+        child.pszText = item->mPresetName.getTreeText();
         child.cchTextMax = sizeof(item->mPresetName.getTreeText());
 
         auto lparam = (LPARAM) &item->mPresetName;
@@ -319,7 +319,7 @@ void LivePresetsTreeAdapter::addChildsForFx(FxInfo* item, std::vector<TVITEM>* c
         TVITEM child;
         child.mask = TVIF_TEXT | TVIF_PARAM;
 
-        child.pszText = (char*) item->mParamInfo.getTreeText();
+        child.pszText = item->mParamInfo.getTreeText();
         child.cchTextMax = sizeof(item->mParamInfo.getTreeText());
 
         auto lparam = (LPARAM) &item->mParamInfo;

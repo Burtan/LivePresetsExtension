@@ -38,7 +38,7 @@ PluginRecallStrategies::PluginRecallStrategies() {
     mDefaultStrategy = (PluginRecallStrategy) GetPrivateProfileInt(
             "general",
             "default",
-            (int) PluginRecallStrategy::PRESET,
+            PluginRecallStrategy::PRESET,
             resPath.data()
     );
 

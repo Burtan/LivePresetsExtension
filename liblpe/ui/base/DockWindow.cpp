@@ -54,7 +54,7 @@ DockWindow::DockWindow(int iResource, const char* cWndTitle, const char* cId, in
 DockWindow::~DockWindow() {
     plugin_register("-accelerator", &mAr);
     if (mId.length())
-        screenset_unregister((char*) mId.data());
+        screenset_unregister(mId.data());
 
     if (mHwnd) {
         DestroyWindow(mHwnd);

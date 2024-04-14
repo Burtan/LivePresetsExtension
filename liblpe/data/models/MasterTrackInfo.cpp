@@ -97,7 +97,7 @@ bool MasterTrackInfo::applyFilterPreset(FilterPreset *preset) {
     if (preset->mType == MASTERTRACK) {
         mFilter = preset->mFilter;
         auto toFilters = std::set<Filterable*>();
-        toFilters.insert((Filterable*) &mParamInfo);
+        toFilters.insert(&mParamInfo);
         toFilters.insert(mHwSends.begin(), mHwSends.end());
         toFilters.insert(mFxs.begin(), mFxs.end());
 
