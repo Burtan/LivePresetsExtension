@@ -35,7 +35,6 @@
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <thread>
-#include <iostream>
 
 static bool loadAPI(void* (*getFunc)(const char*)) {
     struct ApiFunc { void* *ptr; const char* name; bool required; };
@@ -242,17 +241,17 @@ extern "C" {
     REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_HINSTANCE hInst, reaper_plugin_info_t* rec) {
         if (!rec)
             return extensionExit();
-        else if (rec->caller_version != REAPER_PLUGIN_VERSION || !loadAPI(rec->GetFunc))
+        if (rec->caller_version != REAPER_PLUGIN_VERSION || !loadAPI(rec->GetFunc))
             return 0;
 
         if (!extensionInit(hInst, rec))
             return extensionExit();
 
-        std::thread t([](){
-            std::cout << "thread function\n";
-        });
-        std::cout << "main thread\n";
-        t.join();
+        // std::thread t([](){
+        //     std::cout << "thread function\n";
+        // });
+        // std::cout << "main thread\n";
+        // t.join();
 
         // hookcommand2 must be registered before hookcommand
         if (!rec->Register("hookcommand2", (void*) hookCommand2Proc))
