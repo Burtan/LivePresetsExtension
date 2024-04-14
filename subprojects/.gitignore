@@ -1,2 +1,5 @@
 */
 !*.wrap
+!packagefiles
+!packagefiles/wdl
+!packagefiles/wdl/meson.build

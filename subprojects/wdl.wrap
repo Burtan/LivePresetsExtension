@@ -2,3 +2,4 @@
 url = git@github.com:justinfrankel/WDL.git
 revision = head
 depth = 1
+patch_directory = wdl

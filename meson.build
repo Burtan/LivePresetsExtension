@@ -28,6 +28,7 @@ sample_cpp_project_bin = shared_library('livepresets',
 
 gtest = subproject('gtest')
 benchmark = subproject('benchmark')
+wdl = subproject('wdl')
 
 if get_option('enable-tests')
     subdir('tests')
@@ -45,7 +46,7 @@ run_target('format',
 
 # This regex excludes any sources from the third_party, tests, benchmarks
 # and gtest related files.
-regex = '^((?!(third_party|tests|benchmarks|gtest)).)*$'
+regex = '^((?!(third_party|tests|benchmarks|gtest|wdl)).)*$'
 # This adds clang tidy support
 configure_file(input : '.clang-tidy',
                output : '.clang-tidy',
