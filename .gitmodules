@@ -1,6 +1,0 @@
-[submodule "thid_party/WDL"]
-	path = thid_party/WDL
-	url = https://github.com/justinfrankel/WDL
-[submodule "thid_party/LPE-U"]
-	path = thid_party/LPE-U
-	url = git@gitlab.dr-bertling.de:livepresets/lpe-cs.git
