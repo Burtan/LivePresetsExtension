@@ -29,6 +29,7 @@
 
 #include <sstream>
 #include <functional>
+#include <memory>
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/plugins/lpe_ultimate.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
@@ -36,6 +37,8 @@
 #include <liblpe/data/models/ActionCommand.h>
 #include <liblpe/ui/LivePresetsListAdapter.h>
 #include <liblpe/util/util.h>
+
+#define WDL_NO_DEFINE_MINMAX
 
 /*
 Main entry point, is called when the extension is loaded.
@@ -164,7 +167,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.cbSize = sizeof(MENUITEMINFO);
 
         std::string text = "LivePresets";
-        mii.dwTypeData = text.data();
+        mii.dwTypeData = (char*) text.data();
         mii.cch = text.size();
 
         mii.hSubMenu = subMenu;
@@ -177,7 +180,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.fType = MFT_STRING;
 
         text = "Presets";
-        mii.dwTypeData = text.data();
+        mii.dwTypeData = (char*) text.data();
         mii.cch = text.size();
 
         mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_MAIN");
@@ -192,7 +195,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
             mii.fType = MFT_STRING;
 
             text = "Control View";
-            mii.dwTypeData = text.data();
+            mii.dwTypeData = (char*) text.data();
             mii.cch = text.size();
 
             mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_CONTROL");
@@ -212,7 +215,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.fType = MFT_STRING;
 
         text = "About LPE";
-        mii.dwTypeData = text.data();
+        mii.dwTypeData = (char*) text.data();
         mii.cch = text.size();
 
         mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_ABOUT");
@@ -227,7 +230,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.cbSize = sizeof(MENUITEMINFO);
 
         std::string text = "LivePresets";
-        mii.dwTypeData = text.data();
+        mii.dwTypeData = (char*) text.data();
         mii.cch = text.size();
 
         mii.hSubMenu = subMenu;
@@ -240,7 +243,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         smii.cbSize = sizeof(MENUITEMINFO);
 
         std::string subtext = "Save track settings to all presets";
-        smii.dwTypeData = subtext.data();
+        smii.dwTypeData = (char*) subtext.data();
         smii.cch = subtext.size();
 
         smii.wID = NamedCommandLookup("_LPE_TRACKSAVEALL");
@@ -406,7 +409,7 @@ bool LPE::recallState(ProjectStateContext* ctx, bool) {
     //Update ui after loading data or returning to persisted state via undo/redo
     if (mController.mList) {
         auto adapter = std::make_unique<LivePresetsListAdapter>(&mModel->mPresets);
-        mController.mList->setAdapter(move(adapter));
+        mController.mList->setAdapter(std::move(adapter));
     }
 
     return true;

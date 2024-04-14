@@ -33,10 +33,11 @@
 #include <memory>
 #include <vector>
 #include <functional>
+
 #ifdef _WIN32
     #include <Windows.h>
 #else
-
+    #define WDL_NO_DEFINE_MINMAX
 #endif
 
 #include <set>

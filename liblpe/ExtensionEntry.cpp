@@ -30,6 +30,8 @@
 #define REAPERAPI_IMPLEMENT
 #define REQUIRED_API(name) {reinterpret_cast<void **>(&name), #name, true}
 
+#define WDL_NO_DEFINE_MINMAX
+
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <thread>
@@ -273,7 +275,7 @@ extern "C" {
 }   // end extern C
 
 #ifndef _WIN32
-    #include <src/resources/resource.h>
+    #include <liblpe/resources/resource.h>
     #include <third_party/WDL/WDL/swell/swell-dlggen.h>
-    #include <resource.rc_mac_dlg"
+    //#include <liblpe/resources/resource.rc_mac_dlg>
 #endif

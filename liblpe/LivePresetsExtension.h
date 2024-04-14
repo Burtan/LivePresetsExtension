@@ -30,6 +30,7 @@
 #ifndef LPE_LIVEPRESETSEXTENSION_H
 #define LPE_LIVEPRESETSEXTENSION_H
 
+#define WDL_NO_DEFINE_MINMAX
 
 #include <liblpe/data/models/CommandList.h>
 #include <liblpe/controller/LivePresetsController.h>

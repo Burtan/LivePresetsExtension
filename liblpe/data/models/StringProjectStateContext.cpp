@@ -28,7 +28,6 @@
 ******************************************************************************/
 
 #include <liblpe/data/models/StringProjectStateContext.h>
-#include <string>
 
 /**
  * Not implemented
