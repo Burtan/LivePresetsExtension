@@ -30,12 +30,11 @@
 #ifndef LPE_PERSISTABLE_H
 #define LPE_PERSISTABLE_H
 
-#define WDL_NO_DEFINE_MINMAX
 
 #include <string>
 #include <vector>
 #include <cstring> //needed for WDL/wdlstring
-#include <third_party/WDL/WDL/wdlstring.h>
+#include <wdlstring.h>
 #include <liblpe/plugins/reaper_plugin.h>
 
 class Persistable {

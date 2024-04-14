@@ -34,8 +34,8 @@
     #include <Windows.h>
     #include <CommCtrl.h>
 #else
-    #define WDL_NO_DEFINE_MINMAX
-    #include <third_party/WDL/WDL/swell/swell-types.h>
+
+    #include <swell/swell-types.h>
 #endif
 
 #include <map>

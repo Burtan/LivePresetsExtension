@@ -29,7 +29,7 @@
 
 #include <liblpe/controller/AboutController.h>
 #include <liblpe/resources/resource.h>
-#include <third_party/WDL/WDL/wdlstring.h>
+#include <wdlstring.h>
 #include <liblpe/plugins/lpe_ultimate.h>
 
 /**
@@ -38,10 +38,12 @@
 AboutController::AboutController() : DockWindow(IDD_ABOUT, "", "AboutController", 0) {
     //change title with temp vars
     auto temp = WDL_FastString();
+    /*
     temp.AppendFormatted(4096, "LivePresets %s: %s (%s)",
             Licensing_IsUltimate() ? "Ultimate" : "CE",
             BUILD_VERSION,
             BUILD_DATE
     );
+    */
     mTitle = temp.Get();
 }

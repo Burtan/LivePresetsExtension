@@ -3,5 +3,7 @@ project_sources += files(
     'ExtensionEntry.cpp'
 )
 
-subdir('util')
+subdir('controller')
 subdir('data')
+subdir('ui')
+subdir('util')

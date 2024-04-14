@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#define WDL_NO_DEFINE_MINMAX
+
 
 #include <sstream>
 #include <functional>

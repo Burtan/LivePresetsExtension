@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#define WDL_NO_DEFINE_MINMAX
+
 
 #define REAPERAPI_IMPLEMENT
 #define REQUIRED_API(name) {reinterpret_cast<void **>(&name), #name, true}
@@ -276,6 +276,6 @@ extern "C" {
 
 #ifndef _WIN32
     #include <liblpe/resources/resource.h>
-    #include <third_party/WDL/WDL/swell/swell-dlggen.h>
+    #include <swell/swell-dlggen.h>
     //#include <liblpe/resources/resource.rc_mac_dlg>
 #endif

@@ -33,9 +33,9 @@
 #ifdef _WIN32
     #include <Windows.h>
 #else
-    #define WDL_NO_DEFINE_MINMAX
-    #include <third_party/WDL/WDL/swell/swell-types.h>
-    #include <third_party/WDL/WDL/swell/swell-functions.h>
+
+    #include <swell/swell-types.h>
+    #include <swell/swell-functions.h>
 #endif
 
 #include <vector>

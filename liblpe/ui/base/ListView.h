@@ -37,14 +37,14 @@
 #ifdef _WIN32
     #include <Windows.h>
 #else
-    #define WDL_NO_DEFINE_MINMAX
+
 #endif
 
 #include <set>
 #include <algorithm>
 #include <cstdlib> //needed for WDL/lineparse
 #include <cstring> //needed for WDL/lineparse
-#include <third_party/WDL/WDL/lineparse.h>
+#include <lineparse.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>
 #include <liblpe/ui/base/ListViewAdapter.h>
 

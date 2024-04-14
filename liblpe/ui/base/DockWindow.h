@@ -35,12 +35,12 @@
     #include <Windows.h>
     #include <rpc.h>
 #else
-    #define WDL_NO_DEFINE_MINMAX
-    #include <third_party/WDL/WDL/swell/swell-types.h>
-    #include <third_party/WDL/WDL/swell/swell-dlggen.h>
+
+    #include <swell/swell-types.h>
+    #include <swell/swell-dlggen.h>
 #endif
 #include <liblpe/plugins/reaper_plugin.h>
-#include <third_party/WDL/WDL/wingui/wndsize.h>
+#include <wingui/wndsize.h>
 
 typedef struct DockWindowState {
     int visible = 1; //-1 not saved, 0 hidden, 1 showing

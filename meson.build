@@ -12,20 +12,12 @@ project_header_files = []
 project_test_sources = []
 project_benchmark_sources = []
 
-inc = [include_directories('include')]
-
-subdir('include')
 subdir('third_party')
-# This is where you should add in include directories
-
-# This triggers the builds of sources
 subdir('liblpe')
 
 gtest = subproject('gtest')
 benchmark = subproject('benchmark')
-wdl = subproject('wdl')
-
-#depWdl = dependency('wdl-1.0')
+wdl = subproject('WDL')
 
 if get_option('enable-tests')
     subdir('tests')
@@ -34,25 +26,16 @@ if get_option('enable-benchmarks')
     subdir('benchmarks')
 endif
 
-livepresets_bin = shared_library('livepresets',
-                                        project_sources,
-                                        include_directories : inc,
-                                        #dependencies: [depWdl]
+wdl_dep = dependency('WDL')
+
+if host_machine.system() == 'windows'
+    swell_dep = dependency('', required: false)
+else
+    swell_dep = dependency('SWELL')
+endif
+
+livepresets = shared_library(
+    'livepresets',
+    project_sources,
+    dependencies: [wdl_dep, swell_dep]
 )
-#
-## This adds the clang format file to the build directory
-#configure_file(input : '.clang-format',
-#               output : '.clang-format',
-#               copy: true)
-#run_target('format',
-#           command : ['clang-format','-i','-style=file',project_sources,project_test_sources,project_benchmark_sources,project_header_files])
-#
-## This regex excludes any sources from the third_party, tests, benchmarks
-## and gtest related files.
-#regex = '^((?!(third_party|tests|benchmarks|gtest|wdl)).)*$'
-## This adds clang tidy support
-#configure_file(input : '.clang-tidy',
-#               output : '.clang-tidy',
-#               copy : true)
-## run_target('tidy', command : ['run-clang-tidy.py','-fix', '-j' , '8', 'files', regex ,'-format', '-p='+ meson.build_root()])
-#

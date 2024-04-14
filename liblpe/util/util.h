@@ -36,8 +36,8 @@
 #ifdef _WIN32
     #include <guiddef.h>
 #else
-    #define WDL_NO_DEFINE_MINMAX
-    #include <third_party/WDL/WDL/swell/swell-types.h>
+
+    #include <swell/swell-types.h>
 #endif
 #include <liblpe/plugins/reaper_plugin_functions.h>
 

@@ -1,8 +1,0 @@
-[wrap-git]
-url = git@github.com:justinfrankel/WDL.git
-revision = head
-depth = 1
-patch_filename = file///home/frederik/CLionProjects/LivePresetsExtension/subprojects/packagefiles/wdl/meson.build
-
-[provide]
-dependency_names = wdl-1.0

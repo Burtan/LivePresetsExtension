@@ -35,11 +35,11 @@
     #include <Windows.h>
     #include <rpc.h>
 #else
-    #define WDL_NO_DEFINE_MINMAX
-    #include <third_party/WDL/WDL/swell/swell-types.h>
+
+    #include <swell/swell-types.h>
 #endif
 #include <liblpe/plugins/reaper_plugin.h>
-#include <third_party/WDL/WDL/wingui/wndsize.h>
+#include <wingui/wndsize.h>
 
 typedef struct ModalWindowState {
     RECT pos = RECT{500, 200, 1000, 500}; // position and size

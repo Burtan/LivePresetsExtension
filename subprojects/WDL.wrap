@@ -1,0 +1,5 @@
+[wrap-git]
+url = git@github.com:justinfrankel/WDL.git
+revision = main
+depth = 1
+patch_directory = WDL

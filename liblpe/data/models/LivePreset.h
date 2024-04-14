@@ -30,7 +30,7 @@
 #ifndef LPE_LIVEPRESET_H
 #define LPE_LIVEPRESET_H
 
-#define WDL_NO_DEFINE_MINMAX
+
 
 #include <ctime>
 #include <memory>
