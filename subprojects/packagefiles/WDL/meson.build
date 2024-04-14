@@ -3,33 +3,21 @@ project('WDL', ['c', 'cpp'], version: 'unknown',
 
 cc = meson.get_compiler('c')
 
-wdl_dir = 'WDL'
+# WDL
+wdl_src = files(
+        'WDL/wingui/wndsize.cpp'
+)
 wdl_dep = declare_dependency(
         compile_args: '-DWDL_NO_DEFINE_MINMAX',
-        include_directories: ['.', 'WDL', wdl_dir])
+        include_directories: ['WDL'],
+        sources: wdl_src
+)
 meson.override_dependency('WDL', wdl_dep)
-
-# EEL (used in tests ran outside of REAPER)
-eel_dir = wdl_dir / 'eel2'
-eel_sources = [
-        eel_dir / 'nseel-cfunc.c',
-        eel_dir / 'nseel-compiler.c',
-        eel_dir / 'nseel-eval.c',
-        eel_dir / 'nseel-ram.c',
-        eel_dir / 'y.tab.c',
-]
-eel_args = ['-DEEL_TARGET_PORTABLE']
-if cc.get_argument_syntax() == 'gcc'
-        eel_args += '-Wno-implicit-function-declaration'
-endif
-eel = library('eel2', eel_sources, c_args: eel_args)
-eel_dep = declare_dependency(dependencies: [wdl_dep], link_with: eel)
-meson.override_dependency('EEL2', eel_dep)
 
 # SWELL
 if host_machine.system() != 'windows'
         swell_dependencies = [wdl_dep]
-        swell_dir = wdl_dir / 'swell'
+        swell_dir = 'WDL' / 'swell'
         swell_public_args = ['-DSWELL_PROVIDED_BY_APP']
         if host_machine.system() == 'darwin'
                 swell_sources = swell_dir / 'swell-modstub.mm'

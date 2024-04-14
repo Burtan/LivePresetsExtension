@@ -35,7 +35,6 @@
     #include <Windows.h>
     #include <rpc.h>
 #else
-
     #include <swell/swell-types.h>
 #endif
 #include <liblpe/plugins/reaper_plugin.h>
