@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#include <ui/base/ComboBox.h>
+#include <liblpe/ui/base/ComboBox.h>
 
 ComboBox::ComboBox(HWND hwnd) : mHwnd(hwnd) {
 }

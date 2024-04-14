@@ -27,13 +27,13 @@
 /
 ******************************************************************************/
 
-#include <data/models/base/BaseTrackInfo.h>
-#include <data/models/TrackInfo.h>
-#include <data/models/FxInfo.h>
-#include <data/models/HwSendInfo.h>
-#include <data/models/SwSendInfo.h>
-#include <plugins/reaper_plugin_functions.h>
-#include <LivePresetsExtension.h>
+#include <liblpe/data/models/base/BaseTrackInfo.h>
+#include <liblpe/data/models/TrackInfo.h>
+#include <liblpe/data/models/FxInfo.h>
+#include <liblpe/data/models/HwSendInfo.h>
+#include <liblpe/data/models/SwSendInfo.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/LivePresetsExtension.h>
 #include <util/util.h>
 
 const GUID BaseTrackInfo::MASTER_GUID = GUID{0, 0, 0, 0};

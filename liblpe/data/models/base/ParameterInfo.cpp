@@ -29,8 +29,8 @@
 
 #include <utility>
 #include <set>
-#include <data/models/base/ParameterInfo.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/data/models/base/ParameterInfo.h>
+#include <liblpe/data/models/FilterPreset.h>
 
 ParameterInfo::ParameterInfo(Filterable* parent) : Filterable(parent)
 {}

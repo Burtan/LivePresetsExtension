@@ -32,17 +32,17 @@
 
 #ifdef LPE_ULTIMATE
 //full headers for ultimate version
-#include <controller/ControlViewController.h>
-#include <data/models/Hardware.h>
-#include <data/models/ControlInfo.h>
-#include <ui/ControlsListAdapter.h>
+#include <liblpe/controller/ControlViewController.h>
+#include <liblpe/data/models/Hardware.h>
+#include <liblpe/data/models/ControlInfo.h>
+#include <liblpe/ui/ControlsListAdapter.h>
 #include <util/Licensing.h>
 #else //LPE_ULTIMATE
 //Only include this one in .cpp files for models not in .h files as that creates circular dependencies
 //stub classes and functions for ce version
 #include <memory>
-#include <data/models/base/Persistable.h>
-#include <data/models/base/Filterable.h>
+#include <liblpe/data/models/base/Persistable.h>
+#include <liblpe/data/models/base/Filterable.h>
 
 class ControlInfo : public Filterable{};
 class Hardware{};

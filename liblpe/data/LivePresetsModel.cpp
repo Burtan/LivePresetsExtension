@@ -27,11 +27,11 @@
 /
 ******************************************************************************/
 
-#include <data/LivePresetsModel.h>
+#include <liblpe/data/LivePresetsModel.h>
 #include <algorithm>
-#include <plugins/reaper_plugin_functions.h>
-#include <LivePresetsExtension.h>
-#include <util/util.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/LivePresetsExtension.h>
+#include <liblpe/util/util.h>
 
 /*
  * Should be called to load LivePresetsModel from .rpp file.

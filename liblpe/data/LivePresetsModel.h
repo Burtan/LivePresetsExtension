@@ -31,10 +31,10 @@
 #define LPE_LIVEPRESETSMODEL_H
 
 
-#include <data/models/LivePreset.h>
-#include <data/models/base/Persistable.h>
-#include <data/models/FilterPreset.h>
-#include <plugins/lpe_ultimate.h>
+#include <liblpe/data/models/LivePreset.h>
+#include <liblpe/data/models/base/Persistable.h>
+#include <liblpe/data/models/FilterPreset.h>
+#include <liblpe/plugins/lpe_ultimate.h>
 
 class LivePresetsModel : public Persistable {
 public:

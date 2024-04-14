@@ -30,8 +30,8 @@
 #ifndef LPE_STRINGPROJECTSTATECONTEXT_H
 #define LPE_STRINGPROJECTSTATECONTEXT_H
 
-#include <plugins/reaper_plugin.h>
-#include "WDL/wdlstring.h"
+#include <liblpe/plugins/reaper_plugin.h>
+#include <third_party/WDL/WDL/wdlstring.h>
 
 class StringProjectStateContext : public ProjectStateContext {
 public:

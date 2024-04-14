@@ -30,8 +30,8 @@
 #ifndef LPE_SETTINGSCONTROLLER_H
 #define LPE_SETTINGSCONTROLLER_H
 
-#include "ui/base/ModalWindow.h"
-#include <ui/base/ComboBox.h>
+#include <liblpe/ui/base/ModalWindow.h>
+#include <liblpe/ui/base/ComboBox.h>
 
 class SettingsController : public ModalWindow {
 public:

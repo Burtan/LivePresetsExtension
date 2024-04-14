@@ -27,8 +27,8 @@
 /
 ******************************************************************************/
 
-#include <data/models/base/BaseSendInfo.h>
-#include <plugins/reaper_plugin_functions.h>
+#include <liblpe/data/models/base/BaseSendInfo.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 
 BaseSendInfo::BaseSendInfo(Filterable *parent) : BaseInfo(parent) {}
 

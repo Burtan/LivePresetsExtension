@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#include <data/models/base/Filterable.h>
+#include <liblpe/data/models/base/Filterable.h>
 
 Filterable::Filterable(Filterable* parent, FilterMode mFilter) : mFilter(mFilter), mParent(parent) {}
 

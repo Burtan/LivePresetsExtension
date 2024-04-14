@@ -30,7 +30,7 @@
 #ifndef LPE_MASTERTRACKINFO_H
 #define LPE_MASTERTRACKINFO_H
 
-#include <data/models/base/BaseTrackInfo.h>
+#include <liblpe/data/models/base/BaseTrackInfo.h>
 
 class MasterTrackInfo : public BaseTrackInfo {
 public:

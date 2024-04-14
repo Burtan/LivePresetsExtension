@@ -27,8 +27,8 @@
 /
 ******************************************************************************/
 
-#include "ui/base/TreeView.h"
-#include "ui/LivePresetsTreeAdapter.h"
+#include <liblpe/ui/base/TreeView.h>
+#include <liblpe/ui/LivePresetsTreeAdapter.h>
 
 TreeView::TreeView(HWND hwnd) : mHwnd(hwnd) {
 

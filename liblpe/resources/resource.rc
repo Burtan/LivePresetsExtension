@@ -1,7 +1,7 @@
-#include "resources/resource.h"
+#include <liblpe/resources/resource.h>
 
 #ifdef _WIN32
-    #include "winres.h"
+    #include <winres.h>
 #endif
 
 IDD_LIVEPRESETS DIALOGEX 0, 0, 528, 200

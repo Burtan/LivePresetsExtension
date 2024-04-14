@@ -27,11 +27,11 @@
 /
 ******************************************************************************/
 
-#include <data/models/FxInfo.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/data/models/FxInfo.h>
+#include <liblpe/data/models/FilterPreset.h>
 #include <util/util.h>
 #include <cfloat>
-#include <LivePresetsExtension.h>
+#include <liblpe/LivePresetsExtension.h>
 #include <thread>
 
 FxInfo::FxInfo(Filterable* parent, GUID trackGuid, GUID fxGuid) : BaseInfo(parent),

@@ -32,10 +32,10 @@
 
 
 #include <functional>
-#include <ui/base/ModalWindow.h>
-#include <ui/base/TreeView.h>
-#include <ui/base/ComboBox.h>
-#include <data/models/LivePreset.h>
+#include <liblpe/ui/base/ModalWindow.h>
+#include <liblpe/ui/base/TreeView.h>
+#include <liblpe/ui/base/ComboBox.h>
+#include <liblpe/data/models/LivePreset.h>
 
 class LivePresetEditController : public ModalWindow {
 public:

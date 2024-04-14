@@ -33,8 +33,8 @@
 #include <string>
 #include <vector>
 #include <cstring> //needed for WDL/wdlstring
-#include <WDL/wdlstring.h>
-#include <plugins/reaper_plugin.h>
+#include <third_party/WDL/WDL/wdlstring.h>
+#include <liblpe/plugins/reaper_plugin.h>
 
 class Persistable {
 public:

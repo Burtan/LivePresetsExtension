@@ -30,8 +30,8 @@
 #define REAPERAPI_IMPLEMENT
 #define REQUIRED_API(name) {reinterpret_cast<void **>(&name), #name, true}
 
-#include "LivePresetsExtension.h"
-#include "src/plugins/reaper_plugin_functions.h"
+#include <liblpe/LivePresetsExtension.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 #include <thread>
 #include <iostream>
 
@@ -273,7 +273,7 @@ extern "C" {
 }   // end extern C
 
 #ifndef _WIN32
-    #include "src/resources/resource.h"
-    #include "WDL/swell/swell-dlggen.h"
-    #include "resource.rc_mac_dlg"
+    #include <src/resources/resource.h>
+    #include <third_party/WDL/WDL/swell/swell-dlggen.h>
+    #include <resource.rc_mac_dlg"
 #endif

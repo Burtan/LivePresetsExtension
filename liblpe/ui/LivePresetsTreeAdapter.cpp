@@ -27,9 +27,9 @@
 /
 ******************************************************************************/
 
-#include <ui/base/TreeView.h>
-#include "ui/LivePresetsTreeAdapter.h"
-#include "data/models/TrackInfo.h"
+#include <liblpe/ui/base/TreeView.h>
+#include <liblpe/ui/LivePresetsTreeAdapter.h>
+#include <liblpe/data/models/TrackInfo.h>
 
 LivePresetsTreeAdapter::LivePresetsTreeAdapter(LivePreset *preset) : mPreset(preset) {}
 

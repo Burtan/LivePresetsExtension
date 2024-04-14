@@ -36,9 +36,9 @@
 #ifdef _WIN32
     #include <guiddef.h>
 #else
-    #include <WDL/swell/swell-types.h>
+    #include <third_party/WDL/WDL/swell/swell-types.h>
 #endif
-#include <plugins/reaper_plugin_functions.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 
 
 // Stuff to do in swell someday

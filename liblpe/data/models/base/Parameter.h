@@ -30,7 +30,7 @@
 #ifndef LPE_PARAMINFO_H
 #define LPE_PARAMINFO_H
 
-#include <data/models/base/Filterable.h>
+#include <liblpe/data/models/base/Filterable.h>
 #include <cstdio>
 
 template<typename T>

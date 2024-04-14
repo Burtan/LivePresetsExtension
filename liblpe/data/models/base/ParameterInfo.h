@@ -31,8 +31,8 @@
 #define LPE_PARAMLIST_H
 
 
-#include <data/models/base/Parameter.h>
-#include <data/models/base/Persistable.h>
+#include <liblpe/data/models/base/Parameter.h>
+#include <liblpe/data/models/base/Persistable.h>
 #include <map>
 
 class ParameterInfo : public Filterable, public Persistable {

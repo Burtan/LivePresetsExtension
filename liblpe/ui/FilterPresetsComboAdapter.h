@@ -30,7 +30,7 @@
 #ifndef LPE_FILTERPRESETSCOMBOADAPTER_H
 #define LPE_FILTERPRESETSCOMBOADAPTER_H
 
-#include <ui/base/ComboBoxAdapter.h>
+#include <liblpe/ui/base/ComboBoxAdapter.h>
 #include <string>
 
 class FilterPresetsComboAdapter : public ComboBoxAdapter<std::string*> {

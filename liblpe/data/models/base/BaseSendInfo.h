@@ -30,7 +30,7 @@
 #ifndef LPE_SENDINFO_H
 #define LPE_SENDINFO_H
 
-#include <data/models/base/BaseInfo.h>
+#include <liblpe/data/models/base/BaseInfo.h>
 
 //define used parameters
 #define B_MUTE "B_MUTE"

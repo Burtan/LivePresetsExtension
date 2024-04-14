@@ -30,7 +30,7 @@
 #ifndef LPE_SWSENDINFO_H
 #define LPE_SWSENDINFO_H
 
-#include <data/models/base/BaseSendInfo.h>
+#include <liblpe/data/models/base/BaseSendInfo.h>
 
 //define used parameters
 #define P_DESTTRACK "P_DESTTRACK"

@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
-#include <data/models/LivePreset.h>
+#include <liblpe/data/models/LivePreset.h>
 #include <util/util.h>
-#include <data/models/FilterPreset.h>
-#include <LivePresetsExtension.h>
+#include <liblpe/data/models/FilterPreset.h>
+#include <liblpe/LivePresetsExtension.h>
 #include <functional>
 
 LivePreset::LivePreset(std::string name, std::string description) : BaseInfo(nullptr), mName(std::move(name)),

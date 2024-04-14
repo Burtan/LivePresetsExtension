@@ -30,7 +30,7 @@
 #ifndef LPE_FXINFO_H
 #define LPE_FXINFO_H
 
-#include <data/models/base/BaseInfo.h>
+#include <liblpe/data/models/base/BaseInfo.h>
 
 class FxInfo : public BaseInfo {
 public:

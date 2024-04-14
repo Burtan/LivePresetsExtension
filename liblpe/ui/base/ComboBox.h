@@ -31,7 +31,7 @@
 #define LPE_COMBOBOX_H
 
 #include <memory>
-#include <ui/FilterPresetsComboAdapter.h>
+#include <liblpe/ui/FilterPresetsComboAdapter.h>
 
 class ComboBox {
 public:

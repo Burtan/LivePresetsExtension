@@ -37,7 +37,7 @@
 // loaded functions are verified using REAPERAPI_LoadAPI(), see note below).
 
 // New (4.76+) usage of this file:
-//   1) most source files should just #include "reaper_plugin_functions.h" as is.
+//   1) most source files should just #include <reaper_plugin_functions.h> as is.
 //   2) one file should #define REAPERAPI_IMPLEMENT before including this file.
 //   3) the plug-in should call REAPERAPI_LoadAPI(rec->GetFunc) from REAPER_PLUGIN_ENTRYPOINT
 //      and check the return value for errors (REAPERAPI_LoadAPI will return 0 on success).
@@ -63,7 +63,7 @@ class joystick_device;
 // easiest to include reaper_plugin.h before reaper_plugin_functions.h in your application code.
 // if not, you may need to edit this path.
 #ifndef _REAPER_PLUGIN_H_
-#include "reaper_plugin.h"
+#include <reaper_plugin.h>
 #endif
 
 #ifdef REAPERAPI_DEF

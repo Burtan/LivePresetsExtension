@@ -32,7 +32,7 @@
 #define LPE_BASEINFO_H
 
 #include <set>
-#include <data/models/base/ParameterInfo.h>
+#include <liblpe/data/models/base/ParameterInfo.h>
 
 class BaseInfo : public Filterable, public Persistable {
 public:

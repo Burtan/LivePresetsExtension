@@ -27,11 +27,11 @@
 /
 ******************************************************************************/
 
-#include <controller/LivePresetEditController.h>
-#include <controller/ConfirmationController.h>
-#include <LivePresetsExtension.h>
-#include <resources/resource.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/controller/LivePresetEditController.h>
+#include <liblpe/controller/ConfirmationController.h>
+#include <liblpe/LivePresetsExtension.h>
+#include <liblpe/resources/resource.h>
+#include <liblpe/data/models/FilterPreset.h>
 
 WNDPROC LivePresetEditController::defWndProc;
 

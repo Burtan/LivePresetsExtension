@@ -27,8 +27,8 @@
 /
 ******************************************************************************/
 
-#include <data/models/ActionCommand.h>
-#include "plugins/reaper_plugin_functions.h"
+#include <liblpe/data/models/ActionCommand.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 
 ActionCommand::ActionCommand(const std::string& name, const std::string& desc, Callback callback)
         : BaseCommand(name, desc, std::move(callback))

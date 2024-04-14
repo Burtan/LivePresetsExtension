@@ -36,8 +36,8 @@
 #else
 
 #endif
-#include <ui/base/TreeViewAdapter.h>
-#include <ui/LivePresetsTreeAdapter.h>
+#include <liblpe/ui/base/TreeViewAdapter.h>
+#include <liblpe/ui/LivePresetsTreeAdapter.h>
 #include <map>
 
 

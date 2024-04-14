@@ -34,7 +34,7 @@
 #ifdef _WIN32
     #include <Windows.h>
 #else
-    #include <WDL/swell/swell-types.h>
+    #include <third_party/WDL/WDL/swell/swell-types.h>
 #endif
 #include <string>
 #include <functional>

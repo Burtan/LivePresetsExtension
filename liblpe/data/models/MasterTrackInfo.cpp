@@ -27,9 +27,9 @@
 /
 ******************************************************************************/
 
-#include <data/models/MasterTrackInfo.h>
-#include <plugins/reaper_plugin_functions.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/data/models/MasterTrackInfo.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/data/models/FilterPreset.h>
 
 MasterTrackInfo::MasterTrackInfo(Filterable* parent) : BaseTrackInfo(parent) {
     MasterTrackInfo::saveCurrentState(false);

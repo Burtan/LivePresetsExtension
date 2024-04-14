@@ -27,11 +27,11 @@
 /
 ******************************************************************************/
 
-#include <data/models/SwSendInfo.h>
-#include <plugins/reaper_plugin_functions.h>
+#include <liblpe/data/models/SwSendInfo.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 #include <util/util.h>
-#include <data/models/FilterPreset.h>
-#include <data/models/base/BaseTrackInfo.h>
+#include <liblpe/data/models/FilterPreset.h>
+#include <liblpe/data/models/base/BaseTrackInfo.h>
 
 /**
  * Create a new SendInfo object from a track

@@ -28,9 +28,9 @@
 ******************************************************************************/
 
 #include <algorithm>
-#include <ui/base/ListViewAdapter.h>
-#include <data/models/LivePreset.h>
-#include <plugins/lpe_ultimate.h>
+#include <liblpe/ui/base/ListViewAdapter.h>
+#include <liblpe/data/models/LivePreset.h>
+#include <liblpe/plugins/lpe_ultimate.h>
 
 /**
  * Add a comparator to enable sorting

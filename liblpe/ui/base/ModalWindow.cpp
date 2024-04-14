@@ -27,15 +27,15 @@
 /
 ******************************************************************************/
 
-#include "ui/base/ModalWindow.h"
+#include <liblpe/ui/base/ModalWindow.h>
 #ifdef _WIN32
     #include <WinUser.h>
     #include <windowsx.h>
 #else
 
 #endif
-#include "plugins/reaper_plugin_functions.h"
-#include <LivePresetsExtension.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/LivePresetsExtension.h>
 
 ModalWindow::ModalWindow(int iResource, const char* cWndTitle, const char* cId, int iCmdID)
         : mHwnd(nullptr), mLayout(iResource), mTitle(cWndTitle), mId(cId), mCmdId(iCmdID) {

@@ -1,8 +1,8 @@
 #ifndef LPE_FILTERPRESET_H
 #define LPE_FILTERPRESET_H
 
-#include <data/models/base/Persistable.h>
-#include <data/models/base/Filterable.h>
+#include <liblpe/data/models/base/Persistable.h>
+#include <liblpe/data/models/base/Filterable.h>
 
 class FilterPreset : public Persistable {
 public:

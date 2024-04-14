@@ -27,11 +27,11 @@
 /
 ******************************************************************************/
 
-#include <controller/SettingsController.h>
-#include <ui/FilterPresetsComboAdapter.h>
-#include <resources/resource.h>
-#include <plugins/reaper_plugin_functions.h>
-#include <LivePresetsExtension.h>
+#include <liblpe/controller/SettingsController.h>
+#include <liblpe/ui/FilterPresetsComboAdapter.h>
+#include <liblpe/resources/resource.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/LivePresetsExtension.h>
 
 /*
 Constructor for the LivePresetsController. Takes the layout file from resource.rc IDD_LIVEPRESETS

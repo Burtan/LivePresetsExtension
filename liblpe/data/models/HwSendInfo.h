@@ -30,7 +30,7 @@
 #ifndef LPE_HWSENDINFO_H
 #define LPE_HWSENDINFO_H
 
-#include <data/models/base/BaseSendInfo.h>
+#include <liblpe/data/models/base/BaseSendInfo.h>
 
 /**
  * Represents information about a send from tracks to hardware (category 1)

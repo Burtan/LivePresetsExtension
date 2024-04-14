@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#include <data/models/base/BaseInfo.h>
+#include <liblpe/data/models/base/BaseInfo.h>
 
 BaseInfo::BaseInfo(Filterable *parent) : Filterable(parent) {}
 

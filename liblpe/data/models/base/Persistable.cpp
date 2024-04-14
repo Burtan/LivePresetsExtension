@@ -27,8 +27,8 @@
 /
 ******************************************************************************/
 
-#include <data/models/base/Persistable.h>
-#include <WDL/lineparse.h>
+#include <liblpe/data/models/base/Persistable.h>
+#include <third_party/WDL/WDL/lineparse.h>
 
 /**
  * Creates the element for persisting this class

@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#include <data/models/StringProjectStateContext.h>
+#include <liblpe/data/models/StringProjectStateContext.h>
 #include <string>
 
 /**

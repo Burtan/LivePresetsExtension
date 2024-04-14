@@ -34,15 +34,15 @@
     #include <Windows.h>
     #include <CommCtrl.h>
 #else
-    #include <WDL/swell/swell-types.h>
+    #include <third_party/WDL/WDL/swell/swell-types.h>
 #endif
 
 #include <map>
 #include <memory>
 #include <string>
-#include <plugins/lpe_ultimate.h>
-#include "ui/base/TreeViewAdapter.h"
-#include "data/models/LivePreset.h"
+#include <liblpe/plugins/lpe_ultimate.h>
+#include <liblpe/ui/base/TreeViewAdapter.h>
+#include <liblpe/data/models/LivePreset.h>
 
 class LivePresetsTreeAdapter : public TreeViewAdapter {
 public:

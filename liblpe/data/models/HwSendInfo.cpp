@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
-#include <data/models/HwSendInfo.h>
-#include <data/models/base/BaseTrackInfo.h>
-#include <plugins/reaper_plugin_functions.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/data/models/HwSendInfo.h>
+#include <liblpe/data/models/base/BaseTrackInfo.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/data/models/FilterPreset.h>
 #include <util/util.h>
 
 /**

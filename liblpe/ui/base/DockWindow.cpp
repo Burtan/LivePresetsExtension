@@ -27,15 +27,15 @@
 /
 ******************************************************************************/
 
-#include "ui/base/DockWindow.h"
+#include <liblpe/ui/base/DockWindow.h>
 #ifdef _WIN32
     #include <windowsx.h>
 #else
     #include <util/util.h>
 #endif
-#include "plugins/reaper_plugin_functions.h"
-#include <LivePresetsExtension.h>
-#include <resources/resource.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/LivePresetsExtension.h>
+#include <liblpe/resources/resource.h>
 
 DockWindow::DockWindow(int iResource, const char* cWndTitle, const char* cId, int iCmdID)
         : mHwnd(nullptr), mLayout(iResource), mTitle(cWndTitle), mId(cId), mCmdId(iCmdID) {

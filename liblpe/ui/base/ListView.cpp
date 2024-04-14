@@ -27,9 +27,9 @@
 /
 ******************************************************************************/
 
-#include <ui/base/ListView.h>
-#include <data/models/LivePreset.h>
-#include <plugins/lpe_ultimate.h>
+#include <liblpe/ui/base/ListView.h>
+#include <liblpe/data/models/LivePreset.h>
+#include <liblpe/plugins/lpe_ultimate.h>
 
 /**
  * A c++ wrapper class for winapi ListView. Use ListViewAdapter to customize

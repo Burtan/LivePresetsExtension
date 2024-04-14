@@ -38,8 +38,8 @@
 #else
 
 #endif
-#include "ui/base/ListViewAdapter.h"
-#include "data/models/LivePreset.h"
+#include <liblpe/ui/base/ListViewAdapter.h>
+#include <liblpe/data/models/LivePreset.h>
 
 class LivePresetsListAdapter : public ListViewAdapter<LivePreset> {
 public:

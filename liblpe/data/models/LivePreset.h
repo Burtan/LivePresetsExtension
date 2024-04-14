@@ -32,9 +32,9 @@
 
 #include <ctime>
 #include <memory>
-#include <data/models/TrackInfo.h>
-#include <data/models/MasterTrackInfo.h>
-#include <data/models/base/BaseCommand.h>
+#include <liblpe/data/models/TrackInfo.h>
+#include <liblpe/data/models/MasterTrackInfo.h>
+#include <liblpe/data/models/base/BaseCommand.h>
 
 class ControlInfo;
 

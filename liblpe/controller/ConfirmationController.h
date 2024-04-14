@@ -31,7 +31,7 @@
 #define LPE_CONFIRMATIONCONTROLLER_H
 
 
-#include <ui/base/ModalWindow.h>
+#include <liblpe/ui/base/ModalWindow.h>
 
 class ConfirmationController : public ModalWindow {
 public:

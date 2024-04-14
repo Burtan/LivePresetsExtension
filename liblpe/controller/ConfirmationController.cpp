@@ -27,8 +27,8 @@
 /
 ******************************************************************************/
 
-#include <resources/resource.h>
-#include "controller/ConfirmationController.h"
+#include <liblpe/resources/resource.h>
+#include <liblpe/controller/ConfirmationController.h>
 
 ConfirmationController::ConfirmationController(const std::string& title, std::string* name)
         : ModalWindow(IDD_CONFIRM, title.data(), "ConfirmationController", 0), mName(name) {

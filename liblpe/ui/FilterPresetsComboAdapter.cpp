@@ -27,6 +27,6 @@
 /
 ******************************************************************************/
 
-#include <ui/FilterPresetsComboAdapter.h>
+#include <liblpe/ui/FilterPresetsComboAdapter.h>
 
 FilterPresetsComboAdapter::FilterPresetsComboAdapter(std::vector<std::string*> items) : ComboBoxAdapter(std::move(items)) {}

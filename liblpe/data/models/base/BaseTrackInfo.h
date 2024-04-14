@@ -30,10 +30,10 @@
 #ifndef LPE_BASETRACKINFO_H
 #define LPE_BASETRACKINFO_H
 
-#include <data/models/base/BaseInfo.h>
-#include <data/models/FxInfo.h>
-#include <data/models/SwSendInfo.h>
-#include <data/models/HwSendInfo.h>
+#include <liblpe/data/models/base/BaseInfo.h>
+#include <liblpe/data/models/FxInfo.h>
+#include <liblpe/data/models/SwSendInfo.h>
+#include <liblpe/data/models/HwSendInfo.h>
 
 #define B_MUTE "B_MUTE"
 #define I_SOLO "I_SOLO"

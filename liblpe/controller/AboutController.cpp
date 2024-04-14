@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
-#include <controller/AboutController.h>
-#include <resources/resource.h>
-#include <WDL/wdlstring.h>
-#include <plugins/lpe_ultimate.h>
+#include <liblpe/controller/AboutController.h>
+#include <liblpe/resources/resource.h>
+#include <third_party/WDL/WDL/wdlstring.h>
+#include <liblpe/plugins/lpe_ultimate.h>
 
 /**
  * Window showing about information like licensing, build version and date, contributions, license etc.

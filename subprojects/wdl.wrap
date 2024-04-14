@@ -1,0 +1,4 @@
+[wrap-git]
+url = git@github.com:justinfrankel/WDL.git
+revision = head
+depth = 1

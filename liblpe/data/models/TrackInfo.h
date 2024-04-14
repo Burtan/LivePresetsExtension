@@ -30,7 +30,7 @@
 #ifndef LPE_TRACKINFO_H
 #define LPE_TRACKINFO_H
 
-#include <data/models/base/BaseTrackInfo.h>
+#include <liblpe/data/models/base/BaseTrackInfo.h>
 
 //define used parameters
 #define B_PHASE "B_PHASE"

@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
-#include <plugins/reaper_plugin_functions.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
 #include <utility>
 #include <util/util.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/data/models/FilterPreset.h>
 #include <algorithm>
 
 FilterPreset::FilterPreset(ItemIdentifier id, TYPE type, FilterMode filter, std::vector<FilterPreset*> childs)

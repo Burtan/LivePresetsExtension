@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
-#include <ui/LivePresetsListAdapter.h>
+#include <liblpe/ui/LivePresetsListAdapter.h>
 #include <algorithm>
-#include <plugins/reaper_plugin_functions.h>
-#include <LivePresetsExtension.h>
+#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/LivePresetsExtension.h>
 
 enum COLUMN {
     ACTIVE = 0,

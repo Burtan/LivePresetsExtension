@@ -28,7 +28,7 @@
 ******************************************************************************/
 
 #include <algorithm>
-#include "util/util.h"
+#include <liblpe/util/util.h>
 
 bool GuidsEqual(const GUID g1, const GUID g2) {
     return g1.Data1 == g2.Data1 &&

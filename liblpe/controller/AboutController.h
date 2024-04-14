@@ -30,7 +30,7 @@
 #ifndef LPE_ABOUTCONTROLLER_H
 #define LPE_ABOUTCONTROLLER_H
 
-#include <ui/base/DockWindow.h>
+#include <liblpe/ui/base/DockWindow.h>
 
 class AboutController : public DockWindow {
 public:

@@ -30,10 +30,10 @@
 #ifndef LPE_LIVEPRESETSCONTROLLER_H
 #define LPE_LIVEPRESETSCONTROLLER_H
 
-#include "ui/base/DockWindow.h"
-#include "ui/base/ListView.h"
-#include "data/models/LivePreset.h"
-#include "LivePresetEditController.h"
+#include <liblpe/ui/base/DockWindow.h>
+#include <liblpe/ui/base/ListView.h>
+#include <liblpe/data/models/LivePreset.h>
+#include <liblpe/controller/LivePresetEditController.h>
 
 class LivePresetsController : public DockWindow {
 public:

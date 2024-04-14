@@ -27,8 +27,8 @@
 /
 ******************************************************************************/
 
-#include <data/models/base/Parameter.h>
-#include <data/models/FilterPreset.h>
+#include <liblpe/data/models/base/Parameter.h>
+#include <liblpe/data/models/FilterPreset.h>
 
 template<typename T>
 FilterPreset* Parameter<T>::extractFilterPreset() {

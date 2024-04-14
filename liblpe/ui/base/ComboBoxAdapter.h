@@ -33,8 +33,8 @@
 #ifdef _WIN32
     #include <Windows.h>
 #else
-    #include <WDL/swell/swell-types.h>
-    #include <WDL/swell/swell-functions.h>
+    #include <third_party/WDL/WDL/swell/swell-types.h>
+    #include <third_party/WDL/WDL/swell/swell-functions.h>
 #endif
 
 #include <vector>
