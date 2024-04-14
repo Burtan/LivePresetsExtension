@@ -27,10 +27,10 @@
 /
 ******************************************************************************/
 
+#define WDL_NO_DEFINE_MINMAX
+
 #define REAPERAPI_IMPLEMENT
 #define REQUIRED_API(name) {reinterpret_cast<void **>(&name), #name, true}
-
-#define WDL_NO_DEFINE_MINMAX
 
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/plugins/reaper_plugin_functions.h>

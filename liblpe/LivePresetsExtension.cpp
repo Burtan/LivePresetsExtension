@@ -27,6 +27,8 @@
 /
 ******************************************************************************/
 
+#define WDL_NO_DEFINE_MINMAX
+
 #include <sstream>
 #include <functional>
 #include <memory>
@@ -38,7 +40,6 @@
 #include <liblpe/ui/LivePresetsListAdapter.h>
 #include <liblpe/util/util.h>
 
-#define WDL_NO_DEFINE_MINMAX
 
 /*
 Main entry point, is called when the extension is loaded.

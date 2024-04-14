@@ -35,6 +35,7 @@
     #include <Windows.h>
     #include <rpc.h>
 #else
+    #define WDL_NO_DEFINE_MINMAX
     #include <third_party/WDL/WDL/swell/swell-types.h>
     #include <third_party/WDL/WDL/swell/swell-dlggen.h>
 #endif

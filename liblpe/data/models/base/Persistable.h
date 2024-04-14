@@ -30,6 +30,8 @@
 #ifndef LPE_PERSISTABLE_H
 #define LPE_PERSISTABLE_H
 
+#define WDL_NO_DEFINE_MINMAX
+
 #include <string>
 #include <vector>
 #include <cstring> //needed for WDL/wdlstring
