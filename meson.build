@@ -16,6 +16,8 @@ global_cpp_args = {
         '-fsigned-char', # defaults to unsigned on ARM
         '-fstack-protector-strong',
         '-fvisibility=hidden', # meson's gnu_symbol_visibility is per-target
+        '-DBUILD_VERSION="1.0.0"',
+        '-DBUILD_DATE="1231"'
     ],
     'msvc': [
         '-DBUILD_VERSION="1.0.0"',
@@ -107,7 +109,7 @@ if host_machine.system() == 'darwin'
         language: 'objcpp')
 endif
 
-# Variables tracking sources and libraries
+# sources and dependencies
 library_path = []
 project_sources = []
 project_header_files = []
@@ -118,7 +120,7 @@ subdir('third_party')
 subdir('liblpe')
 
 gtest = subproject('gtest')
-#benchmark = subproject('benchmark')
+benchmark = subproject('benchmark')
 wdl = subproject('WDL')
 
 if get_option('enable-tests')
@@ -136,9 +138,28 @@ else
     swell_dep = dependency('SWELL')
 endif
 
+# installation
+fs = import('fs')
+arch_suffix = host_machine.cpu()
+if host_machine.system() == 'windows' and arch_suffix == 'x86_64'
+    arch_suffix = 'x64'
+endif
+
+install_platform = build_machine.system()
+if install_platform == 'darwin'
+    resource_path = fs.expanduser('~/Library/Application Support')
+elif install_platform == 'windows'
+    appdata = run_command('cmd', '/C', 'echo %APPDATA%', check: true)
+    resource_path = appdata.stdout().strip()
+else
+    resource_path = fs.expanduser('~/.config')
+endif
+resource_path = resource_path / 'REAPER'
+plugins_dir = resource_path / 'UserPlugins'
+
 livepresets = shared_library('livepresets', project_sources,
                              dependencies: [wdl_dep, swell_dep],
                              name_prefix: '',
                              install: true,
-                             install_dir: 'C:\Users\Frederik Bertling\AppData\Roaming\REAPER\UserPlugins'
+                             install_dir: plugins_dir
 )
