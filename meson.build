@@ -90,15 +90,18 @@ foreach native : native_set
     add_global_arguments(
         cpp.get_supported_arguments(global_cpp_args[arg_syntax]),
         language: ['c', 'cpp', 'objcpp'],
-        native: native)
+        native: native
+    )
     add_project_arguments(
         cpp.get_supported_arguments(project_cpp_args[arg_syntax]),
         language: ['c', 'cpp', 'objcpp'],
-        native: native)
+        native: native
+    )
     add_global_link_arguments(
         cpp.get_supported_link_arguments(link_args[arg_syntax]),
         language: ['c', 'cpp', 'objcpp'],
-        native: native)
+        native: native
+    )
 endforeach
 
 if host_machine.system() == 'darwin'
@@ -120,7 +123,7 @@ subdir('third_party')
 subdir('liblpe')
 
 gtest = subproject('gtest')
-benchmark = subproject('benchmark')
+#benchmark = subproject('benchmark')
 wdl = subproject('WDL')
 
 if get_option('enable-tests')
