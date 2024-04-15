@@ -30,7 +30,7 @@
 #include <liblpe/data/models/TrackInfo.h>
 #include <liblpe/util/util.h>
 #include <liblpe/data/models/FilterPreset.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 
 TrackInfo::TrackInfo(Filterable* parent, MediaTrack *track) : BaseTrackInfo(parent), mGuid(*GetTrackGUID(track)) {
     TrackInfo::saveCurrentState(false);

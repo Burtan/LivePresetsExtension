@@ -32,7 +32,7 @@
 #include <liblpe/controller/LivePresetEditController.h>
 #include <liblpe/controller/SettingsController.h>
 #include <liblpe/resources/resource.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/ui/LivePresetsListAdapter.h>
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/data/models/StringProjectStateContext.h>

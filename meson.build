@@ -125,6 +125,7 @@ subdir('liblpe')
 gtest = subproject('gtest')
 #benchmark = subproject('benchmark')
 wdl = subproject('WDL')
+subproject('reaper-sdk')
 
 if get_option('enable-tests')
     subdir('tests')
@@ -134,6 +135,7 @@ if get_option('enable-benchmarks')
 endif
 
 wdl_dep = dependency('WDL')
+reaper_sdk_dep = dependency('reaper-sdk')
 
 if host_machine.system() == 'windows'
     swell_dep = dependency('', required: false)
@@ -161,7 +163,7 @@ resource_path = resource_path / 'REAPER'
 plugins_dir = resource_path / 'UserPlugins'
 
 livepresets = shared_library('livepresets', project_sources,
-                             dependencies: [wdl_dep, swell_dep],
+                             dependencies: [wdl_dep, swell_dep, reaper_sdk_dep],
                              name_prefix: '',
                              install: true,
                              install_dir: plugins_dir

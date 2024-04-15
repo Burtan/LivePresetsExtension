@@ -30,7 +30,7 @@
 #include <liblpe/controller/SettingsController.h>
 #include <liblpe/ui/FilterPresetsComboAdapter.h>
 #include <liblpe/resources/resource.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
 
 /*

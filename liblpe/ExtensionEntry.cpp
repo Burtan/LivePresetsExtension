@@ -33,7 +33,7 @@
 #define REQUIRED_API(name) {reinterpret_cast<void **>(&name), #name, true}
 
 #include <liblpe/LivePresetsExtension.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 
 static bool loadAPI(void* (*getFunc)(const char*)) {
     struct ApiFunc { void* *ptr; const char* name; bool required; };

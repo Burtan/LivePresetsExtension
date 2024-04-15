@@ -27,7 +27,7 @@
 /
 ******************************************************************************/
 
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <utility>
 #include <liblpe/util/util.h>
 #include <liblpe/data/models/FilterPreset.h>

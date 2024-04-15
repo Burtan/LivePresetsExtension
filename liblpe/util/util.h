@@ -39,7 +39,7 @@
 
     #include <swell/swell-types.h>
 #endif
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 
 
 // Stuff to do in swell someday

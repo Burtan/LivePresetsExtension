@@ -31,7 +31,7 @@
 #define LPE_ACTIONCOMMAND_H
 
 #include <liblpe/data/models/base/BaseCommand.h>
-#include <liblpe/plugins/reaper_plugin.h>
+#include <reaper_plugin.h>
 
 class ActionCommand : public BaseCommand {
 public:

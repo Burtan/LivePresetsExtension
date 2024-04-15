@@ -29,7 +29,7 @@
 
 #include <liblpe/ui/LivePresetsListAdapter.h>
 #include <algorithm>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
 
 enum COLUMN {

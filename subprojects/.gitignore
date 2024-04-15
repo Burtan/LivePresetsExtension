@@ -3,3 +3,5 @@
 !packagefiles
 !packagefiles/WDL
 !packagefiles/WDL/meson.build
+!packagefiles/reaper-sdk
+!packagefiles/reaper-sdk/meson.build

@@ -28,7 +28,7 @@
 ******************************************************************************/
 
 #include <liblpe/data/models/HotkeyCommand.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 
 HotkeyCommand::HotkeyCommand(const std::string& name, const std::string& desc, Callback callback)
         : BaseCommand(name, desc, std::move(callback))

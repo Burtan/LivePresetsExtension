@@ -29,7 +29,7 @@
 
 #include <liblpe/data/LivePresetsModel.h>
 #include <algorithm>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/util/util.h>
 

@@ -39,7 +39,7 @@
     #include <swell/swell-types.h>
     #include <swell/swell-dlggen.h>
 #endif
-#include <liblpe/plugins/reaper_plugin.h>
+#include <reaper_plugin.h>
 #include <wingui/wndsize.h>
 
 typedef struct DockWindowState {

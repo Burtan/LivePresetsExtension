@@ -28,7 +28,7 @@
 ******************************************************************************/
 
 #include <liblpe/data/models/SwSendInfo.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/util/util.h>
 #include <liblpe/data/models/FilterPreset.h>
 #include <liblpe/data/models/base/BaseTrackInfo.h>

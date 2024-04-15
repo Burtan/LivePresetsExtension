@@ -30,7 +30,7 @@
 #ifndef LPE_PROJECTCHANGELISTENER_H
 #define LPE_PROJECTCHANGELISTENER_H
 
-#include <liblpe/plugins/reaper_plugin.h>
+#include <reaper_plugin.h>
 
 class ProjectChangeListener : public IReaperControlSurface {
 public:

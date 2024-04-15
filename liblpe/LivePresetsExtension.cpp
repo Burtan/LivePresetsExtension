@@ -33,8 +33,8 @@
 #include <functional>
 #include <memory>
 #include <liblpe/LivePresetsExtension.h>
-#include <liblpe/plugins/lpe_ultimate.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <liblpe/lpe_ultimate.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/data/models/HotkeyCommand.h>
 #include <liblpe/data/models/ActionCommand.h>
 #include <liblpe/ui/LivePresetsListAdapter.h>

@@ -45,7 +45,7 @@
 #include <cstdlib> //needed for WDL/lineparse
 #include <cstring> //needed for WDL/lineparse
 #include <lineparse.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/ui/base/ListViewAdapter.h>
 
 template<typename T>

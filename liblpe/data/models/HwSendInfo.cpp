@@ -29,7 +29,7 @@
 
 #include <liblpe/data/models/HwSendInfo.h>
 #include <liblpe/data/models/base/BaseTrackInfo.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/data/models/FilterPreset.h>
 #include <liblpe/util/util.h>
 

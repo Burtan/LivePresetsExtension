@@ -34,7 +34,7 @@
 #else
 
 #endif
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
 
 ModalWindow::ModalWindow(int iResource, const char* cWndTitle, const char* cId, int iCmdID)

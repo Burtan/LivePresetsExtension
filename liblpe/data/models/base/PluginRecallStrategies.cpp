@@ -29,7 +29,7 @@
 
 #include <utility>
 #include <liblpe/data/models/base/PluginRecallStrategies.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 
 PluginRecallStrategies::PluginRecallStrategies() {
     auto resPath = std::string(GetResourcePath()) + "/LPE_plugin_recall_strategies.ini";

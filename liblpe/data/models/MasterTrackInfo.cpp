@@ -28,7 +28,7 @@
 ******************************************************************************/
 
 #include <liblpe/data/models/MasterTrackInfo.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/data/models/FilterPreset.h>
 
 MasterTrackInfo::MasterTrackInfo(Filterable* parent) : BaseTrackInfo(parent) {

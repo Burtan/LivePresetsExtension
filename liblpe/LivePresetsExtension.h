@@ -37,7 +37,7 @@
 #include <liblpe/data/LivePresetsModel.h>
 #include <liblpe/data/models/base/PluginRecallStrategies.h>
 #include <liblpe/controller/AboutController.h>
-#include <liblpe/plugins/lpe_ultimate.h>
+#include "lpe_ultimate.h"
 #include <liblpe/util/ProjectChangeListener.h>
 
 /**

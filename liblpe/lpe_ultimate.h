@@ -41,8 +41,8 @@
 //Only include this one in .cpp files for models not in .h files as that creates circular dependencies
 //stub classes and functions for ce version
 #include <memory>
-#include <liblpe/data/models/base/Persistable.h>
-#include <liblpe/data/models/base/Filterable.h>
+#include "liblpe/data/models/base/Persistable.h"
+#include "liblpe/data/models/base/Filterable.h"
 
 class ControlInfo : public Filterable{};
 class Hardware{};

@@ -30,7 +30,7 @@
 #include <liblpe/controller/AboutController.h>
 #include <liblpe/resources/resource.h>
 #include <wdlstring.h>
-#include <liblpe/plugins/lpe_ultimate.h>
+#include <liblpe/lpe_ultimate.h>
 
 /**
  * Window showing about information like licensing, build version and date, contributions, license etc.

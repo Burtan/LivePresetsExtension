@@ -32,7 +32,7 @@
 #include <liblpe/data/models/FxInfo.h>
 #include <liblpe/data/models/HwSendInfo.h>
 #include <liblpe/data/models/SwSendInfo.h>
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/util/util.h>
 

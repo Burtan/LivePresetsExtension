@@ -33,7 +33,7 @@
 #else
     #include <liblpe/util/util.h>
 #endif
-#include <liblpe/plugins/reaper_plugin_functions.h>
+#include <reaper_plugin_functions.h>
 #include <liblpe/LivePresetsExtension.h>
 #include <liblpe/resources/resource.h>
 
