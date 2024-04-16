@@ -1,5 +1,4 @@
 project('LivePresetsExtension', 'cpp',
-        version: '1.0',
         license: ['MIT'],
         meson_version: '>= 1.4.0',
         default_options: [
@@ -13,7 +12,7 @@ project('LivePresetsExtension', 'cpp',
             'default_library=static',
             'warning_level=2',
             'WDL:warning_level=0',
-            #'werror=true',
+            'werror=true',
         ]
 )
 
@@ -23,13 +22,8 @@ global_cpp_args = {
         '-fsigned-char', # defaults to unsigned on ARM
         '-fstack-protector-strong',
         '-fvisibility=hidden', # meson's gnu_symbol_visibility is per-target
-        '-DBUILD_VERSION="1.0.0"',
-        '-DBUILD_DATE="1231"'
     ],
-    'msvc': [
-        '-DBUILD_VERSION="1.0.0"',
-        '-DBUILD_DATE="1231"'
-    ],
+    'msvc': [],
 }
 project_cpp_args = {
     'gcc': [
@@ -175,9 +169,9 @@ endif
 resource_path = resource_path / 'REAPER'
 plugins_dir = resource_path / 'UserPlugins'
 
-livepresets = shared_library('livepresets', project_sources,
+livepresets = shared_library('livepresets_' + arch_suffix, project_sources,
                              dependencies: [wdl_dep, swell_dep, win_dep, reaper_sdk_dep],
-                             name_prefix: '',
+                             name_prefix: 'reaper_',
                              install: true,
                              install_dir: plugins_dir
 )
