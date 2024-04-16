@@ -1,4 +1,4 @@
-#include <liblpe/resources/resource.h>
+#include <resource.h>
 
 #ifdef _WIN32
     #include <winres.h>

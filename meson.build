@@ -120,6 +120,12 @@ if host_machine.system() == 'darwin'
 endif
 
 # dependencies
+win_dep = []
+if host_machine.system() == 'windows'
+    foreach win32_lib : ['User32', 'Gdi32', 'Advapi32', 'Comdlg32', 'Shell32']
+        win_dep += cpp.find_library(win32_lib)
+    endforeach
+endif
 wdl_dep = dependency('WDL')
 reaper_sdk_dep = dependency('reaper-sdk')
 
@@ -130,8 +136,6 @@ else
 endif
 
 # sources
-win_dep = []
-win32_resources = []
 project_sources = []
 project_header_files = []
 project_test_sources = []
@@ -139,12 +143,6 @@ project_benchmark_sources = []
 
 subdir('third_party')
 subdir('liblpe')
-
-if host_machine.system() == 'windows'
-    foreach win32_lib : ['User32', 'Gdi32', 'Advapi32', 'Comdlg32', 'Shell32']
-        win_dep += cpp.find_library(win32_lib)
-    endforeach
-endif
 
 gtest = subproject('gtest')
 #benchmark = subproject('benchmark')
