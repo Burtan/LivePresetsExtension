@@ -288,8 +288,8 @@ void LPE::showSettings() {
 /*
  * Recall a preset by its GUID which is encoded in all 4 variables
  */
-void LPE::recallPresetByGuid(int data1, int data2, int data3, HWND data4) {
-    mModel->recallPresetByGuid(IntsToGuid(data1, data2, data3, (long) data4));
+void LPE::recallPresetByGuid(int data1, int data2, int data3, int data4) {
+    mModel->recallPresetByGuid(IntsToGuid(data1, data2, data3, data4));
 }
 
 /**

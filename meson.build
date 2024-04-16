@@ -3,10 +3,17 @@ project('LivePresetsExtension', 'cpp',
         license: ['MIT'],
         meson_version: '>= 1.4.0',
         default_options: [
-            'warning_level=0',
-            'buildtype=debugoptimized',
+            'b_lto=true', # -fno-lto added below in debug builds
+            'b_ndebug=if-release',
+            'b_pie=true',
+            'b_vscrt=static_from_buildtype',
             'cpp_std=c++20',
             'build.cpp_std=c++20',
+            'cpp_winlibs=', # explicitely specified per-target
+            'default_library=static',
+            'warning_level=2',
+            'WDL:warning_level=0',
+            #'werror=true',
         ]
 )
 
@@ -112,8 +119,19 @@ if host_machine.system() == 'darwin'
         language: 'objcpp')
 endif
 
-# sources and dependencies
-library_path = []
+# dependencies
+wdl_dep = dependency('WDL')
+reaper_sdk_dep = dependency('reaper-sdk')
+
+if host_machine.system() == 'windows'
+    swell_dep = dependency('', required: false)
+else
+    swell_dep = dependency('SWELL')
+endif
+
+# sources
+win_dep = []
+win32_resources = []
 project_sources = []
 project_header_files = []
 project_test_sources = []
@@ -121,6 +139,12 @@ project_benchmark_sources = []
 
 subdir('third_party')
 subdir('liblpe')
+
+if host_machine.system() == 'windows'
+    foreach win32_lib : ['User32', 'Gdi32', 'Advapi32', 'Comdlg32', 'Shell32']
+        win_dep += cpp.find_library(win32_lib)
+    endforeach
+endif
 
 gtest = subproject('gtest')
 #benchmark = subproject('benchmark')
@@ -132,15 +156,6 @@ if get_option('enable-tests')
 endif
 if get_option('enable-benchmarks')
     subdir('benchmarks')
-endif
-
-wdl_dep = dependency('WDL')
-reaper_sdk_dep = dependency('reaper-sdk')
-
-if host_machine.system() == 'windows'
-    swell_dep = dependency('', required: false)
-else
-    swell_dep = dependency('SWELL')
 endif
 
 # installation
@@ -163,7 +178,7 @@ resource_path = resource_path / 'REAPER'
 plugins_dir = resource_path / 'UserPlugins'
 
 livepresets = shared_library('livepresets', project_sources,
-                             dependencies: [wdl_dep, swell_dep, reaper_sdk_dep],
+                             dependencies: [wdl_dep, swell_dep, win_dep, reaper_sdk_dep],
                              name_prefix: '',
                              install: true,
                              install_dir: plugins_dir

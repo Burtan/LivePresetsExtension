@@ -173,7 +173,7 @@ void LivePreset::createRecallAction() {
     mRecallCmdId = g_lpe->mActions.add(new ActionCommand(
             name.Get(),
             desc.Get(),
-            std::bind(&LPE::recallPresetByGuid, g_lpe.get(), ints[0], ints[1], ints[2], (HWND) ((long) ints[3]))
+            std::bind(&LPE::recallPresetByGuid, g_lpe.get(), ints[0], ints[1], ints[2], ints[3])
     ));
 }
 

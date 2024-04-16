@@ -67,7 +67,7 @@ public:
     bool recallState(ProjectStateContext* ctx, bool isUndo);
     void saveState(ProjectStateContext* ctx, bool isUndo);
     void resetState(bool isUndo);
-    void recallPresetByGuid(int data1, int data2, int data3, HWND data4);
+    void recallPresetByGuid(int data1, int data2, int data3, int data4);
     void onRecallPreset(int val, int valhw, int relmode, HWND hwnd);
     void onProjectChanged(ReaProject* proj);
 private:
