@@ -1,5 +1,5 @@
 genversion_src = vcs_tag(
-    command: [find_program('git'), 'describe', '--match=v*', '--dirty=+'],
+    command: [find_program('git'), 'describe', '--tags', '--dirty'],
     input: 'genversion.cpp.in',
     output: 'genversion.cpp',
     fallback: '0.0-nogit'
