@@ -32,7 +32,7 @@
 
 #include <liblpe/data/models/base/BaseInfo.h>
 
-class FxInfo : public BaseInfo {
+class FxInfo final : public BaseInfo {
 public:
     //adept to RecFx indices: 0x1000000..0x1000000+n
     static const int RECFX_INDEX_FACTOR = 0x1000000;

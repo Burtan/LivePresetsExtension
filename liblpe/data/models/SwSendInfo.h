@@ -38,7 +38,7 @@
 /**
  * Represents information about a send between two tracks (category 0)
  */
-class SwSendInfo : public BaseSendInfo {
+class SwSendInfo final : public BaseSendInfo {
 public:
     SwSendInfo(Filterable* parent, GUID srcGuid, int sendidx);
     explicit SwSendInfo(Filterable* parent, ProjectStateContext *ctx);

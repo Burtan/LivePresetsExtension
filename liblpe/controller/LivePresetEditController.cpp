@@ -156,6 +156,7 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
                 auto *section = SectionFromUniqueID(0);
                 DoActionShortcutDialog(mHwnd, section, mPreset->mRecallCmdId, 0);
             }
+            break;
         }
         case IDC_SETTINGS:
             showFilterSettings();

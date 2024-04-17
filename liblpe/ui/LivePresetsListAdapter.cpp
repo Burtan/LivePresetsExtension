@@ -45,7 +45,7 @@ int LivePresetsListAdapter::getCount() {
 }
 
 LivePreset* LivePresetsListAdapter::getItem(int index) {
-    if (index >= 0 && index < mShowingItems.size())
+    if (index >= 0 && index < (int) mShowingItems.size())
         return mShowingItems.at(index);
     
     return nullptr;
@@ -181,6 +181,7 @@ void LivePresetsListAdapter::onChangedSortingColumn(LVCOLUMN col, bool reverse) 
                     return a->mDate > b->mDate;
                 });
             }
+            break;
         default: {
                 setComparator(nullptr);
             }
@@ -190,7 +191,7 @@ void LivePresetsListAdapter::onChangedSortingColumn(LVCOLUMN col, bool reverse) 
 void LivePresetsListAdapter::saveColumnWidths(HWND hwnd) {
     auto str = WDL_FastString();
     auto columns = getColumns().size();
-    for (int i = 0; i < columns; i++) {
+    for (int i = 0; i < (int) columns; i++) {
         str.AppendFormatted(4096, "%i ", ListView_GetColumnWidth(hwnd, i));
     }
 

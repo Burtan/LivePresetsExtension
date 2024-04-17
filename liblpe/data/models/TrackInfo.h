@@ -47,7 +47,7 @@
 #define C_MAINSEND_OFFS "C_MAINSEND_OFFS"
 #define B_FREEMODE "B_FREEMODE"
 
-class TrackInfo : public BaseTrackInfo {
+class TrackInfo final : public BaseTrackInfo {
 public:
     explicit TrackInfo(Filterable* parent, MediaTrack* track);
     explicit TrackInfo(Filterable* parent, ProjectStateContext* ctx);

@@ -35,7 +35,7 @@
 /**
  * Represents information about a send from tracks to hardware (category 1)
  */
-class HwSendInfo : public BaseSendInfo {
+class HwSendInfo final : public BaseSendInfo {
 public:
     HwSendInfo(Filterable* parent, GUID srcGuid, int sendidx);
     explicit HwSendInfo(Filterable* parent, ProjectStateContext *ctx);

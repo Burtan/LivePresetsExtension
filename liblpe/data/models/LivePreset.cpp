@@ -127,7 +127,7 @@ void LivePreset::saveCurrentState(bool update) {
 
         for (TrackInfo* trackDelete : tracksDelete) {
             int index = 0;
-            for (int i = 0; i < mTracks.size(); i++) {
+            for (int i = 0; i < (int) mTracks.size(); i++) {
                 if (mTracks[i] == trackDelete) {
                     index = i;
                     break;

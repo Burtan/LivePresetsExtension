@@ -72,10 +72,10 @@ void compareVectors(std::vector<T>& as, std::vector<I>& bs, std::vector<T>& uniq
     //a's that are NOT found in b's are going to uniqueAs and removed from a's
     //a's that are found in b's go to equals and removed from a's and b's
     //b's that are left go to uniqueBs and are removed from b's
-    for (int i = 0; i < as.size(); i++) {
-        int index = -1;
+    for (int i = 0; i < (int) as.size(); i++) {
+        int index;
         auto a = as[i];
-        for (int j = 0; j < bs.size(); j++) {
+        for (int j = 0; j < (int) bs.size(); j++) {
             auto b = bs[j];
             if (compare(a, b)) {
                 index = j;

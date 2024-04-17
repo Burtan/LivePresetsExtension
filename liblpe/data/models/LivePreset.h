@@ -40,7 +40,7 @@
 
 class ControlInfo;
 
-class LivePreset : public BaseInfo {
+class LivePreset final : public BaseInfo {
 public:
 	explicit LivePreset(std::string name = "New preset", std::string description = "");
     explicit LivePreset(ProjectStateContext* ctx, BaseCommand::CommandID recallCmdId = 0);

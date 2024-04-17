@@ -136,7 +136,7 @@ void ListView<T>::invalidate() {
         }
 
         //colIndex 1+ specifies the subItems
-        for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
+        for (int colIndex = 0; colIndex < (int) columns.size(); colIndex++) {
             const char* text = mAdapter->getLvItemText(index, colIndex);
 
 #ifndef _WIN32
@@ -147,7 +147,7 @@ void ListView<T>::invalidate() {
         }
     }
 
-    for (auto* item : deletedItems) {
+    for ([[maybe_unused]] auto* item : deletedItems) {
         ListView_DeleteItem(mHwnd, ListView_GetItemCount(mHwnd) - 1);
     }
 }

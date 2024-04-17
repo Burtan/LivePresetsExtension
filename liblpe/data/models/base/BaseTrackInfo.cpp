@@ -125,10 +125,10 @@ void BaseTrackInfo::recallSettings() const {
 void BaseTrackInfo::recallHwSends() const {
     MediaTrack* track = getMediaTrack();
 
-    while (GetTrackNumSends(track, 1) > mHwSends.size())
+    while (GetTrackNumSends(track, 1) > (int) mHwSends.size())
         RemoveTrackSend(track, 1, 0);
 
-    while (GetTrackNumSends(track, 1) < mHwSends.size())
+    while (GetTrackNumSends(track, 1) < (int) mHwSends.size())
         CreateTrackSend(track, nullptr);
 
     int index = 0;
@@ -208,7 +208,7 @@ void BaseTrackInfo::saveHwSendState(Filterable *parent, std::vector<HwSendInfo *
 
         for (HwSendInfo* hwSendDelete : hwSendsDelete) {
             int index = 0;
-            for (int i = 0; i < hwSends.size(); i++) {
+            for (int i = 0; i < (int) hwSends.size(); i++) {
                 if (hwSends[i] == hwSendDelete) {
                     index = i;
                     break;
@@ -260,7 +260,7 @@ void BaseTrackInfo::saveSwSendState(Filterable *parent, std::vector<SwSendInfo *
 
         for (SwSendInfo* swSendDelete : swSendsDelete) {
             int index = 0;
-            for (int i = 0; i < swSends.size(); i++) {
+            for (int i = 0; i < (int) swSends.size(); i++) {
                 if (swSends[i] == swSendDelete) {
                     index = i;
                     break;
@@ -312,7 +312,7 @@ void BaseTrackInfo::saveFxState(Filterable *parent, std::vector<FxInfo *> &fxs, 
 
         for (FxInfo* fxDelete : fxsDelete) {
             int index = 0;
-            for (int i = 0; i < fxs.size(); i++) {
+            for (int i = 0; i < (int) fxs.size(); i++) {
                 if (fxs[i] == fxDelete) {
                     index = i;
                     break;

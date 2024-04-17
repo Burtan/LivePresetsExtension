@@ -32,7 +32,7 @@
 
 #include <liblpe/data/models/base/BaseTrackInfo.h>
 
-class MasterTrackInfo : public BaseTrackInfo {
+class MasterTrackInfo final : public BaseTrackInfo {
 public:
     MasterTrackInfo(Filterable* parent);
     explicit MasterTrackInfo(Filterable* parent, ProjectStateContext* ctx);

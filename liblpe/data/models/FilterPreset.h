@@ -4,7 +4,7 @@
 #include <liblpe/data/models/base/Persistable.h>
 #include <liblpe/data/models/base/Filterable.h>
 
-class FilterPreset : public Persistable {
+class FilterPreset final : public Persistable {
 public:
     typedef struct {
         GUID guid;
