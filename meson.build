@@ -137,6 +137,7 @@ project_benchmark_sources = []
 
 subdir('third_party')
 subdir('liblpe')
+subdir('tools')
 
 gtest = subproject('gtest')
 #benchmark = subproject('benchmark')
