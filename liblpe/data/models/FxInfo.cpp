@@ -35,7 +35,7 @@
 #include <thread>
 
 FxInfo::FxInfo(Filterable* parent, GUID trackGuid, GUID fxGuid) : BaseInfo(parent),
-        mTrackGuid(trackGuid), mGuid(fxGuid) {
+        mGuid(fxGuid), mTrackGuid(trackGuid) {
     FxInfo::saveCurrentState(false);
 }
 

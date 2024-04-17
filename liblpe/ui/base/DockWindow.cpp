@@ -38,7 +38,7 @@
 #include <liblpe/resources/resource.h>
 
 DockWindow::DockWindow(int iResource, const char* cWndTitle, const char* cId, int iCmdID)
-        : mHwnd(nullptr), mLayout(iResource), mTitle(cWndTitle), mId(cId), mCmdId(iCmdID) {
+        : mHwnd(nullptr), mCmdId(iCmdID), mLayout(iResource), mTitle(cWndTitle), mId(cId) {
 
     if (cId && *cId) {// e.g. default constructor
         screenset_unregister((char*) cId);

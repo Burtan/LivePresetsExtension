@@ -38,7 +38,7 @@ BaseSendInfo::BaseSendInfo(Filterable *parent) : BaseInfo(parent) {}
  * @param sendidx the id of the send
  */
 BaseSendInfo::BaseSendInfo(Filterable* parent, GUID trackGuid, int sendidx) : BaseInfo(parent),
-        mSrcTrackGuid(trackGuid), mSendIdx(sendidx) {
+        mSendIdx(sendidx), mSrcTrackGuid(trackGuid) {
     BaseSendInfo::saveCurrentState(false);
 }
 

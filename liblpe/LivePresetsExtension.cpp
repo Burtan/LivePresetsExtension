@@ -44,7 +44,7 @@
 /*
 Main entry point, is called when the extension is loaded.
 */
-LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mMainHwnd(mainHwnd), mInstance(hInstance) {
+LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mInstance(hInstance), mMainHwnd(mainHwnd) {
     //register commands and project config with reaper
     mActions.add(new HotkeyCommand(
             "LPE_OPENTOGGLE_MAIN",
