@@ -268,5 +268,5 @@ extern "C" {
 #ifndef _WIN32
     #include <liblpe/resources/resource.h>
     #include <swell/swell-dlggen.h>
-    //#include <liblpe/resources/resource.rc_mac_dlg>
+    #include <liblpe/resources/resource.rc_mac_dlg>
 #endif
