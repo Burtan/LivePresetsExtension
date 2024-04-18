@@ -44,7 +44,10 @@
 #include "liblpe/data/models/base/Persistable.h"
 #include "liblpe/data/models/base/Filterable.h"
 
-class ControlInfo : public Filterable{};
+class ControlInfo : public Filterable{
+public:
+    virtual ~ControlInfo();
+};
 class Hardware{};
 class Control{};
 class ControlViewController{};
