@@ -169,9 +169,9 @@ void LivePresetEditController::onCommand(WPARAM wparam, LPARAM lparam) {
                 //When name is entered that exists ask for overwrite
                 if (FilterPreset_GetFilterByName(g_lpe->mModel->mFilterPresets, &name)) {
                     char title[256];
-                    sprintf(title, "Overwrite %s?", name.data());
+                    snprintf(title, 256, "Overwrite %s?", name.data());
                     char msg[256];
-                    sprintf(msg, "The filter preset %s already exists.\n Do you want to overwrite it?", name.data());
+                    snprintf(msg, 256, "The filter preset %s already exists.\n Do you want to overwrite it?", name.data());
                     if (MessageBox(mHwnd, msg, title, MB_YESNO) != IDYES) {
                         return;
                     }

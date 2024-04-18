@@ -41,7 +41,7 @@
 #include <liblpe/ui/base/ListViewAdapter.h>
 #include <liblpe/data/models/LivePreset.h>
 
-class LivePresetsListAdapter : public ListViewAdapter<LivePreset> {
+class LivePresetsListAdapter final : public ListViewAdapter<LivePreset> {
 public:
     explicit LivePresetsListAdapter(std::vector<LivePreset*>* items) : ListViewAdapter(items) {};
 

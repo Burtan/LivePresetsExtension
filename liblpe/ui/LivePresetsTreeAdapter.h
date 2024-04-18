@@ -45,7 +45,7 @@
 #include <liblpe/ui/base/TreeViewAdapter.h>
 #include <liblpe/data/models/LivePreset.h>
 
-class LivePresetsTreeAdapter : public TreeViewAdapter {
+class LivePresetsTreeAdapter final : public TreeViewAdapter {
 public:
 
     explicit LivePresetsTreeAdapter(LivePreset* preset);

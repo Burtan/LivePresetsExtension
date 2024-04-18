@@ -26,7 +26,7 @@ if host_machine.system() != 'windows'
         swell_dependencies = [wdl_dep]
         swell_public_args = ['-DSWELL_PROVIDED_BY_APP']
         if host_machine.system() == 'darwin'
-                swell_sources = swell_dir / 'swell-modstub.mm'
+                swell_sources = 'WDL/swell/swell-modstub.mm'
                 add_languages('objcpp')
                 swell_dependencies += dependency('appleframeworks', modules: ['AppKit'])
         else
