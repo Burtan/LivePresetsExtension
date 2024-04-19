@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://github.com/justinfrankel/reaper-sdk.git
+revision = main
+depth = 1
+
+patch_directory = reaper-sdk

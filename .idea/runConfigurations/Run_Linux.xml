@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Linux" type="GradleAppRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="LivePresetsExtension" TARGET_NAME="LivePresetsExtension" CONFIG_NAME="LivePresetsExtension [debugLinux]" RUN_PATH="/opt/REAPER/reaper">
-    <method v="2">
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
-    </method>
-  </configuration>
-</component>
