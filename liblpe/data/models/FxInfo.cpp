@@ -89,8 +89,8 @@ void FxInfo::recallSettings() const {
     if (!mEnabled.isFilteredInChain() && TrackFX_GetEnabled(getTrack(), index) != mEnabled.mValue)
         TrackFX_SetEnabled(getTrack(), index, mEnabled.mValue);
 
-    //auto min = DBL_MIN;
-    //auto max = DBL_MAX;
+    auto min = DBL_MIN;
+    auto max = DBL_MAX;
 
     //FX Preset loading
     //has to be done every time as changes by the user on plugin presets is not tracked
@@ -114,14 +114,15 @@ void FxInfo::recallSettings() const {
         case PluginRecallStrategies::PARAMETERS: {
             //recall parameters once
             for (int i = 0; i < mParamInfo.size(); i++) {
-                //auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
-                if (!mParamInfo.at(i).isFilteredInChain()) // && currentValue != mParamInfo.at(i).mValue)
+                // checking for changed parameters is faster than updating all params
+                auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
+                if (!mParamInfo.at(i).isFilteredInChain() && currentValue != mParamInfo.at(i).mValue)
                     TrackFX_SetParam(getTrack(), index, i, mParamInfo.at(i).mValue);
             }
             break;
         }
     }
-
+    
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     auto dur = std::chrono::duration_cast<std::chrono::microseconds> (end - begin).count();
     std::string msg = "Time difference: ";
