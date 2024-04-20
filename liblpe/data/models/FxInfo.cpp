@@ -33,6 +33,7 @@
 #include <cfloat>
 #include <liblpe/LivePresetsExtension.h>
 #include <thread>
+#include <string>
 
 FxInfo::FxInfo(Filterable* parent, GUID trackGuid, GUID fxGuid) : BaseInfo(parent),
         mGuid(fxGuid), mTrackGuid(trackGuid) {
@@ -88,13 +89,15 @@ void FxInfo::recallSettings() const {
     if (!mEnabled.isFilteredInChain() && TrackFX_GetEnabled(getTrack(), index) != mEnabled.mValue)
         TrackFX_SetEnabled(getTrack(), index, mEnabled.mValue);
 
-    auto min = DBL_MIN;
-    auto max = DBL_MAX;
+    //auto min = DBL_MIN;
+    //auto max = DBL_MAX;
 
     //FX Preset loading
     //has to be done every time as changes by the user on plugin presets is not tracked
     char name[256];
     TrackFX_GetFXName(getTrack(), index, (char*) name, 256);
+
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
     switch (g_lpe->mPrs.get(name)) {
         case PluginRecallStrategies::NONE:
@@ -111,14 +114,18 @@ void FxInfo::recallSettings() const {
         case PluginRecallStrategies::PARAMETERS: {
             //recall parameters once
             for (int i = 0; i < mParamInfo.size(); i++) {
-                auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
-                if (!mParamInfo.at(i).isFilteredInChain() && currentValue != mParamInfo.at(i).mValue)
+                //auto currentValue = TrackFX_GetParam(getTrack(), index, i, &min, &max);
+                if (!mParamInfo.at(i).isFilteredInChain()) // && currentValue != mParamInfo.at(i).mValue)
                     TrackFX_SetParam(getTrack(), index, i, mParamInfo.at(i).mValue);
             }
             break;
         }
     }
 
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    auto dur = std::chrono::duration_cast<std::chrono::microseconds> (end - begin).count();
+    std::string msg = "Time difference: ";
+    ShowConsoleMsg(msg.append(std::to_string(dur).append("[µs] \n")).c_str());
 }
 
 MediaTrack* FxInfo::getTrack() const {
