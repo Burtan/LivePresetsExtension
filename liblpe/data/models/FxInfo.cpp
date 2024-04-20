@@ -68,6 +68,13 @@ void FxInfo::saveCurrentState(bool update) {
         auto param = Parameter<double>(&mParamInfo, i, TrackFX_GetParam(getTrack(), index, i, &min, &max), filter);
         mParamInfo.insert(i, param);
     }
+
+    // JS Midi plugin for Program Change or Bank Change must always set param 4 to 0 to trigger a midi send
+    if (strcmp(mName.c_str(), "JS: MIDI Program/Bank Switch on Load") == 0) {
+        auto filter = update ? (mParamInfo.keyExists(4) ? mParamInfo.at(4).mFilter : RECALLED) : RECALLED;
+        auto param = Parameter<double>(&mParamInfo, 4, 0, filter);
+        mParamInfo.insert(4, param);
+    }
 }
 
 void FxInfo::recallSettings() const {
@@ -118,7 +125,6 @@ void FxInfo::recallSettings() const {
             break;
         }
     }
-
 }
 
 MediaTrack* FxInfo::getTrack() const {
