@@ -1,3 +1,0 @@
-[submodule "third_party/lpe-u"]
-	path = third_party/lpe-u
-	url = git@gitlab.dr-bertling.de:livepresets/lpe-u.git
