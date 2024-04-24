@@ -37,7 +37,7 @@
 #include <liblpe/data/models/TrackInfo.h>
 #include <liblpe/data/models/MasterTrackInfo.h>
 #include <liblpe/data/models/base/BaseCommand.h>
-#include <liblpe/lpe_ultimate.h>
+#include <liblpe/data/models/ControlInfo.h>
 
 class LivePreset final : public BaseInfo {
 public:

@@ -33,7 +33,6 @@
 #include <functional>
 #include <memory>
 #include <liblpe/LivePresetsExtension.h>
-#include <liblpe/lpe_ultimate.h>
 #include <reaper_plugin_functions.h>
 #include <liblpe/data/models/HotkeyCommand.h>
 #include <liblpe/data/models/ActionCommand.h>
@@ -58,14 +57,11 @@ LPE::LPE(REAPER_PLUGIN_HINSTANCE hInstance, HWND mainHwnd) : mInstance(hInstance
             std::bind(&LPE::toggleAboutWindow, this)
     ));
 
-    //create control view action only on ultimate
-    if (Licensing_IsUltimate()) {
-        mActions.add(new HotkeyCommand(
-                "LPE_OPENTOGGLE_CONTROL",
-                "LPE - Opens/Closes the LivePresetsExtension ControlView window",
-                std::bind(&LPE::toggleControlView, this)
-        ));
-    }
+    mActions.add(new HotkeyCommand(
+            "LPE_OPENTOGGLE_CONTROL",
+            "LPE - Opens/Closes the LivePresetsExtension ControlView window",
+            std::bind(&LPE::toggleControlView, this)
+    ));
 
     mActions.add(new HotkeyCommand(
             "LPE_TRACKSAVEALL",
@@ -188,20 +184,17 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
 
         InsertMenuItem(subMenu, 0, true, &mii);
 
-        //show control menu only in ultimate version
-        if (Licensing_IsUltimate()) {
-            mii = MENUITEMINFO();
-            mii.cbSize = sizeof(MENUITEMINFO);
-            mii.fMask = MIIM_TYPE | MIIM_ID;
-            mii.fType = MFT_STRING;
+        mii = MENUITEMINFO();
+        mii.cbSize = sizeof(MENUITEMINFO);
+        mii.fMask = MIIM_TYPE | MIIM_ID;
+        mii.fType = MFT_STRING;
 
-            text = "Control View";
-            mii.dwTypeData = text.data();
-            mii.cch = text.size();
+        text = "Control View (ALPHA)";
+        mii.dwTypeData = text.data();
+        mii.cch = text.size();
 
-            mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_CONTROL");
-            InsertMenuItem(subMenu, 1, true, &mii);
-        }
+        mii.wID = NamedCommandLookup("_LPE_OPENTOGGLE_CONTROL");
+        InsertMenuItem(subMenu, 1, true, &mii);
 
         //seperator
         mii = MENUITEMINFO();

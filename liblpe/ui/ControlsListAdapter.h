@@ -1,7 +1,7 @@
 /******************************************************************************
 / LivePresetsExtension
 /
-/ Window showing information about this extension
+/ Combobox adapter to show filters to select
 /
 / Copyright (c) 2020 and later Dr. med. Frederik Bertling
 /
@@ -27,19 +27,35 @@
 /
 ******************************************************************************/
 
-#include <liblpe/controller/AboutController.h>
-#include <liblpe/resources/resource.h>
-#include <wdlstring.h>
-#include <version.h>
+#ifndef LPE_CONTROLSLISTADAPTER_H
+#define LPE_CONTROLSLISTADAPTER_H
 
-/**
- * Window showing about information like licensing, build version and date, contributions, license etc.
- */
-AboutController::AboutController() : DockWindow(IDD_ABOUT, "", "AboutController", 0) {
-    auto temp = WDL_FastString();
-    temp.AppendFormatted(4096, "LivePresets: %s (%s)",
-            LPE_BUILD_VERSION,
-            LPE_BUILD_DATE
-    );
-    mTitle = temp.Get();
-}
+#include <memory>
+#include <vector>
+#ifdef _WIN32
+    #include <Windows.h>
+    #include <CommCtrl.h>
+#else
+
+#endif
+
+#include <liblpe/ui/base/ListViewAdapter.h>
+#include <liblpe/data/models/Control.h>
+
+class ControlsListAdapter : public ListViewAdapter<Control> {
+public:
+    explicit ControlsListAdapter(std::vector<Control*>* items) : ListViewAdapter(items) {};
+
+    void saveColumnWidths(HWND hwnd) override;
+    void saveSortedColumnIndex(HWND hwnd, int index) override;
+    void onChangedSortingColumn(LVCOLUMN col, bool reverse) override;
+    std::vector<LVCOLUMN> getColumns() override;
+    int getCount() override;
+    Control* getItem(int index) override;
+    int getIndex(Control* item) override;
+    LVITEM getLvItem(int index) override;
+    const char* getLvItemText(int index, int column) override;
+};
+
+
+#endif //LPE_CONTROLSLISTADAPTER_H

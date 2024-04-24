@@ -34,7 +34,7 @@
 #include <liblpe/data/models/LivePreset.h>
 #include <liblpe/data/models/base/Persistable.h>
 #include <liblpe/data/models/FilterPreset.h>
-#include "liblpe/lpe_ultimate.h"
+#include <liblpe/data/models/Hardware.h>
 
 class LivePresetsModel : public Persistable {
 public:

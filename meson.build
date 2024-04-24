@@ -135,7 +135,6 @@ project_header_files = []
 project_test_sources = []
 project_benchmark_sources = []
 
-subdir('third_party')
 subdir('liblpe')
 subdir('tools')
 
