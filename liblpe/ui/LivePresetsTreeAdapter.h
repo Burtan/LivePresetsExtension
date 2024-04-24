@@ -41,7 +41,6 @@
 #include <map>
 #include <memory>
 #include <string>
-#include "liblpe/lpe_ultimate.h"
 #include <liblpe/ui/base/TreeViewAdapter.h>
 #include <liblpe/data/models/LivePreset.h>
 

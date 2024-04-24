@@ -37,8 +37,8 @@
 #include <liblpe/data/LivePresetsModel.h>
 #include <liblpe/data/models/base/PluginRecallStrategies.h>
 #include <liblpe/controller/AboutController.h>
-#include "lpe_ultimate.h"
 #include <liblpe/util/ProjectChangeListener.h>
+#include <liblpe/controller/ControlViewController.h>
 
 /**
  * LPE = LivePresetsExtension, main class that manages the base classes statically
