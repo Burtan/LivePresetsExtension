@@ -251,13 +251,28 @@ int LivePresetsModel::getRecallIdForPreset(LivePreset* preset, int id) {
  */
 void LivePresetsModel::onApplySelectedTrackConfigsToAllPresets(const std::vector<MediaTrack*>& tracks) {
     for (auto* preset : mPresets) {
-        for (auto* mTrack : preset->mTracks) {
-            for (auto* track : tracks) {
-                if (GuidsEqual(*GetTrackGUID(track), mTrack->mGuid)) {
-                    mTrack->saveCurrentState(true);
+        for (auto* updatingTrack : tracks) {
+            auto guid = *GetTrackGUID(updatingTrack);
+
+            TrackInfo* updatingTrackInfo = nullptr;
+            for (auto* mTrackInfo : preset->mTracks) {
+                if (GuidsEqual(guid, mTrackInfo->mGuid)) {
+                    updatingTrackInfo = mTrackInfo;
                     break;
                 }
             }
+
+            if (updatingTrackInfo == nullptr) {
+                // no existing TrackInfo on preset was found, create a new one
+                updatingTrackInfo = new TrackInfo(nullptr, updatingTrack);
+                preset->mTracks.push_back(updatingTrackInfo);
+                updatingTrackInfo->saveCurrentState(false);
+            } else {
+                // update existing TrackInfo
+                updatingTrackInfo->saveCurrentState(true);
+            }
+
+            preset->mDate = time(nullptr);
         }
     }
 }

@@ -255,4 +255,5 @@ bool TrackInfo::applyFilterPreset(FilterPreset *preset) {
         }
         return true;
     }
-    return false;}
+    return false;
+}
