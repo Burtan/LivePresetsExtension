@@ -189,7 +189,7 @@ void LPE::onMenuClicked(const char* menustr, HMENU menu, int flag) {
         mii.fMask = MIIM_TYPE | MIIM_ID;
         mii.fType = MFT_STRING;
 
-        text = "Control View";
+        text = "Control View (ALPHA)";
         mii.dwTypeData = text.data();
         mii.cch = text.size();
 
