@@ -33,7 +33,7 @@
 
 #include <liblpe/ui/base/ModalWindow.h>
 
-class ConfirmationController : public ModalWindow {
+class ConfirmationController final : public ModalWindow {
 public:
     explicit ConfirmationController(const std::string& title, std::string* name);
 protected:
@@ -43,6 +43,8 @@ protected:
     void onClose() override;
     LPARAM result() override;
     int onNotify(WPARAM wParam, LPARAM lParam) override;
+    LONG getMinHeight() override { return 52; }
+    LONG getMinWidth() override { return 168; }
 private:
     std::string* mName;
 };

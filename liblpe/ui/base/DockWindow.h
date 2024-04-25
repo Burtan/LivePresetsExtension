@@ -45,7 +45,10 @@
 typedef struct DockWindowState {
     int visible = 1; //-1 not saved, 0 hidden, 1 showing
     int dockId = -1; //-1 not docked, >= 0 dockId
-    RECT pos = RECT{500, 200, 1000, 500}; // position and size
+    LONG left = 500;
+    LONG top = 200;
+    LONG width = 500;
+    LONG height = 300;
 } DockWindowState;
 
 class DockWindow {
@@ -53,7 +56,7 @@ public:
     explicit DockWindow(int iResource = 0, const char* cWndTitle = "", const char* cId = "", int iCmdID = 0);
     virtual ~DockWindow();
 
-    void focus();
+    [[maybe_unused]] [[maybe_unused]] void focus();
     bool isDocked();
     bool isVisible();
     void show(bool loadState = true);
@@ -73,7 +76,8 @@ protected:
     virtual void onInitDlg() {}
     virtual int onKey(MSG* msg, int iKeyState) { return 0; } // return 1 for "processed key"
     virtual INT_PTR onUnhandledMsg(UINT uMsg, WPARAM wParam, LPARAM lParam) { return 0; }
-    virtual void getMinMaxInfo(LPMINMAXINFO info);
+    virtual LONG getMinWidth() { return 150; }
+    virtual LONG getMinHeight() { return 150; }
 
     HWND mHwnd;
     int mCmdId;
@@ -92,6 +96,7 @@ private:
     DockWindowState getStateForPersistance();
     void loadStateFromPersistance(DockWindowState state);
     void showContextMenu(int x, int y, HMENU menu);
+    virtual void getMinMaxInfo(LPMINMAXINFO info);
 };
 
 #endif //LPE_DOCKWINDOW_H

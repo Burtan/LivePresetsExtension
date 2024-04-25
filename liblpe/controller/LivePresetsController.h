@@ -33,9 +33,8 @@
 #include <liblpe/ui/base/DockWindow.h>
 #include <liblpe/ui/base/ListView.h>
 #include <liblpe/data/models/LivePreset.h>
-#include <liblpe/controller/LivePresetEditController.h>
 
-class LivePresetsController : public DockWindow {
+class LivePresetsController final : public DockWindow {
 public:
 	LivePresetsController();
     std::unique_ptr<ListView<LivePreset>> mList = nullptr;
@@ -53,7 +52,8 @@ protected:
     int onNotify(WPARAM wParam, LPARAM lParam) override;
     void onClose() override;
     void onInitDlg() override;
-    void getMinMaxInfo(LPMINMAXINFO info) override;
+    LONG getMinWidth() override { return 300; }
+    LONG getMinHeight() override { return 200; }
 private:
     static void recallLivePreset(LivePreset* preset);
     void applyFilterToSelectedTracks(int filterIndex) const;

@@ -30,6 +30,6 @@ std::string Control::getChunkId() const {
 }
 
 const char *Control::getName(int index) const {
-    sprintf(mNameText, "%i: \n", index);
+    snprintf(mNameText, 256, "%i: \n", index);
     return (const char*) mNameText;
 }

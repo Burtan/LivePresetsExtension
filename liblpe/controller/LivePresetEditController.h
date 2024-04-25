@@ -37,7 +37,7 @@
 #include <liblpe/ui/base/ComboBox.h>
 #include <liblpe/data/models/LivePreset.h>
 
-class LivePresetEditController : public ModalWindow {
+class LivePresetEditController final : public ModalWindow {
 public:
     explicit LivePresetEditController(LivePreset* preset);
 
@@ -49,8 +49,9 @@ protected:
     int onKey(MSG* msg, int iKeyState) override;
     void onClose() override;
     LPARAM result() override;
-    void getMinMaxInfo(LPMINMAXINFO info) override;
     int onNotify(WPARAM wParam, LPARAM lParam) override;
+    LONG getMinWidth() override { return 310; }
+    LONG getMinHeight() override { return 122; }
 private:
     static WNDPROC defWndProc;
     static LRESULT WINAPI wndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

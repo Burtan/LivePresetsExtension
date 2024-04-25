@@ -23,6 +23,8 @@ protected:
     void onClose() override;
     void onResize() override;
     void onInitDlg() override;
+    LONG getMinWidth() override { return 416; }
+    LONG getMinHeight() override { return 180; }
 private:
     HWND tabHwnd = nullptr;
     std::set<int> mControlIds;

@@ -32,9 +32,12 @@
 
 #include <liblpe/ui/base/DockWindow.h>
 
-class AboutController : public DockWindow {
+class AboutController final : public DockWindow {
 public:
     AboutController();
+protected:
+    LONG getMinWidth() override { return 250; }
+    LONG getMinHeight() override { return 50; }
 };
 
 #endif //LPE_ABOUTCONTROLLER_H

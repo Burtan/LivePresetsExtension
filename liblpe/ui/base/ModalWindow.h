@@ -37,11 +37,15 @@
 #else
     #include <swell/swell-types.h>
 #endif
+// needed for mac
 #include <reaper_plugin.h>
 #include <wingui/wndsize.h>
 
 typedef struct ModalWindowState {
-    RECT pos = RECT{500, 200, 1000, 500}; // position and size
+    LONG left = 500;
+    LONG top = 200;
+    LONG width = 500;
+    LONG height = 300;
 } ModalWindowState;
 
 class ModalWindow {
@@ -49,12 +53,13 @@ public:
     explicit ModalWindow(int iResource = 0, const char* cWndTitle = "", const char* cId = "", int iCmdID = 0);
     virtual ~ModalWindow();
 
-    void focus();
+    [[maybe_unused]] [[maybe_unused]] void focus();
     LPARAM show();
     void close();
     int saveScreensetState(char* cStateBuf, int iMaxLen);
     void loadScreensetState(const char* cStateBuf, int iLen);
-    virtual bool isActive();
+
+    [[maybe_unused]] virtual bool isActive();
     virtual void onCommand(WPARAM wParam, LPARAM lParam) {}
 protected:
     virtual int onNotify(WPARAM wParam, LPARAM lParam) { return 0; }
@@ -65,7 +70,8 @@ protected:
     virtual void onInitDlg() {}
     virtual int onKey(MSG* msg, int iKeyState) { return 0; } // return 1 for "processed key"
     virtual INT_PTR onUnhandledMsg(UINT uMsg, WPARAM wParam, LPARAM lParam) { return 0; }
-    virtual void getMinMaxInfo(LPMINMAXINFO info);
+    virtual LONG getMinWidth() { return 150; }
+    virtual LONG getMinHeight() { return 150; }
 
     HWND mHwnd;
     int mCmdId;
@@ -80,8 +86,9 @@ private:
     void resize();
     void onDestroy();
     ModalWindowState getStateForPersistance();
-    void loadStateFromPersistance(ModalWindowState state);
+    void loadStateFromPersistance(const ModalWindowState& state);
     void showContextMenu(int x, int y, HMENU menu);
+    virtual void getMinMaxInfo(LPMINMAXINFO info);
 };
 
 

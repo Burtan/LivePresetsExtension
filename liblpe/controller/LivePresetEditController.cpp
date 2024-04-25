@@ -250,8 +250,3 @@ void LivePresetEditController::showFilterSettings() {
     GetWindowRect(GetDlgItem(mHwnd, IDC_SETTINGS), &r);
     TrackPopupMenu(menu, TPM_LEFTALIGN | TPM_TOPALIGN, r.left, r.bottom, 0, mHwnd, nullptr);
 }
-
-void LivePresetEditController::getMinMaxInfo(LPMINMAXINFO info) {
-    info->ptMinTrackSize.x = 1400;
-    info->ptMinTrackSize.y = 1200;
-}

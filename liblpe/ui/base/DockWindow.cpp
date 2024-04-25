@@ -30,6 +30,7 @@
 #include <liblpe/ui/base/DockWindow.h>
 #ifdef _WIN32
     #include <windowsx.h>
+    #include <shellscalingapi.h>
 #else
     #include <liblpe/util/util.h>
 #endif
@@ -80,11 +81,57 @@ void DockWindow::initDialog(HWND hwndDlg) {
  * @param pointer that stores the size infos
  */
 void DockWindow::getMinMaxInfo(LPMINMAXINFO info) {
-    int w = 150;
-    int h = 150;
+    double dpiFactor = 1.5;
+    int staticX = 0;
+    int staticY = 0;
 
-    info->ptMinTrackSize.x = w;
-    info->ptMinTrackSize.y = h;
+#ifdef _WIN32
+    // 310/92 in .rc scales to 465/481/150/189 at 100 %, 930/958/288/359 at 200 %,
+    // 100 % is 1,5 * x + 0/16 and 1,5 * y + 12/51 (16 width and 39 height for window decorations at 100 %)
+    // 200 % is 3 * x + 0/28 and 3 * y + 12/83 (28 width and 71 height for window decorations at 200 %)
+    DPI_AWARENESS dpiAwareness = GetAwarenessFromDpiAwarenessContext(GetThreadDpiAwarenessContext());
+    if (dpiAwareness == DPI_AWARENESS_PER_MONITOR_AWARE) {
+        dpiFactor = 3 * GetDpiForWindow(mHwnd) / 192.0;
+    } else if (dpiAwareness == DPI_AWARENESS_UNAWARE) {
+        // only works on DPI_AWARENESS_UNAWARE
+        auto monitor = MonitorFromWindow(mHwnd, MONITOR_DEFAULTTONEAREST);
+        DEVICE_SCALE_FACTOR scale;
+        auto result = GetScaleFactorForMonitor(monitor, &scale);
+        if (result == S_OK) {
+            dpiFactor = 3 * scale / 200.0;
+        } else {
+            dpiFactor = 1.5;
+        }
+    } else {
+        dpiFactor = 1.5;
+    }
+
+    staticY = 12;
+#elif __APPLE__
+    // 310/92 in .rc scales to 527/156/184 at 100 %
+    // 100 % is 1,7 * x and 1,7 * y + 28 (28 height for window decorations at 100 %)
+    // TODO
+    /*RECT wnd, clnt;
+    GetClientRect(mHwnd, &clnt);
+    GetWindowRect(mHwnd, &wnd);
+
+    char msg[512];
+    snprintf(msg, 512,
+        "client: %d, %d, %d, %d\nwnd: %d, %d, %d, %d\nfactor: %f\n",
+        clnt.left, clnt.top, clnt.right - clnt.left, clnt.bottom - clnt.top,
+        wnd.left, wnd.top, wnd.right - wnd.left, wnd.bottom - wnd.top,
+        dpiFactor
+    );
+    ShowConsoleMsg(msg);*/
+    dpiFactor = 1.7;
+#else
+    // LPMINMAX corresponds to Window rect 1:2 for 100 % and scales linear
+    // 310/92 in .rc scales to 620/184 at 100 % and 1240/368 at 200 % for client and window rect
+    dpiFactor = SWELL_GetScaling256() / 128.0;
+#endif
+
+    info->ptMinTrackSize.x = getMinWidth() * dpiFactor + staticX;
+    info->ptMinTrackSize.y = getMinHeight() * dpiFactor + staticY;
 }
 
 /**
@@ -106,7 +153,7 @@ void DockWindow::toggleVisibility() {
     }
 }
 
-void DockWindow::focus() {
+[[maybe_unused]] void DockWindow::focus() {
     if (isDocked()) {
         DockWindowActivate(mHwnd);
     }
@@ -235,9 +282,12 @@ int DockWindow::keyHandler(MSG* msg, accelerator_register_t* ctx) {
 DockWindowState DockWindow::getStateForPersistance() {
     DockWindowState state{};
     state.dockId = DockIsChildOfDock(mHwnd, nullptr);
-    RECT r = RECT();
-    GetWindowRect(mHwnd, &r);
-    state.pos = r;
+    auto rect = RECT();
+    GetWindowRect(mHwnd, &rect);
+    state.top = rect.top;
+    state.left = rect.left,
+    state.width = rect.right - rect.left;
+    state.height = rect.bottom - rect.top;
     state.visible = isVisible();
     return state;
 }
@@ -254,9 +304,9 @@ void DockWindow::loadStateFromPersistance(DockWindowState state) {
             DockWindowAddEx(mHwnd, mTitle.data(), mId.data(), true);
             Dock_UpdateDockID(mId.data(), state.dockId);
         } else {
-            RECT r = state.pos;
-            EnsureNotCompletelyOffscreen(&r);
-            SetWindowPos(mHwnd, nullptr, r.left, r.top, r.right - r.left, r.bottom - r.top, 0);
+            auto rect = RECT{state.left, state.top, state.left + state.width, state.top + state.height};
+            EnsureNotCompletelyOffscreen(&rect);
+            SetWindowPos(mHwnd, nullptr, state.left, state.top, state.width, state.height, 0);
         }
     }
 }
