@@ -33,7 +33,7 @@
 #include <liblpe/ui/base/ModalWindow.h>
 #include <liblpe/ui/base/ComboBox.h>
 
-class SettingsController : public ModalWindow {
+class SettingsController final : public ModalWindow {
 public:
     SettingsController();
 protected:
@@ -43,6 +43,8 @@ protected:
     void onClose() override;
     LPARAM result() override;
     int onNotify(WPARAM wParam, LPARAM lParam) override;
+    LONG getMinHeight() override { return 278; }
+    LONG getMinWidth() override { return 200; }
 private:
     std::unique_ptr<ComboBox> mCombo = nullptr;
 

@@ -116,7 +116,7 @@ endif
 # dependencies
 win_dep = []
 if host_machine.system() == 'windows'
-    foreach win32_lib : ['User32', 'Gdi32', 'Advapi32', 'Comdlg32', 'Shell32']
+    foreach win32_lib : ['User32', 'Gdi32', 'Advapi32', 'Comdlg32', 'Shell32', 'Shcore']
         win_dep += cpp.find_library(win32_lib)
     endforeach
 endif

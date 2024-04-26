@@ -29,6 +29,9 @@
 
 #include <liblpe/resources/resource.h>
 #include <liblpe/controller/ConfirmationController.h>
+#ifndef _WIN32
+    #include <swell/swell.h>
+#endif
 
 ConfirmationController::ConfirmationController(const std::string& title, std::string* name)
         : ModalWindow(IDD_CONFIRM, title.data(), "ConfirmationController", 0), mName(name) {
