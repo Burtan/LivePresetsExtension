@@ -60,17 +60,17 @@ jobs:
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
-      - uses: Shopify/upload-to-release@v2
+      - uses: Shopify/upload-to-release@v1
         with:
           name: Linux x86_x64
           path: builddir/reaper_livepresets_x86_64.so
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: Shopify/upload-to-release@v2
+      - uses: Shopify/upload-to-release@v1
         with:
           name: Windows x86_x64
           path: builddir/reaper_livepresets_x64.dll
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: Shopify/upload-to-release@v2
+      - uses: Shopify/upload-to-release@v1
         with:
           name: MacOS Arm64
           path: builddir/reaper_livepresets_aarch64.dylib
