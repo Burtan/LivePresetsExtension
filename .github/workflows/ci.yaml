@@ -1,0 +1,77 @@
+name: ci_meson
+
+on: [push]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install meson ninja
+      - run: meson setup builddir/
+      - run: meson compile livepresets_x86_64 -C builddir/ -v -j 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Linux x86_x64
+          path: builddir/reaper_livepresets_x86_64.so
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: brew install gcc php
+      - run: pip install meson ninja
+      - run: meson setup builddir/
+      - run: meson compile livepresets_aarch64 -C builddir/ -v -j 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MacOS Arm64
+          path: builddir/reaper_livepresets_aarch64.dylib
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install meson ninja
+      - uses: TheMrMilchmann/setup-msvc-dev@v3
+        with:
+          arch: x64
+      - run: meson setup builddir/
+      - run: meson compile livepresets_x64 -C builddir/ -v -j 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Windows x86_x64
+          path: builddir/reaper_livepresets_x64.dll
+
+  publish:
+    needs:
+      - linux
+      - windows
+      - macos
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Shopify/upload-to-release@v2
+        with:
+          name: Linux x86_x64
+          path: builddir/reaper_livepresets_x86_64.so
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: Shopify/upload-to-release@v2
+        with:
+          name: Windows x86_x64
+          path: builddir/reaper_livepresets_x64.dll
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: Shopify/upload-to-release@v2
+        with:
+          name: MacOS Arm64
+          path: builddir/reaper_livepresets_aarch64.dylib
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
