@@ -62,16 +62,12 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          path: builddir/reaper_livepresets_x86_64.dll
-      - uses: actions/download-artifact@v4
-        with:
-          path: builddir/reaper_livepresets_aarch64.dll
-      - uses: actions/download-artifact@v4
-        with:
-          path: builddir/reaper_livepresets_x64.dll
+          path: artifacts
+          merge-multiple: true
+      - run: ls -R artifacts
       - uses: softprops/action-gh-release@v2
         with:
           files:
-            builddir/reaper_livepresets_x86_64.so
-            builddir/reaper_livepresets_x64.dll
-            builddir/reaper_livepresets_aarch64.dylib
+            artifacts/reaper_livepresets_x86_64.so
+            artifacts/reaper_livepresets_x64.dll
+            artifacts/reaper_livepresets_aarch64.dylib
