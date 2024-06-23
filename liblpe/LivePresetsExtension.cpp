@@ -412,6 +412,10 @@ bool LPE::recallState(ProjectStateContext* ctx, bool) {
 void LPE::saveState(ProjectStateContext* ctx, bool) {
     auto *proj = GetCurrentProjectInLoadSave();
 
+    // only save data when there are presets
+    if (mModels[proj].mPresets.empty())
+        return;
+
     WDL_FastString chunk;
     mModels[proj].persist(chunk);
 
