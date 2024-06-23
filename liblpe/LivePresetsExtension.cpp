@@ -414,7 +414,7 @@ void LPE::saveState(ProjectStateContext* ctx, bool) {
 
     // only save data when there are presets
     if (mModels[proj].mPresets.empty())
-        return
+        return;
 
     WDL_FastString chunk;
     mModels[proj].persist(chunk);
