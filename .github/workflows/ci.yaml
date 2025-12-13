@@ -13,7 +13,7 @@ jobs:
       - run: pip install meson ninja
       - run: meson setup builddir/
       - run: meson compile livepresets_x86_64 -C builddir/ -v -j 14
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: Linux x86_x64
           path: builddir/reaper_livepresets_x86_64.so
@@ -29,7 +29,7 @@ jobs:
       - run: pip install meson ninja
       - run: meson setup builddir/
       - run: meson compile livepresets_aarch64 -C builddir/ -v -j 14
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: MacOS Arm64
           path: builddir/reaper_livepresets_aarch64.dylib
@@ -47,7 +47,7 @@ jobs:
           arch: x64
       - run: meson setup builddir/
       - run: meson compile livepresets_x64 -C builddir/ -v -j 14
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: Windows x86_x64
           path: builddir/reaper_livepresets_x64.dll
