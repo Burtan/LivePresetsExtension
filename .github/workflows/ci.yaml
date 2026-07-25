@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: '3.x'
       - run: pip install meson ninja
-      - uses: TheMrMilchmann/setup-msvc-dev@v3
+      - uses: TheMrMilchmann/setup-msvc-dev@v4.1.0
         with:
           arch: x64
       - run: meson setup builddir/
